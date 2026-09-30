@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>山形志 · 景点图标方案</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap');
+    :root {
+      --ink: #142b31;
+      --ink-deep: #0d2027;
+      --paper: #f1efe5;
+      --paper-warm: #e7e4d7;
+      --muted: #7f918c;
+      --line: rgba(231, 237, 222, .17);
+      --gold: #d6b675;
+      --gold-pale: #f0d69b;
+      --leaf: #89ad8d;
+      --serif: 'Noto Serif SC', Georgia, serif;
+      --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--paper);
+      background: var(--ink-deep);
+      font-family: var(--sans);
+      letter-spacing: .01em;
+    }
+    body::before {
+      position: fixed; inset: 0; content: '';
+      pointer-events: none; opacity: .16;
+      background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+    .page { width: min(1180px, calc(100% - 44px)); margin: 0 auto; padding: 48px 0 64px; }
+    .masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+    .kicker { color: var(--gold); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; }
+    h1 { margin: 9px 0 8px; font: 600 clamp(32px, 5vw, 56px)/1.1 var(--serif); letter-spacing: -.04em; }
+    .intro { max-width: 570px; margin: 0; color: #b9c5bb; font-size: 14px; line-height: 1.8; }
+    .stamp { flex: 0 0 auto; width: 88px; height: 88px; display: grid; place-items: center; border: 1px solid rgba(214,182,117,.6); color: var(--gold); transform: rotate(-5deg); }
+    .stamp span { font: 600 28px var(--serif); transform: rotate(5deg); }
+    .legend { display: flex; align-items: center; gap: 18px; margin: 24px 0 16px; color: var(--muted); font-size: 12px; }
+    .legend strong { color: var(--paper); font-weight: 500; }
+    .legend i { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--gold); }
+    .legend i.hollow { background: transparent; border: 1px solid var(--gold); }
+    .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
+    .option { position: relative; overflow: hidden; min-width: 0; border: 1px solid rgba(231,237,222,.14); background: rgba(20,43,49,.78); transition: border-color .25s, transform .25s, box-shadow .25s; }
+    .option:hover { border-color: rgba(214,182,117,.62); transform: translateY(-4px); box-shadow: 0 18px 46px rgba(0,0,0,.22); }
+    .option.recommended { border-color: rgba(214,182,117,.57); }
+    .option.recommended::before { position: absolute; top: 0; left: 0; content: '推荐'; padding: 6px 10px; color: var(--ink-deep); background: var(--gold); font-size: 10px; letter-spacing: .12em; }
+    .option-head { min-height: 160px; padding: 32px 20px 18px; background: linear-gradient(145deg, rgba(37,76,77,.8), rgba(14,34,41,.95)); }
+    .option-code { color: var(--gold); font: 600 12px var(--sans); letter-spacing: .16em; }
+    h2 { margin: 9px 0 5px; font: 600 24px var(--serif); }
+    .option-head p { margin: 0; color: #aebbb1; font-size: 12px; line-height: 1.65; }
+    .rows { padding: 12px 14px 15px; }
+    .column-head { display: grid; grid-template-columns: 66px 1fr; gap: 10px; padding: 0 6px 3px; color: #718a84; font-size: 9px; letter-spacing: .08em; }
+    .column-head .labels { display: grid; grid-template-columns: 38px repeat(3, 42px); gap: 7px; text-align: center; }
+    .row { display: grid; grid-template-columns: 66px 1fr; gap: 10px; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(231,237,222,.09); }
+    .row:last-child { border-bottom: 0; }
+    .name { color: #aebbb1; font: 12px var(--serif); }
+    .name small { display: block; margin-top: 3px; color: #6f8580; font: 10px var(--sans); }
+    .samples { display: flex; align-items: center; gap: 7px; }
+    .sample { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(231,237,222,.13); background: rgba(231,237,222,.035); color: var(--gold); }
+    .sample svg { width: 32px; height: 32px; overflow: visible; }
+    .sample.map { width: 38px; height: 38px; border: 0; background: transparent; }
+    .sample.map svg { width: 22px; height: 22px; }
+    .sample.hover { border-color: rgba(214,182,117,.9); color: var(--gold-pale); background: rgba(214,182,117,.11); transform: translateY(-1px); }
+    .sample.selected { border-color: var(--gold); color: var(--ink-deep); background: var(--gold); }
+    .sample.selected svg { filter: drop-shadow(0 1px 0 rgba(255,255,255,.25)); }
+    .footer-note { display: flex; justify-content: space-between; gap: 20px; margin-top: 22px; padding-top: 17px; border-top: 1px solid var(--line); color: #78908a; font-size: 11px; line-height: 1.6; }
+    svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+    .b svg { stroke-width: 1.5; }
+    .c svg { fill: currentColor; stroke: none; }
+    @media (max-width: 1000px) {
+      .page { width: min(560px, calc(100% - 28px)); padding-top: 28px; }
+      .masthead { align-items: flex-start; }
+      .stamp { width: 58px; height: 58px; } .stamp span { font-size: 20px; }
+      .options { grid-template-columns: 1fr; gap: 18px; }
+      .option-head { min-height: auto; }
+      .footer-note { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div>
+        <div class="kicker">SHAN XING ZHI / WAYFINDING STUDY 01</div>
+        <h1>景点图标方案</h1>
+        <p class="intro">为山形志的微缩山水地图挑选一套景点语言。三种方向都用同一组地标测试，左侧是实际地图尺寸，右侧是放大后的普通、悬停、选中状态。</p>
+      </div>
+      <div class="stamp"><span>山<br>形</span></div>
+    </header>
+    <div class="legend"><strong>阅读方式</strong><span><i></i>普通</span><span><i class="hollow"></i>悬停</span><span><i></i>选中</span></div>
+
+    <section class="options" aria-label="三组景点图标方案">
+      <article class="option a recommended">
+        <div class="option-head"><div class="option-code">A / FINE LINE</div><h2>精细线描地标</h2><p>推荐。保留山体等高线的轻盈感，适合深青底图与多层缩放。</p></div>
+        <div class="rows">
+          <div class="column-head"><span></span><div class="labels"><span>地图</span><span>普通</span><span>悬停</span><span>选中</span></div></div>
+          <div class="row"><div class="name">山峰<small>PEAK</small></div><div class="samples"><div class="sample map"><svg><use href="#peak-line"/></svg></div><div class="sample"><svg><use href="#peak-line"/></svg></div><div class="sample hover"><svg><use href="#peak-line"/></svg></div><div class="sample selected"><svg><use href="#peak-line"/></svg></div></div></div>
+          <div class="row"><div class="name">寺观<small>TEMPLE</small></div><div class="samples"><div class="sample map"><svg><use href="#temple-line"/></svg></div><div class="sample"><svg><use href="#temple-line"/></svg></div><div class="sample hover"><svg><use href="#temple-line"/></svg></div><div class="sample selected"><svg><use href="#temple-line"/></svg></div></div></div>
+          <div class="row"><div class="name">洞穴<small>CAVE</small></div><div class="samples"><div class="sample map"><svg><use href="#cave-line"/></svg></div><div class="sample"><svg><use href="#cave-line"/></svg></div><div class="sample hover"><svg><use href="#cave-line"/></svg></div><div class="sample selected"><svg><use href="#cave-line"/></svg></div></div></div>
+          <div class="row"><div class="name">上山口<small>TRAILHEAD</small></div><div class="samples"><div class="sample map"><svg><use href="#gate-line"/></svg></div><div class="sample"><svg><use href="#gate-line"/></svg></div><div class="sample hover"><svg><use href="#gate-line"/></svg></div><div class="sample selected"><svg><use href="#gate-line"/></svg></div></div></div>
+          <div class="row"><div class="name">湖畔<small>LAKESIDE</small></div><div class="samples"><div class="sample map"><svg><use href="#lake-line"/></svg></div><div class="sample"><svg><use href="#lake-line"/></svg></div><div class="sample hover"><svg><use href="#lake-line"/></svg></div><div class="sample selected"><svg><use href="#lake-line"/></svg></div></div></div>
+        </div>
+      </article>
+
+      <article class="option b">
+        <div class="option-head"><div class="option-code">B / SEAL MARK</div><h2>圆章式图标</h2><p>像一组旅行印章。辨识度高、面积稳定，小屏与密集标注更醒目。</p></div>
+        <div class="rows">
+          <div class="column-head"><span></span><div class="labels"><span>地图</span><span>普通</span><span>悬停</span><span>选中</span></div></div>
+          <div class="row"><div class="name">山峰<small>PEAK</small></div><div class="samples"><div class="sample map"><svg><use href="#peak-seal"/></svg></div><div class="sample"><svg><use href="#peak-seal"/></svg></div><div class="sample hover"><svg><use href="#peak-seal"/></svg></div><div class="sample selected"><svg><use href="#peak-seal"/></svg></div></div></div>
+          <div class="row"><div class="name">寺观<small>TEMPLE</small></div><div class="samples"><div class="sample map"><svg><use href="#temple-seal"/></svg></div><div class="sample"><svg><use href="#temple-seal"/></svg></div><div class="sample hover"><svg><use href="#temple-seal"/></svg></div><div class="sample selected"><svg><use href="#temple-seal"/></svg></div></div></div>
+          <div class="row"><div class="name">洞穴<small>CAVE</small></div><div class="samples"><div class="sample map"><svg><use href="#cave-seal"/></svg></div><div class="sample"><svg><use href="#cave-seal"/></svg></div><div class="sample hover"><svg><use href="#cave-seal"/></svg></div><div class="sample selected"><svg><use href="#cave-seal"/></svg></div></div></div>
+          <div class="row"><div class="name">上山口<small>TRAILHEAD</small></div><div class="samples"><div class="sample map"><svg><use href="#gate-seal"/></svg></div><div class="sample"><svg><use href="#gate-seal"/></svg></div><div class="sample hover"><svg><use href="#gate-seal"/></svg></div><div class="sample selected"><svg><use href="#gate-seal"/></svg></div></div></div>
+          <div class="row"><div class="name">湖畔<small>LAKESIDE</small></div><div class="samples"><div class="sample map"><svg><use href="#lake-seal"/></svg></div><div class="sample"><svg><use href="#lake-seal"/></svg></div><div class="sample hover"><svg><use href="#lake-seal"/></svg></div><div class="sample selected"><svg><use href="#lake-seal"/></svg></div></div></div>
+        </div>
+      </article>
+
+      <article class="option c">
+        <div class="option-head"><div class="option-code">C / MINIATURE RELIEF</div><h2>立体地标剪影</h2><p>像纸上浮起的小型山水模型。层次最强，适合强调选中点位与导览。</p></div>
+        <div class="rows">
+          <div class="column-head"><span></span><div class="labels"><span>地图</span><span>普通</span><span>悬停</span><span>选中</span></div></div>
+          <div class="row"><div class="name">山峰<small>PEAK</small></div><div class="samples"><div class="sample map"><svg><use href="#peak-solid"/></svg></div><div class="sample"><svg><use href="#peak-solid"/></svg></div><div class="sample hover"><svg><use href="#peak-solid"/></svg></div><div class="sample selected"><svg><use href="#peak-solid"/></svg></div></div></div>
+          <div class="row"><div class="name">寺观<small>TEMPLE</small></div><div class="samples"><div class="sample map"><svg><use href="#temple-solid"/></svg></div><div class="sample"><svg><use href="#temple-solid"/></svg></div><div class="sample hover"><svg><use href="#temple-solid"/></svg></div><div class="sample selected"><svg><use href="#temple-solid"/></svg></div></div></div>
+          <div class="row"><div class="name">洞穴<small>CAVE</small></div><div class="samples"><div class="sample map"><svg><use href="#cave-solid"/></svg></div><div class="sample"><svg><use href="#cave-solid"/></svg></div><div class="sample hover"><svg><use href="#cave-solid"/></svg></div><div class="sample selected"><svg><use href="#cave-solid"/></svg></div></div></div>
+          <div class="row"><div class="name">上山口<small>TRAILHEAD</small></div><div class="samples"><div class="sample map"><svg><use href="#gate-solid"/></svg></div><div class="sample"><svg><use href="#gate-solid"/></svg></div><div class="sample hover"><svg><use href="#gate-solid"/></svg></div><div class="sample selected"><svg><use href="#gate-solid"/></svg></div></div></div>
+          <div class="row"><div class="name">湖畔<small>LAKESIDE</small></div><div class="samples"><div class="sample map"><svg><use href="#lake-solid"/></svg></div><div class="sample"><svg><use href="#lake-solid"/></svg></div><div class="sample hover"><svg><use href="#lake-solid"/></svg></div><div class="sample selected"><svg><use href="#lake-solid"/></svg></div></div></div>
+        </div>
+      </article>
+    </section>
+    <div class="footer-note"><span>尺寸参考：地图 22px · 放大预览 32px</span><span>状态：普通 / 悬停 / 选中</span></div>
+  </main>
+
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+    <symbol id="peak-line" viewBox="0 0 24 24"><path d="M2.5 19.5 8.6 9.6l3 4.1 2.8-5.4 7.1 11.2Z"/><path d="m5 19.5 3.6-3 2.2 1.7 3.6-3.5 4.2 4.8"/></symbol>
+    <symbol id="temple-line" viewBox="0 0 24 24"><path d="m2.5 8.5 2-1.3.8-1.7 1.2 1 5.5-3.1 5.5 3.1 1.2-1 .8 1.7 2 1.3M4 9.5h16M6 18V9.5m4 8.5V9.5m4 8.5V9.5m4 8.5V9.5M3.5 18h17M2.5 20.5h19"/><path d="M9.5 6.2h5"/></symbol>
+    <symbol id="cave-line" viewBox="0 0 24 24"><path d="M3 19.5c1.8-6.8 4.2-11 8.4-11.7 4.8-.8 7.8 4.5 9.6 11.7Z"/><path d="M9 19.5c.1-3.9 1.1-6.1 3-6.1s2.8 2.2 3 6.1"/></symbol>
+    <symbol id="gate-line" viewBox="0 0 24 24"><path d="M3 7.5 5 6l1-2 1.2 1.2L12 2.8l4.8 2.4L18 4l1 2 2 1.5M4.5 8.5h15M6.5 20V8.5m11 11V8.5M3 20h18M9 20v-6.2c0-2.2 6-2.2 6 0V20"/></symbol>
+    <symbol id="lake-line" viewBox="0 0 24 24"><path d="M3 7.5c2.4 1.8 4.6 1.8 6.9 0s4.6-1.8 7 0 4.5 1.8 4.2 0M3 12c2.4 1.8 4.6 1.8 6.9 0s4.6-1.8 7 0 4.5 1.8 4.2 0M3 16.5c2.4 1.8 4.6 1.8 6.9 0s4.6-1.8 7 0 4.5 1.8 4.2 0"/></symbol>
+    <symbol id="peak-seal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m6 16.5 4-6 2 2.7 1.8-3.2 4.2 6.5Z"/></symbol>
+    <symbol id="temple-seal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m5.5 8.5 1.5-1 1-1.5 1.2.8L12 5l2.8 1.8L16 6l1 1.5 1.5 1M7 10h10M8 17v-7m3 7v-7m3 7v-7m3 7v-7M6.5 18h11"/></symbol>
+    <symbol id="cave-seal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M6 17c1.6-4.8 3.5-7.2 6-7.2s4.4 2.4 6 7.2M10 17c0-2.1.7-3.4 2-3.4s2 1.3 2 3.4"/></symbol>
+    <symbol id="gate-seal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m6 8 1.5-1 1-1.3L12 4.5l3.5 1.2 1 1.3L18 8M7 9.5h10M8 18V9.5m8 8.5V9.5M6 18h12M10 18v-4c0-1.6 4-1.6 4 0v4"/></symbol>
+    <symbol id="lake-seal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M6 9c1.7 1.4 3.2 1.4 4.9 0s3.2-1.4 4.9 0 2.9 1.4 2.3 0M6 13c1.7 1.4 3.2 1.4 4.9 0s3.2-1.4 4.9 0 2.9 1.4 2.3 0M6 17h12"/></symbol>
+    <symbol id="peak-solid" viewBox="0 0 24 24"><path d="M3 19 9 8l3 4 3-6 6 13Z"/><path d="m5 19 4-3 2 2 3-3 4 4Z" fill="#86a37e"/><path d="m14.8 8.8 1.2 2.5-1.4 1.5-1.1-1.4Z" fill="#17353a"/></symbol>
+    <symbol id="temple-solid" viewBox="0 0 24 24"><path d="m2.5 8.5 2.2-1.4.9-1.8 1.3 1.1L12 3.1l5.1 3.3 1.3-1.1.9 1.8 2.2 1.4H2.5Z"/><path d="M5 9h14v10H5Z" fill="#86a37e"/><path d="M3 19h18v2H3Z" fill="#17353a"/><path d="M7.2 19V9m3.2 10V9m3.2 10V9m3.2 10V9" fill="none" stroke="#17353a" stroke-width="1.3"/><path d="M10 19v-5.8c0-1.4 4-1.4 4 0V19Z" fill="#17353a"/></symbol>
+    <symbol id="cave-solid" viewBox="0 0 24 24"><path d="M3 20C4 12 7 7 12 7s8 5 9 13H3Z"/><path d="M5 18c1.5-5.5 3.8-8.2 7-8.2s5.5 2.7 7 8.2Z" fill="#86a37e"/><path d="M9 20c.2-4 1.2-6 3-6s2.8 2 3 6Z" fill="#17353a"/></symbol>
+    <symbol id="gate-solid" viewBox="0 0 24 24"><path d="m3 7.5 2-1.4 1-2 1.3 1.2L12 2.7l4.7 2.6L18 4.1l1 2 2 1.4H3Z"/><path d="M5 8.5h14v12H5Z" fill="#86a37e"/><path d="M3 19h18v2H3Z" fill="#17353a"/><path d="M7 8.5V21m10-12.5V21" fill="none" stroke="#17353a" stroke-width="1.4"/><path d="M9 21v-6c0-2 6-2 6 0v6Z" fill="#17353a"/></symbol>
+    <symbol id="lake-solid" viewBox="0 0 24 24"><path d="M4 7c2 1.7 3.7 1.7 5.7 0s3.7-1.7 5.7 0 3.7 1.7 4.6 0v10H4Z"/><path d="M4 9.5c2 1.5 3.7 1.5 5.7 0s3.7-1.5 5.7 0 3.7 1.5 4.6 0v7.5H4Z" fill="#86a37e"/><path d="M4 11c2 1.5 3.7 1.5 5.7 0s3.7-1.5 5.7 0 3.7 1.5 4.6 0" fill="none" stroke="#17353a"/></symbol>
+  </defs></svg>
+</body>
+</html>

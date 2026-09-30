@@ -1,0 +1,15 @@
+{
+  "width": 418,
+  "height": 432,
+  "west": 120.05513888888889,
+  "east": 120.17097222222222,
+  "north": 30.285972222222224,
+  "south": 30.16625,
+  "unit": "decimetres, signed 16-bit little-endian",
+  "sourceTile": "N30E120.tif",
+  "horizontalScale": 0.0025,
+  "verticalExaggeration": 4,
+  "lakeElevation": 7.5,
+  "minElevation": -0.7,
+  "maxElevation": 414.5
+}

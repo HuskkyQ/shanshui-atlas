@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#182b31" />
+    <meta name="description" content="山形志：中国山水数字展陈。进入黄山与杭州西湖的三维微缩景观，在群峰与湖岸之间自由游望。" />
+    <title>山形志 · 中国山水数字展陈</title>
+  </head>
+  <body>
+    <div class="homepage">
+      <header class="home-header">
+        <a class="home-brand" href="./" aria-label="山形志首页">
+          <span class="home-brand-mark" aria-hidden="true">山</span>
+          <span class="home-brand-name">山形志</span>
+          <span class="home-brand-subtitle">中国山水数字展陈</span>
+        </a>
+        <span class="home-header-note">山水有形，游望无界 <span aria-hidden="true">◆</span></span>
+      </header>
+
+      <main class="home-main">
+        <section class="home-intro" aria-labelledby="home-title">
+          <div>
+            <p class="home-eyebrow"><span aria-hidden="true"></span> A DIGITAL LANDSCAPE COLLECTION</p>
+            <h1 id="home-title">把山水，<em>放在眼前。</em></h1>
+          </div>
+          <p class="home-intro-copy">从黄山的奇峰云海，到西湖的一湖碧水。<br />走进三维山水，换一个角度看风景。</p>
+        </section>
+
+        <section id="landscapes" class="home-collection" aria-labelledby="collection-title">
+          <div class="home-collection-heading">
+            <h2 id="collection-title">选择一处山水，开始游望</h2>
+            <span>02 <span aria-hidden="true">/</span> LANDSCAPES</span>
+          </div>
+          <div class="home-grid">
+            <a class="landscape-card" href="?place=huangshan" aria-labelledby="huangshan-card-title huangshan-card-action">
+              <div class="landscape-image">
+                <img src="/src/assets/huangshan-preview.jpg" width="1024" height="540" alt="黄山三维模型：起伏的陡峭群峰与点缀山脊的松树" fetchpriority="high" />
+                <span class="landscape-index" aria-hidden="true">01 <span>山</span></span>
+                <span class="landscape-coordinates" aria-hidden="true">30°N · 118°E</span>
+              </div>
+              <div class="landscape-info">
+                <div>
+                  <p class="landscape-location">安徽 · 黄山 <span>ANHUI, CHINA</span></p>
+                  <h3 id="huangshan-card-title">黄山 <span>MOUNT HUANGSHAN</span></h3>
+                  <p class="landscape-description">奇峰、松石与云海，沿着山脊探索群峰。</p>
+                </div>
+                <span id="huangshan-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+
+            <a class="landscape-card" href="?place=west-lake" aria-labelledby="west-lake-card-title west-lake-card-action">
+              <div class="landscape-image">
+                <img src="/src/assets/west-lake-preview.jpg" width="1024" height="540" alt="西湖三维模型：湖东的开阔水面与湖西连绵的林木山脊" />
+                <span class="landscape-index" aria-hidden="true">02 <span>水</span></span>
+                <span class="landscape-coordinates" aria-hidden="true">30°N · 120°E</span>
+              </div>
+              <div class="landscape-info">
+                <div>
+                  <p class="landscape-location">浙江 · 杭州 <span>HANGZHOU, CHINA</span></p>
+                  <h3 id="west-lake-card-title">西湖 <span>WEST LAKE</span></h3>
+                  <p class="landscape-description">三面云山一面城，在湖岸与群山之间漫游。</p>
+                </div>
+                <span id="west-lake-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="home-footer">
+        <p><span aria-hidden="true">◇</span> 进入景观后，拖动旋转 · 滚轮缩放 · 切换视角</p>
+        <span>山形志 <span aria-hidden="true">/</span> LANDSCAPE STUDY © 2026</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

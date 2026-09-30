@@ -1,0 +1,92 @@
+[
+  {
+    "id": "baoshi",
+    "name": "宝石山",
+    "category": "湖畔北侧",
+    "description": "西湖北岸的丘陵，可从这里观察宝石山与湖面的相对位置。",
+    "longitude": 120.141408,
+    "latitude": 30.2624214,
+    "viewOffset": [
+      8,
+      7,
+      9
+    ],
+    "osm": "https://www.openstreetmap.org/node/5580634142",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  },
+  {
+    "id": "ge",
+    "name": "葛岭（东峰）",
+    "category": "湖北丘陵",
+    "description": "连接西湖北岸丘陵与西侧群山的山岭，与宝石山相邻。",
+    "longitude": 120.1365021,
+    "latitude": 30.2616854,
+    "viewOffset": [
+      -7,
+      7,
+      9
+    ],
+    "osm": "https://www.openstreetmap.org/node/5580634141",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  },
+  {
+    "id": "beigao",
+    "name": "北高峰",
+    "category": "湖西群山",
+    "description": "西湖西侧的山峰，可观察灵隐一带的山脊与谷地。",
+    "longitude": 120.0920867,
+    "latitude": 30.2479298,
+    "viewOffset": [
+      8,
+      9,
+      10
+    ],
+    "osm": "https://www.openstreetmap.org/node/2763362675",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  },
+  {
+    "id": "nangao",
+    "name": "南高峰",
+    "category": "湖西群山",
+    "description": "西湖西侧的山峰，与北高峰共同构成湖西群山的代表景观。",
+    "longitude": 120.1175872,
+    "latitude": 30.2240207,
+    "viewOffset": [
+      9,
+      8,
+      10
+    ],
+    "osm": "https://www.openstreetmap.org/node/5162287122",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  },
+  {
+    "id": "wuyun",
+    "name": "五云山",
+    "category": "西南山地",
+    "description": "西湖西南侧的山地，可从这里观察九溪一带连续的山脊与谷地。",
+    "longitude": 120.0952294,
+    "latitude": 30.1983844,
+    "viewOffset": [
+      9,
+      9,
+      10
+    ],
+    "osm": "https://www.openstreetmap.org/node/756935539",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  },
+  {
+    "id": "yuhuang",
+    "name": "玉皇山",
+    "category": "湖南山地",
+    "description": "西湖南侧的山体，在模型中呈现湖面、南部丘陵与山脊的关系。",
+    "longitude": 120.1401096,
+    "latitude": 30.2170488,
+    "viewOffset": [
+      9,
+      8,
+      10
+    ],
+    "osm": "https://www.openstreetmap.org/node/4943773762",
+    "official": "https://whc.unesco.org/en/list/1334/"
+  }
+]

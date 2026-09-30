@@ -1,0 +1,100 @@
+    <div id="app">
+      <div class="canvas-wrap" id="canvas-wrap" aria-label="可旋转的黄山主题三维场景；悬停或轻点牌坊查看登山点名称，点击金色标记探索山上名胜"></div>
+      <div class="grain" aria-hidden="true"></div>
+      <div class="compass" role="img" aria-label="指南针：N 指向地理北方，随模型视角旋转">
+        <svg id="compass-dial" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="compass-outer" cx="50" cy="50" r="43" />
+          <circle class="compass-inner" cx="50" cy="50" r="30" />
+          <path class="compass-ticks" d="M50 19v7 M81 50h-7 M50 81v-7 M19 50h7" />
+          <path class="compass-north" d="M50 29 43 55 50 49Z" />
+          <path class="compass-south" d="M50 71 57 45 50 51Z" />
+          <circle class="compass-center" cx="50" cy="50" r="3" />
+          <text class="compass-letter compass-letter-n" x="50" y="15">N</text>
+          <text class="compass-letter" x="89" y="53">E</text>
+          <text class="compass-letter" x="50" y="92">S</text>
+          <text class="compass-letter" x="11" y="53">W</text>
+        </svg>
+      </div>
+
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="返回首页" title="返回首页">
+          <span class="brand-mark" aria-hidden="true">山</span>
+          <span class="brand-name">山形志</span>
+          <span class="brand-divider" aria-hidden="true"></span>
+          <span class="brand-subtitle">← 返回首页</span>
+        </a>
+        <div class="header-controls">
+          <nav class="place-nav" aria-label="选择景观">
+            <a href="?place=huangshan" data-place="huangshan">黄山</a>
+            <a href="?place=west-lake" data-place="west-lake">西湖</a>
+          </nav>
+          <button id="clean-toggle" class="clean-toggle" aria-pressed="false" title="关闭日夜光照、投影与云雾，保留模型原色"><span class="clean-icon" aria-hidden="true">◇</span><span class="clean-label">去除光影</span></button>
+          <button id="immersive-toggle" class="immersive-toggle" aria-pressed="false"><span class="immersive-label">沉浸式体验</span></button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="title">
+          <div class="eyebrow"><span class="eyebrow-line"></span> ANHUI, CHINA <span class="eyebrow-dot">◆</span> 30°N 118°E</div>
+          <h1 id="title">黄<span>山</span></h1>
+          <p class="english-title">MOUNT HUANGSHAN</p>
+          <p class="intro-copy">以岩为骨，以松为魂，<br />让云海流过群峰之间。</p>
+          <span class="intro-caption">黄山核心区地形 · 高程数据驱动的微缩景观</span>
+          <div class="terrain-source">
+            <a href="https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM" target="_blank" rel="noreferrer">地形数据：Copernicus DEM GLO-30 ↗</a>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">路线与点位位置：© OpenStreetMap 贡献者 ↗</a>
+            <p>produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.</p>
+          </div>
+        </section>
+
+        <div class="trailhead-credit">
+          <strong>上山步道与山顶联络 <span>TRAILS</span></strong>
+          <ul class="route-legend">
+            <li><i class="route-south"></i>慈光阁 → 玉屏楼</li>
+            <li><i class="route-east"></i>云谷寺 → 白鹅岭 → 北海</li>
+            <li><i class="route-north"></i>松谷庵 → 北海</li>
+            <li><i class="route-west"></i>钓桥庵 → 步仙桥 → 天海</li>
+            <li><i class="route-link"></i>玉屏楼 → 天海 → 北海</li>
+          </ul>
+          <small>西线参考旧规划；路线与开放状态请以景区公告为准。</small>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">步道几何 © OpenStreetMap 贡献者 ↗</a>
+        </div>
+
+        <section id="landmark-detail" class="landmark-detail" aria-label="景点介绍" hidden>
+          <span class="landmark-kicker">黄山名胜 <b>LANDMARK</b></span>
+          <h2 id="landmark-name"></h2>
+          <p id="landmark-description"></p>
+          <a id="landmark-source" target="_blank" rel="noreferrer">景区资料 ↗</a>
+          <small>模型位置为公开地图近似坐标；实地通行以景区公告为准。</small>
+        </section>
+
+        <div class="scene-caption" aria-hidden="true"><span class="caption-cross">＋</span> 奇峰入云 <span> / </span> SCULPTED BY STONE & MIST</div>
+
+        <aside class="view-nav" aria-label="场景视角">
+          <span class="view-nav-heading">探索视角 <i></i> EXPLORE</span>
+          <div class="view-main">
+            <button class="view-button is-active" data-view="overview" aria-pressed="true"><span class="view-no">01</span><span>群峰全景</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="pine" aria-pressed="false"><span class="view-no">02</span><span>迎客松</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="cloud" aria-pressed="false"><span class="view-no">03</span><span>云海之间</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="trailheads" aria-pressed="false"><span class="view-no">04</span><span>登山路线</span><span class="view-arrow">↗</span></button>
+          </div>
+          <span class="view-group-heading">山上名胜 <i></i> SIGHTS</span>
+          <div class="view-landmarks">
+            <button class="view-button" data-view="guangming" aria-pressed="false"><span class="view-no">05</span><span>光明顶</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="lianhua" aria-pressed="false"><span class="view-no">06</span><span>莲花峰</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="tiandu" aria-pressed="false"><span class="view-no">07</span><span>天都峰</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="shixin" aria-pressed="false"><span class="view-no">08</span><span>始信峰</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="feilai" aria-pressed="false"><span class="view-no">09</span><span>飞来石</span><span class="view-arrow">↗</span></button>
+            <button class="view-button" data-view="paiyun" aria-pressed="false"><span class="view-no">10</span><span>排云亭</span><span class="view-arrow">↗</span></button>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="site-footer">
+        <div class="interaction-hint"><span class="hint-icon" aria-hidden="true">↔</span><span>左键旋转 <b>·</b> Shift＋左键平移 <b>·</b> 滚轮缩放</span></div>
+        <button id="motion-toggle" class="motion-toggle" aria-pressed="true"><span class="motion-indicator"></span> 自动漫游 <span class="toggle-state">ON</span></button>
+        <span id="light-status" class="light-status">北京时间 · 计算光照中</span>
+        <span class="footer-credit">THREE-DIMENSIONAL LANDSCAPE STUDY <span>© 2026</span></span>
+      </footer>
+      <div id="scene-error" class="scene-error" role="alert" hidden>当前浏览器无法显示 3D 场景，请开启 WebGL 或更换浏览器。</div>
+    </div>

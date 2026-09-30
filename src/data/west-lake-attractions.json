@@ -1,0 +1,130 @@
+[
+  {
+    "id": "duanqiao",
+    "name": "断桥残雪",
+    "category": "湖畔名胜",
+    "description": "白堤东端的湖畔入口，也是西湖十景中的断桥残雪。沿桥向西可进入白堤，眺望宝石山与湖面。",
+    "longitude": 120.147367,
+    "latitude": 30.261531,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/1468743794",
+    "osmElement": "node/1468743794",
+    "official": "https://wgly.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=c3ccb4250d3143a09047ee20fbe1170c.pdf"
+  },
+  {
+    "id": "pinghu",
+    "name": "平湖秋月",
+    "category": "湖畔名胜",
+    "description": "白堤西端、孤山东侧的临湖赏月胜地。这里连接白堤与孤山一带的人文游览路线。",
+    "longitude": 120.141613,
+    "latitude": 30.254202,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/1468743804",
+    "osmElement": "node/1468743804",
+    "official": "https://wgly.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=c3ccb4250d3143a09047ee20fbe1170c.pdf"
+  },
+  {
+    "id": "gushan",
+    "name": "孤山",
+    "category": "湖畔名胜",
+    "description": "白堤与西泠桥之间的湖中山地，周边聚集了中山公园和西泠印社等人文景观。可从湖岸观察孤山与两堤的关系。",
+    "longitude": 120.137781,
+    "latitude": 30.254194,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/9035381272",
+    "osmElement": "node/9035381272",
+    "official": "https://wgly.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=c3ccb4250d3143a09047ee20fbe1170c.pdf"
+  },
+  {
+    "id": "yuemiao",
+    "name": "岳王庙",
+    "category": "湖畔名胜",
+    "description": "西湖北岸纪念岳飞的历史景点，与曲院风荷、苏堤北口相邻，是北岸游览中的人文节点。",
+    "longitude": 120.129844,
+    "latitude": 30.254569,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/way/435906176",
+    "osmElement": "way/435906176",
+    "official": "https://wgly.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=c3ccb4250d3143a09047ee20fbe1170c.pdf"
+  },
+  {
+    "id": "quyuan",
+    "name": "曲院风荷",
+    "category": "湖畔名胜",
+    "description": "西湖北岸西侧的荷花观赏景区，邻近苏堤北端。夏季荷塘是这里的代表景观，可接续苏堤漫步。",
+    "longitude": 120.126904,
+    "latitude": 30.251607,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/1468743785",
+    "osmElement": "node/1468743785",
+    "official": "https://www.hangzhou.gov.cn/art/2023/6/18/art_812268_59082764.html"
+  },
+  {
+    "id": "huagang",
+    "name": "花港观鱼",
+    "category": "湖畔名胜",
+    "description": "苏堤南段西侧的湖畔公园。路线沿苏堤抵达园区入口，再继续向雷峰塔和西湖南岸游览。",
+    "longitude": 120.137392,
+    "latitude": 30.234386,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/1881729397",
+    "osmElement": "node/1881729397"
+  },
+  {
+    "id": "leifeng",
+    "name": "雷峰塔",
+    "category": "湖畔名胜",
+    "description": "西湖南岸的塔景地标，与湖面和北岸群山相望。雷峰夕照是西湖十景之一；图中标记展示塔址，步行线经过附近步道。",
+    "longitude": 120.145,
+    "latitude": 30.233859,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/way/229726934",
+    "osmElement": "way/229726934",
+    "note": "坐标取 OSM 建筑范围中心；路线使用其附近湖岸步道入口，避免将路线穿过建筑。",
+    "official": "https://wgly.hangzhou.gov.cn/art/2022/12/1/art_1229696389_58943150.html"
+  },
+  {
+    "id": "liulang",
+    "name": "柳浪闻莺",
+    "category": "湖畔名胜",
+    "description": "西湖东南岸的沿湖公园，以柳树、莺鸣和开阔湖景为特色。从这里可沿东岸继续走向湖滨与断桥。",
+    "longitude": 120.151076,
+    "latitude": 30.241903,
+    "viewOffset": [
+      5,
+      5,
+      7
+    ],
+    "osm": "https://www.openstreetmap.org/node/1468743758",
+    "osmElement": "node/1468743758",
+    "official": "https://wgly.hangzhou.gov.cn/art/2022/12/1/art_1229696389_58943144.html"
+  }
+]

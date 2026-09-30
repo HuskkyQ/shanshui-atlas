@@ -1,0 +1,68 @@
+[
+  {
+    "id": "guangming",
+    "name": "光明顶",
+    "category": "三大主峰",
+    "description": "黄山三大主峰之一，是俯瞰天海与群峰的核心观景点。",
+    "longitude": 118.1640111,
+    "latitude": 30.1346774,
+    "viewOffset": [9, 8, 11],
+    "osm": "https://www.openstreetmap.org/node/793824924",
+    "official": "https://hsgwh.huangshan.gov.cn/zjhs/hsjs/hsgk/index.html?eqid=9f408c06001608be000000066460d20c"
+  },
+  {
+    "id": "lianhua",
+    "name": "莲花峰",
+    "category": "黄山最高峰",
+    "description": "海拔约 1865 米，峰形如莲花；登峰通行受轮休和天气管理。",
+    "longitude": 118.1652327,
+    "latitude": 30.1271128,
+    "viewOffset": [8, 7, 10],
+    "osm": "https://www.openstreetmap.org/node/2239653006",
+    "official": "https://hsgwh.huangshan.gov.cn/zjhs/ldjq/ypjq/8665906.html"
+  },
+  {
+    "id": "tiandu",
+    "name": "天都峰",
+    "category": "三大主峰",
+    "description": "玉屏景区的险峻主峰，峰顶石脊称鲫鱼背；实地登峰需关注预约和开放公告。",
+    "longitude": 118.1737115,
+    "latitude": 30.1210193,
+    "viewOffset": [8, 7, 10],
+    "osm": "https://www.openstreetmap.org/node/3071495422",
+    "official": "https://hsgwh.huangshan.gov.cn/zjhs/ldjq/ypjq/8665906.html"
+  },
+  {
+    "id": "shixin",
+    "name": "始信峰",
+    "category": "北海峰林",
+    "description": "北海景区的代表山峰，位于白鹅岭向北海延伸的游览区域。",
+    "longitude": 118.1700947,
+    "latitude": 30.1435887,
+    "viewOffset": [9, 7, 10],
+    "osm": "https://www.openstreetmap.org/node/12558506962",
+    "official": "https://hsgwh.huangshan.gov.cn/zwgk/public/6617641/11352697.html"
+  },
+  {
+    "id": "feilai",
+    "name": "飞来石",
+    "category": "标志性奇石",
+    "description": "后山代表性奇石，位于排云亭与光明顶之间的游览方向。",
+    "longitude": 118.1587831,
+    "latitude": 30.1379374,
+    "viewOffset": [-9, 7, 10],
+    "osm": "https://www.openstreetmap.org/node/1807837217",
+    "official": "https://hsgwh.huangshan.gov.cn/lyfw/xltj/9195903.html"
+  },
+  {
+    "id": "paiyun",
+    "name": "排云亭",
+    "category": "西海观景点",
+    "description": "西海观景点，也是前往西海大峡谷北入口的重要节点。",
+    "longitude": 118.1562397,
+    "latitude": 30.1424319,
+    "viewOffset": [-10, 8, 6],
+    "osm": "https://www.openstreetmap.org/way/214546704",
+    "official": "https://hsgwh.huangshan.gov.cn/lyfw/xltj/9195903.html"
+  }
+]

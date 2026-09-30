@@ -1,0 +1,211 @@
+[
+  {
+    "id": "baochu-tower",
+    "name": "保俶塔",
+    "category": "山间名胜",
+    "mountainIds": [
+      "baoshi"
+    ],
+    "routeIds": [
+      "baoshi-ge"
+    ],
+    "description": "宝石山上的古塔，是西湖北岸的山景地标。可从这里观察塔、山脊与湖面的关系。",
+    "official": "https://ywhz.hangzhou.com.cn/yjls/content/content_6218600.htm",
+    "longitude": 120.1433748,
+    "latitude": 30.2633417,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/5312284654",
+    "osmElement": "node/5312284654",
+    "sourceName": "保俶塔"
+  },
+  {
+    "id": "baopu-daoist-yard",
+    "name": "抱朴道院",
+    "category": "山间名胜",
+    "mountainIds": [
+      "ge"
+    ],
+    "routeIds": [
+      "baoshi-ge"
+    ],
+    "description": "葛岭半山腰的道教宫观，与葛洪的传说相关。周边初阳台、炼丹井等遗迹构成葛岭的人文景观。",
+    "official": "https://ywhz.hangzhou.com.cn/zjwh/content/content_6220147.htm",
+    "longitude": 120.13826556666666,
+    "latitude": 30.26223392857143,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/way/975870012",
+    "osmElement": "way/975870012",
+    "sourceName": "抱朴道院",
+    "sourceWayId": "975870012"
+  },
+  {
+    "id": "lingyin-temple",
+    "name": "灵隐寺",
+    "category": "山间名胜",
+    "mountainIds": [
+      "beigao"
+    ],
+    "routeIds": [
+      "beigao"
+    ],
+    "description": "北高峰山麓、飞来峰旁的佛教寺院。可从模型观察寺院与北高峰登山步道的上下山关系。",
+    "official": "https://ywhz.hangzhou.com.cn/zjwh/content/content_6220379.htm",
+    "longitude": 120.0967987,
+    "latitude": 30.2427953,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/1218588822",
+    "osmElement": "node/1218588822",
+    "sourceName": "灵隐寺"
+  },
+  {
+    "id": "longjing-spring",
+    "name": "龙井泉",
+    "category": "山间名胜",
+    "mountainIds": [
+      "nangao",
+      "wuyun"
+    ],
+    "routeIds": [
+      "wuyun"
+    ],
+    "description": "龙井谷地的泉点，周边为龙井村和茶园景观。这里可作为观察西湖西侧山谷与茶乡位置的节点。",
+    "longitude": 120.1068322,
+    "latitude": 30.223934,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/13371708830",
+    "osmElement": "node/13371708830",
+    "sourceName": "龙井泉"
+  },
+  {
+    "id": "jiuxi-mist-tree",
+    "name": "九溪烟树",
+    "category": "山间名胜",
+    "mountainIds": [
+      "wuyun"
+    ],
+    "routeIds": [
+      "wuyun"
+    ],
+    "description": "九溪十八涧一带溪流与树林交织的谷地景观。可观察九溪与五云山山脊之间的位置关系。",
+    "official": "https://ywhz.hangzhou.com.cn/hssj/content/content_6218726.htm",
+    "longitude": 120.1085446,
+    "latitude": 30.2046172,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/13458238803",
+    "osmElement": "node/13458238803",
+    "sourceName": "九溪烟树"
+  },
+  {
+    "id": "yanxia-cave",
+    "name": "烟霞洞",
+    "category": "山间名胜",
+    "mountainIds": [
+      "nangao"
+    ],
+    "routeIds": [
+      "nangao"
+    ],
+    "description": "南高峰烟霞岭一带的洞穴与石刻景点，也是登南高峰的代表性上山方向之一。",
+    "official": "https://hznews.hangzhou.com.cn/chengshi/content/2022-07/02/content_8296444_0.htm",
+    "longitude": 120.1149332,
+    "latitude": 30.2210174,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/658996803",
+    "osmElement": "node/658996803",
+    "sourceName": "烟霞洞"
+  },
+  {
+    "id": "zilai-cave",
+    "name": "紫来洞",
+    "category": "山间名胜",
+    "mountainIds": [
+      "yuhuang"
+    ],
+    "routeIds": [
+      "yuhuang"
+    ],
+    "description": "玉皇山半山腰的洞穴景点，洞前平台可俯瞰八卦田与钱塘江，与山顶宫观形成上下层次。",
+    "official": "https://hznews.hangzhou.com.cn/chengshi/content/2022-07/30/content_8318557_0.htm",
+    "longitude": 120.1424754,
+    "latitude": 30.2165647,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/5029726518",
+    "osmElement": "node/5029726518",
+    "sourceName": "紫来洞"
+  },
+  {
+    "id": "fuxing-temple",
+    "name": "福星观",
+    "category": "山间名胜",
+    "mountainIds": [
+      "yuhuang"
+    ],
+    "routeIds": [
+      "yuhuang"
+    ],
+    "description": "玉皇山山顶的道教宫观，是玉皇飞云一带的山顶文化节点。标记展示宫观场所的位置。",
+    "longitude": 120.14012052500001,
+    "latitude": 30.216755075000002,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/way/1417737301",
+    "osmElement": "way/1417737301",
+    "sourceName": "福星观",
+    "sourceWayId": "1417737301"
+  },
+  {
+    "id": "lingshun-temple",
+    "name": "灵顺寺",
+    "category": "山间名胜",
+    "mountainIds": [
+      "beigao"
+    ],
+    "routeIds": [
+      "beigao"
+    ],
+    "description": "北高峰山顶的寺院，俗称财神庙。2026 年修缮公告注明 5 月 25 日至 11 月 25 日暂停开放。",
+    "official": "https://hznews.hangzhou.com.cn/shehui/content/2026-05/22/content_9227038.htm",
+    "longitude": 120.0929685,
+    "latitude": 30.247912528571426,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/way/676045761",
+    "osmElement": "way/676045761",
+    "sourceName": "天下第一财神庙- 靈顺寺",
+    "sourceWayId": "676045761"
+  }
+]

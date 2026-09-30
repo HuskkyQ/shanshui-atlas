@@ -1,0 +1,147 @@
+[
+  {
+    "id": "baoshi-foothill",
+    "name": "保俶塔前山路口",
+    "category": "上山口",
+    "mountainIds": [
+      "baoshi",
+      "ge"
+    ],
+    "routeIds": [
+      "baoshi-ge"
+    ],
+    "description": "保俶塔前山路旁的登山台阶连接处，可上行至保俶塔、宝石山和葛岭一带。",
+    "note": "OSM node shared by 保俶塔前山路 and steps; not a ticket gate.",
+    "longitude": 120.1434491,
+    "latitude": 30.2619582,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/6642625053",
+    "osmElement": "node/6642625053",
+    "sourceName": "保俶塔前山路",
+    "sourceWayId": "706869403"
+  },
+  {
+    "id": "beigao-trail",
+    "name": "北高峰登山道口",
+    "category": "上山口",
+    "mountainIds": [
+      "beigao"
+    ],
+    "routeIds": [
+      "beigao"
+    ],
+    "description": "灵隐寺一带的北高峰登山台阶入口，沿步道可到北高峰山顶附近。",
+    "note": "Named OSM steps way.",
+    "longitude": 120.0986607,
+    "latitude": 30.2432864,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/1519392833",
+    "osmElement": "node/1519392833",
+    "sourceName": "北高峰登山道",
+    "sourceWayId": "138564975"
+  },
+  {
+    "id": "nangao-manjuelong",
+    "name": "烟霞洞·南高峰步道口",
+    "category": "上山口",
+    "mountainIds": [
+      "nangao"
+    ],
+    "routeIds": [
+      "nangao"
+    ],
+    "description": "满觉陇路烟霞洞附近的登山步道连接处，可沿山间台阶向南高峰上行。",
+    "note": "OSM node shared by the mapped path and Manjuelong Road.",
+    "longitude": 120.1153426,
+    "latitude": 30.2210551,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/5604066540",
+    "osmElement": "node/5604066540",
+    "sourceName": "满觉陇路与登山步道连接",
+    "sourceWayId": "639117641"
+  },
+  {
+    "id": "longjing-shifeng",
+    "name": "龙井·十里琅珰支线口",
+    "category": "上山口",
+    "mountainIds": [
+      "wuyun"
+    ],
+    "routeIds": [
+      "wuyun"
+    ],
+    "description": "龙井村一带进入十里琅珰狮峰支线的节点，连接山脊步道与五云山方向。",
+    "note": "Start of named OSM steps way; a branch entrance, not a road junction or ticket gate.",
+    "longitude": 120.0967215,
+    "latitude": 30.2191796,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/4469526662",
+    "osmElement": "node/4469526662",
+    "sourceName": "十里琅珰（狮峰支线）",
+    "sourceWayId": "450033737"
+  },
+  {
+    "id": "jiuxi-side-path",
+    "name": "九溪·五云山步道口",
+    "category": "上山口",
+    "mountainIds": [
+      "wuyun"
+    ],
+    "routeIds": [
+      "wuyun"
+    ],
+    "description": "十里琅珰—五云山线路在九溪路侧的公共步道连接节点。",
+    "note": "OSM path node adjacent to named 九溪路; the map does not label it as a gate.",
+    "longitude": 120.1101891,
+    "latitude": 30.1962846,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/770713481",
+    "osmElement": "node/770713481",
+    "sourceName": "九溪路侧步道",
+    "sourceWayId": "1463933441"
+  },
+  {
+    "id": "yuhuang-steps",
+    "name": "玉皇山登山道口",
+    "category": "上山口",
+    "mountainIds": [
+      "yuhuang"
+    ],
+    "routeIds": [
+      "yuhuang"
+    ],
+    "description": "玉皇山东北侧，登山台阶与老玉皇山路相接的步道口。沿步道上行可到紫来洞附近与山顶一带。",
+    "note": "OSM node shared by 玉皇山登山道 and 老玉皇山路; not a surveyed ticket gate.",
+    "longitude": 120.1476235,
+    "latitude": 30.221433,
+    "viewOffset": [
+      6,
+      6,
+      8
+    ],
+    "osm": "https://www.openstreetmap.org/node/5029726488",
+    "osmElement": "node/5029726488",
+    "sourceName": "玉皇山登山道",
+    "sourceWayId": "457498261"
+  }
+]
