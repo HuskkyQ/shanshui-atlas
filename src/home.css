@@ -36,15 +36,22 @@ body { margin: 0; min-width: 320px; background: #182b31; }
 .home-collection-heading > span { color: var(--home-muted); font-size: 9px; letter-spacing: 0.13em; }
 .home-collection-heading > span span { margin-inline: 9px; color: var(--home-gold); }
 .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
-.landscape-card { overflow: hidden; border: 1px solid var(--home-line); background: #1a3035; transition: border-color 0.25s, transform 0.25s; }
+.landscape-card { position: relative; overflow: hidden; border: 1px solid var(--home-line); background: #1a3035; transition: border-color 0.25s, transform 0.25s; }
+.landscape-card-link { display: block; }
 .landscape-card:hover { border-color: var(--home-gold); transform: translateY(-4px); }
 .homepage a:focus-visible { outline: 2px solid var(--home-gold); outline-offset: 6px; }
+.homepage .landscape-card-link:focus-visible { outline-offset: -3px; }
+.landscape-favorite { position: absolute; top: 8px; right: 9px; display: grid; place-items: center; width: 44px; height: 44px; padding: 10px; border: 0; background: transparent; color: var(--home-ivory); cursor: pointer; }
+.landscape-favorite svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 3px #182b31); }
+.landscape-favorite[aria-pressed="true"] { color: #f05265; }
+.landscape-favorite[aria-pressed="true"] svg { fill: currentColor; }
+.landscape-favorite:focus-visible { outline: 2px solid var(--home-gold); outline-offset: -2px; border-radius: 50%; }
 .landscape-image { position: relative; overflow: hidden; aspect-ratio: 2.1; background: #68787a; }
 .landscape-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
 .landscape-card:hover img { transform: scale(1.035); }
 .landscape-index { position: absolute; top: 18px; left: 21px; display: flex; align-items: center; gap: 11px; color: #edf0e3; font-size: 10px; letter-spacing: 0.1em; }
 .landscape-index span { padding-left: 11px; border-left: 1px solid rgba(241, 239, 229, 0.4); font: 400 15px/1 'Noto Serif SC', 'Songti SC', serif; }
-.landscape-coordinates { position: absolute; top: 19px; right: 21px; color: #edf0e3; font-size: 9px; letter-spacing: 0.14em; }
+.landscape-coordinates { position: absolute; top: 19px; right: 65px; color: #edf0e3; font-size: 9px; letter-spacing: 0.14em; }
 .landscape-info { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 20px 24px 23px; }
 .landscape-location { margin: 0 0 6px; color: var(--home-gold); font-size: 9px; letter-spacing: 0.12em; }
 .landscape-location span { margin-left: 10px; color: var(--home-muted); font-size: 8px; letter-spacing: 0.09em; }
@@ -81,7 +88,8 @@ body { margin: 0; min-width: 320px; background: #182b31; }
   .home-collection-heading h2 { font-size: 10px; letter-spacing: 0.04em; }
   .landscape-image { aspect-ratio: 1.9; }
   .landscape-index { top: 15px; left: 17px; }
-  .landscape-coordinates { top: 16px; right: 17px; font-size: 8px; }
+  .landscape-coordinates { top: 16px; right: 61px; font-size: 8px; }
+  .landscape-favorite { top: 5px; right: 5px; }
   .landscape-info { padding: 17px 17px 20px; gap: 7px; }
   .landscape-info h3 { font-size: 26px; gap: 10px; }
   .landscape-info h3 span { font-size: 8px; }

@@ -33,7 +33,8 @@
             <span>02 <span aria-hidden="true">/</span> LANDSCAPES</span>
           </div>
           <div class="home-grid">
-            <a class="landscape-card" href="?place=huangshan" aria-labelledby="huangshan-card-title huangshan-card-action">
+            <article class="landscape-card">
+              <a class="landscape-card-link" href="?place=huangshan" aria-labelledby="huangshan-card-title huangshan-card-action">
               <div class="landscape-image">
                 <img src="/src/assets/huangshan-preview.jpg" width="1024" height="540" alt="黄山三维模型：起伏的陡峭群峰与点缀山脊的松树" fetchpriority="high" />
                 <span class="landscape-index" aria-hidden="true">01 <span>山</span></span>
@@ -47,9 +48,14 @@
                 </div>
                 <span id="huangshan-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
               </div>
-            </a>
+              </a>
+              <button class="landscape-favorite" type="button" data-place="huangshan" data-name="黄山" aria-label="收藏黄山" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+              </button>
+            </article>
 
-            <a class="landscape-card" href="?place=west-lake" aria-labelledby="west-lake-card-title west-lake-card-action">
+            <article class="landscape-card">
+              <a class="landscape-card-link" href="?place=west-lake" aria-labelledby="west-lake-card-title west-lake-card-action">
               <div class="landscape-image">
                 <img src="/src/assets/west-lake-preview.jpg" width="1024" height="540" alt="西湖三维模型：湖东的开阔水面与湖西连绵的林木山脊" />
                 <span class="landscape-index" aria-hidden="true">02 <span>水</span></span>
@@ -63,7 +69,11 @@
                 </div>
                 <span id="west-lake-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
               </div>
-            </a>
+              </a>
+              <button class="landscape-favorite" type="button" data-place="west-lake" data-name="西湖" aria-label="收藏西湖" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+              </button>
+            </article>
           </div>
         </section>
       </main>
