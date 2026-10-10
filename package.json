@@ -1,13 +1,13 @@
 {
-  "name": "huangshan-three-exhibit",
+  "name": "shanshui-atlas",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "vite --host 0.0.0.0 --port 571 --strictPort",
     "test": "node --test",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0 --port 571 --strictPort"
   },
   "dependencies": {
     "suncalc": "^2.0.2",

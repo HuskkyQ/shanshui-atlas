@@ -5,21 +5,19 @@ import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer
 import { createWestLakeTerrain } from './west-lake-terrain.js';
 import { createForest } from './forest.js';
 import { createWestLakeBuiltModels } from './west-lake-built-models.js';
-import { getWestLakeBuiltPOIs } from './west-lake-built-pois.js';
+import { createLeifengOverviewFoundation, createLeifengOverviewTower } from './models/leifeng-pagoda.js';
+import { westLakePOIs, westLakePOIGroups } from './west-lake-pois.js';
+import { isPOIVisible } from './poi-visibility.js';
 import { getLightingForDate, skyDirection } from './lighting.js';
 import { createLandmarkIcon, getLandmarkIconKind } from './landmark-icons.js';
 import { layoutLandmarkLabels } from './landmark-layout.js';
-import mountainLandmarks from './data/west-lake-landmarks.json';
-import originalAttractions from './data/west-lake-attractions.json';
-import builtLandmarkData from './data/west-lake-built-landmarks.json';
+import builtLandmarkData from './data/west-lake-built-landmarks.json' with { type: 'json' };
 import terrainMetadata from './data/west-lake-dem.json';
-import trailheads from './data/west-lake-trailheads.json';
-import hillSights from './data/west-lake-hill-sights.json';
 import routeData from './data/west-lake-routes.json';
 import hikeData from './data/west-lake-hikes.json';
 
-const attractions = getWestLakeBuiltPOIs(builtLandmarkData, originalAttractions);
-const landmarks = [...mountainLandmarks, ...attractions, ...trailheads, ...hillSights];
+const attractions = westLakePOIGroups.attractions;
+const landmarks = westLakePOIs;
 
 const VIEWS = {
   overview: { position: [31, 29, 38], target: [0, 0.8, 0] },
@@ -113,16 +111,17 @@ function addHikingNetwork(group, terrain, network) {
   group.add(nodes);
 }
 
-function addLandmarks(scene, terrain, builtModels) {
+function addLandmarks(scene, terrain, builtModels, overviewAnchors = new Map()) {
   const group = new THREE.Group();
   const points = new Map();
   const labels = [];
-  landmarks.forEach(({ id, name, category, longitude, latitude }) => {
+  let pointCategory = 'all', selectedId = null;
+  [...landmarks].sort((a, b) => b.importance - a.importance).forEach(({ id, name, category, longitude, latitude, importance }) => {
     const [x, z] = terrain.toWorld(longitude, latitude);
     const marker = new THREE.Group();
     const isTrailhead = category === '上山口', isHillSight = category === '山间名胜';
     marker.name = `west-lake-point-${id}`;
-    const anchor = builtModels.anchors.get(id);
+    const anchor = overviewAnchors.get(id) || builtModels.anchors.get(id);
     marker.position.set(anchor?.x ?? x, anchor ? anchor.y + 0.01 : terrain.getHeight(x, z) + (isTrailhead ? 0.035 : 0.25), anchor?.z ?? z);
     const hotspot = document.createElement('button');
     const isAttraction = attractions.some((item) => item.id === id);
@@ -130,7 +129,9 @@ function addLandmarks(scene, terrain, builtModels) {
     hotspot.className = `scenic-hotspot is-${kind}${['pinghu', 'quyuan', 'baoshi'].includes(id) ? ' label-below' : ''}`;
     hotspot.type = 'button';
     hotspot.dataset.landmarkId = id;
+    hotspot.dataset.importance = String(importance);
     hotspot.setAttribute('aria-label', `探索${name}`);
+    hotspot.setAttribute('aria-pressed', 'false');
     const nameLabel = document.createElement('span');
     nameLabel.textContent = name;
     hotspot.append(createLandmarkIcon(getLandmarkIconKind({ name, category })), nameLabel);
@@ -139,17 +140,41 @@ function addLandmarks(scene, terrain, builtModels) {
     label.position.y = anchor ? 0.04 : isTrailhead ? 0.45 : 0.15;
     marker.add(label);
     group.add(marker);
-    points.set(id, { marker, hotspot, kind, category });
+    points.set(id, { marker, hotspot, kind, category, importance, visible: false });
     labels.push(label);
   });
   scene.add(group);
-  return { group, labels, setCategory(category) {
-    points.forEach((point) => { point.marker.visible = category === 'all' || point.kind === 'mountain' || point.category === category; });
+  return { group, labels, getCategory: () => pointCategory, setCategory(category) {
+    pointCategory = category;
   }, setActive(id) {
+    selectedId = id;
     points.forEach(({ hotspot }, key) => {
       hotspot.classList.toggle('is-active', key === id);
+      hotspot.setAttribute('aria-pressed', String(key === id));
+    });
+  }, update(camera) {
+    points.forEach((point, id) => {
+      const selected = selectedId === id;
+      const focused = document.activeElement === point.hotspot || point.hotspot.matches(':hover');
+      const categoryMatch = pointCategory === 'all' || point.kind === 'mountain' || point.category === pointCategory || point.importance === 3;
+      point.visible = (categoryMatch || selected || focused) && isPOIVisible({ importance: point.importance,
+        distance: camera.position.distanceTo(point.marker.position), selected, focused, previousVisible: point.visible });
+      point.marker.visible = point.visible;
     });
   } };
+}
+
+function addLeifengOverviewTower(scene, terrain) {
+  const leifeng = landmarks.find(({ id }) => id === 'leifeng');
+  if (!leifeng) return null;
+  const [x, z] = terrain.toWorld(leifeng.longitude, leifeng.latitude);
+  const foundation = createLeifengOverviewFoundation({ x, z, getHeight: terrain.getHeight });
+  const tower = createLeifengOverviewTower();
+  tower.position.set(x, foundation.baseY, z);
+  foundation.group.add(tower);
+  scene.add(foundation.group);
+  tower.updateMatrixWorld(true);
+  return { tower, anchor: { x, y: new THREE.Box3().setFromObject(tower).max.y + 0.08, z } };
 }
 
 export async function createWestLakeScene(container, onMotionChange, onLightingChange) {
@@ -161,16 +186,17 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   scene.fog = fog;
   const builtModels = createWestLakeBuiltModels(terrain, builtLandmarkData, terrainMetadata.horizontalScale);
   scene.add(builtModels.group);
+  const leifengOverview = addLeifengOverviewTower(scene, terrain);
   const routes = addScenicRoutes(scene, terrain, routeData.routes, 'walking');
   const hikes = addScenicRoutes(scene, terrain, hikeData.routes, 'hiking');
   addHikingNetwork(hikes, terrain, hikeData.network);
   const forest = createForest(terrain, { kind: 'west-lake', paths: [...routeData.routes, ...hikeData.routes].map(({ points }) =>
-    points.map(([longitude, latitude]) => terrain.toWorld(longitude, latitude))), clearings: landmarks.map(({ category, longitude, latitude }) => {
+    points.map(([longitude, latitude]) => terrain.toWorld(longitude, latitude))), clearings: landmarks.map(({ id, category, longitude, latitude }) => {
     const [x, z] = terrain.toWorld(longitude, latitude);
-    return { x, z, radius: category === '上山口' || category === '山间名胜' ? 0.25 : 0.55 };
+    return { x, z, radius: id === 'leifeng' ? 0.62 : category === '上山口' || category === '山间名胜' ? 0.25 : 0.55 };
   }).concat(builtModels.clearings) });
   scene.add(forest.group);
-  const sights = addLandmarks(scene, terrain, builtModels);
+  const sights = addLandmarks(scene, terrain, builtModels, new Map(leifengOverview ? [['leifeng', leifengOverview.anchor]] : []));
   const scenicViews = Object.fromEntries(landmarks.map(({ id, longitude, latitude, viewOffset }) => {
     const coordinate = terrain.toWorld(longitude, latitude);
     const anchor = builtModels.anchors.get(id);
@@ -214,7 +240,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   const compass = document.querySelector('#compass-dial');
   const clock = new THREE.Clock();
   let motion = !reducedMotion, cleanMode = false, immersiveMode = false, activeView = 'overview';
-  let tween = null, savedView = null, frameId;
+  let tween = null, savedView = null, frameId, paused = false, disposed = false;
   let mobileLayout = container.clientWidth < 650;
 
   function positionFor(view) {
@@ -225,7 +251,12 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   camera.position.copy(positionFor(VIEWS.overview));
   controls.target.set(...VIEWS.overview.target);
   controls.update();
-  controls.addEventListener('start', () => { tween = null; });
+  function cancelTween() {
+    const finish = tween?.finish;
+    tween = null;
+    finish?.(false);
+  }
+  controls.addEventListener('start', cancelTween);
 
   function updateLighting() {
     if (cleanMode) return;
@@ -259,7 +290,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       const mapView = activeView === 'top' || activeView === 'hiking';
       camera.position.sub(controls.target).multiplyScalar(mapView && !cleanMode ? 1 : scale).add(controls.target);
       if (savedView) savedView.position.sub(savedView.target).multiplyScalar(mapView ? 1 : scale).add(savedView.target);
-      tween = null;
+      cancelTween();
       mobileLayout = mobile;
     }
     camera.aspect = width / height;
@@ -275,33 +306,74 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   resize();
 
   function animate() {
+    if (paused || disposed) return;
     frameId = requestAnimationFrame(animate);
     const elapsed = clock.getElapsedTime();
     if (tween) {
-      const t = clamp((elapsed - tween.start) / 1.25, 0, 1), smooth = t * t * (3 - 2 * t);
+      const t = clamp((elapsed - tween.start) / (tween.duration || 1.25), 0, 1), smooth = t * t * (3 - 2 * t);
       camera.position.copy(tween.position).lerp(tween.toPosition, smooth);
       controls.target.copy(tween.target).lerp(tween.toTarget, smooth);
-      if (t === 1) tween = null;
+      if (t === 1) {
+        const finish = tween.finish;
+        tween = null;
+        finish?.(true);
+      }
     }
     controls.autoRotate = motion && !cleanMode && !immersiveMode && !tween && activeView !== 'top' && activeView !== 'hiking'
-      && !builtModels.anchors.has(activeView);
+      && !scenicViews[activeView];
     controls.update();
     forest.update(camera, container.clientHeight, elapsed);
     builtModels.update(camera, container.clientHeight, elapsed);
     compass.style.transform = `rotate(${Math.atan2(camera.position.x - controls.target.x, camera.position.z - controls.target.z)}rad)`;
     if (motion && !cleanMode) terrain.waterMaterial.uniforms.time.value = elapsed;
     renderer.render(scene, camera);
+    sights.update(camera);
     layoutLandmarkLabels(sights.labels, camera, container.clientWidth, container.clientHeight);
     labels.render(scene, camera);
   }
   animate();
 
-  return {
+  const controller = {
+    captureState() {
+      return { position: camera.position.toArray(), target: controls.target.toArray(), zoom: camera.zoom,
+        view: activeView, pointCategory: sights.getCategory(), motion, cleanMode, immersiveMode };
+    },
+    restoreState(state) {
+      if (cleanMode !== state.cleanMode) controller.toggleCleanMode();
+      immersiveMode = state.immersiveMode;
+      controller.setView(state.view);
+      cancelTween();
+      const damping = controls.enableDamping;
+      controls.autoRotate = false;
+      controls.enableDamping = false;
+      controls.update();
+      camera.position.fromArray(state.position);
+      controls.target.fromArray(state.target);
+      camera.zoom = state.zoom;
+      sights.setCategory(state.pointCategory);
+      motion = state.motion;
+      onMotionChange(motion);
+      resize();
+      controls.update();
+      controls.enableDamping = damping;
+    },
+    setPaused(value, { keepVisible = false } = {}) {
+      if (disposed) return;
+      renderer.domElement.hidden = value && !keepVisible;
+      labels.domElement.hidden = value;
+      if (paused === value) return;
+      cancelTween();
+      paused = value;
+      controls.enabled = !value;
+      if (value) cancelAnimationFrame(frameId);
+      else { resize(); animate(); }
+    },
     setImmersiveMode(value) { immersiveMode = value; },
     setPointCategory(category) { sights.setCategory(category); },
     setView(name) {
       const view = VIEWS[name] || scenicViews[name];
       if (!view) return;
+      cancelTween();
       activeView = name;
       routes.visible = !cleanMode && !builtModels.anchors.has(name);
       hikes.visible = !cleanMode && !builtModels.anchors.has(name);
@@ -312,6 +384,41 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       tween = { start: clock.getElapsedTime(), position: camera.position.clone(), target: controls.target.clone(),
         toPosition: positionFor(view), toTarget: new THREE.Vector3(...view.target) };
     },
+    flyToScenic(name, { signal } = {}) {
+      const view = scenicViews[name];
+      if (!view || disposed || signal?.aborted) return Promise.resolve(false);
+      cancelTween();
+      activeView = name;
+      const toTarget = new THREE.Vector3(...view.target);
+      const offset = positionFor(view).sub(toTarget).multiplyScalar(0.16);
+      toTarget.y = terrain.getHeight(toTarget.x, toTarget.z) + 0.1;
+      const toPosition = offset.add(toTarget);
+      controls.autoRotate = false;
+      // Flush any residual drag damping before the entry flight owns the camera.
+      const damping = controls.enableDamping;
+      controls.enableDamping = false;
+      controls.update();
+      controls.enableDamping = damping;
+      if (reducedMotion) {
+        camera.position.copy(toPosition);
+        controls.target.copy(toTarget);
+        controls.update();
+        return Promise.resolve(true);
+      }
+      const enabled = controls.enabled;
+      controls.enabled = false;
+      return new Promise((resolve) => {
+        const abort = () => cancelTween();
+        tween = { start: clock.getElapsedTime(), duration: 1.35,
+          position: camera.position.clone(), target: controls.target.clone(), toPosition, toTarget,
+          finish(arrived) {
+            signal?.removeEventListener('abort', abort);
+            controls.enabled = enabled;
+            resolve(arrived);
+          } };
+        signal?.addEventListener('abort', abort, { once: true });
+      });
+    },
     toggleMotion() { motion = !motion; onMotionChange(motion); return motion; },
     isMotionOn: () => motion,
     isCleanMode: () => cleanMode,
@@ -319,7 +426,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       cleanMode = !cleanMode;
       renderer.shadowMap.enabled = !cleanMode;
       terrain.waterMaterial.uniforms.glintStrength.value = cleanMode ? 0 : 1;
-      tween = null;
+      cancelTween();
       sights.group.visible = !cleanMode;
       routes.visible = !cleanMode && !builtModels.anchors.has(activeView);
       hikes.visible = !cleanMode && !builtModels.anchors.has(activeView);
@@ -348,11 +455,15 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       return cleanMode;
     },
     dispose() {
+      if (disposed) return;
+      cancelTween();
+      disposed = true;
       cancelAnimationFrame(frameId);
       window.clearInterval(lightingInterval);
       document.removeEventListener('visibilitychange', updateLighting);
       observer.disconnect();
       disposeShiftPan();
+      controls.removeEventListener('start', cancelTween);
       controls.dispose();
       const geometries = new Set(), materials = new Set();
       scene.traverse((object) => {
@@ -367,4 +478,5 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       labels.domElement.remove();
     },
   };
+  return controller;
 }

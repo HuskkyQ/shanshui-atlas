@@ -1,0 +1,209 @@
+{
+  "leifeng": {
+    "src": "/images/pois/leifeng.jpg",
+    "alt": "从西湖望向雷峰塔",
+    "caption": "西湖湖面远望雷峰塔",
+    "author": "Bjoertvedt",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:West_Lake_IMG_8792_leifeng_pagoda.jpg"
+  },
+  "lingyin-temple": {
+    "src": "/images/pois/lingyin.jpg",
+    "alt": "灵隐景区佛像石刻",
+    "caption": "灵隐景区石刻",
+    "author": "Dave Proffer",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lingyin_Buddhist_Temple,_Hangzhou_(3019250421).jpg"
+  },
+  "santan": {
+    "src": "/images/pois/santan.jpg",
+    "alt": "三潭印月石塔与西湖水面",
+    "caption": "三潭印月",
+    "author": "Hangzhou West Lake, Ten Thousand Strangers",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Three_Pools_Mirroring_the_Moon.jpg"
+  },
+  "duanqiao": {
+    "src": "/images/pois/duanqiao.jpg",
+    "alt": "杭州西湖断桥",
+    "caption": "白堤上的断桥残雪",
+    "author": "Suicasmo",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Broken_Bridge_(Hangzhou)_20250505.jpg"
+  },
+  "pinghu": {
+    "src": "/images/pois/pinghu.jpg",
+    "alt": "西湖平湖秋月临湖景观",
+    "caption": "平湖秋月",
+    "author": "Zhou Guanhuai",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:西湖十景-平湖秋月.jpg"
+  },
+  "sudi": {
+    "src": "/images/pois/sudi.jpg",
+    "alt": "西湖苏堤林荫步道",
+    "caption": "苏堤北望湖面",
+    "author": "DXR",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Su_Causeway_near_West_Lake,_looking_towards_north_20120529_1.jpg"
+  },
+  "baidi": {
+    "src": "/images/pois/baochu.jpg",
+    "alt": "西湖白堤、断桥与保俶塔远景",
+    "caption": "白堤与保俶塔远景（共同景观）",
+    "author": "Shujianyang",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:West_Lake_2025.06_03.jpg"
+  },
+  "quyuan": {
+    "src": "/images/pois/quyuan.jpg",
+    "alt": "杭州西湖曲院风荷荷花池",
+    "caption": "曲院风荷",
+    "author": "Zhou Guanhuai",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:西湖十景-曲院风荷.jpg"
+  },
+  "liulang": {
+    "src": "/images/pois/liulang.jpg",
+    "alt": "杭州西湖柳浪闻莺景观",
+    "caption": "柳浪闻莺",
+    "author": "Zhou Guanhuai",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:西湖十景-柳浪闻莺.jpg"
+  },
+  "gushan": {
+    "src": "/images/pois/gushan.jpg",
+    "alt": "从孤山眺望西湖",
+    "caption": "孤山西泠印社制高点眺望西湖",
+    "author": "CatOnMars",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:View_of_the_West_Lake_from_Gushan.jpg"
+  },
+  "huagang": {
+    "src": "/images/pois/huagang.jpg",
+    "alt": "花港观鱼园林水景",
+    "caption": "花港观鱼",
+    "author": "Shizhao",
+    "license": "CC BY-SA 1.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/1.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:View_Fish_in_the_Flower_Harbour.JPG"
+  },
+  "yuemiao": {
+    "src": "/images/pois/yuemiao.jpg",
+    "alt": "杭州岳王庙建筑",
+    "caption": "岳王庙",
+    "author": "Takashishin",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Yu_Fei_Temple.jpg"
+  },
+  "baochu-tower": {
+    "src": "/images/pois/baochu.jpg",
+    "alt": "宝石山、保俶塔与西湖白堤",
+    "caption": "从湖面望宝石山和保俶塔",
+    "author": "Shujianyang",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:West_Lake_2025.06_03.jpg"
+  },
+  "huxinting": {
+    "src": "/images/pois/huxinting.jpg",
+    "alt": "西湖湖心亭小岛",
+    "caption": "湖心亭所在小岛",
+    "author": "Bjoertvedt",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:West_Lake_IMG_8761_huxin_pavillion_island.jpg"
+  },
+  "xiaoyingzhou": {
+    "src": "/images/pois/santan.jpg",
+    "alt": "小瀛洲三潭印月石塔",
+    "caption": "小瀛洲附近湖面的三潭印月石塔（周边景观）",
+    "author": "Hangzhou West Lake, Ten Thousand Strangers",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Three_Pools_Mirroring_the_Moon.jpg"
+  },
+  "guangming": {
+    "src": "/images/pois/guangming.jpg",
+    "alt": "黄山光明顶",
+    "caption": "黄山光明顶",
+    "author": "Emitchan",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:GuangMingDing.jpg"
+  },
+  "lianhua": {
+    "src": "/images/pois/lianhua.jpg",
+    "alt": "黄山莲花峰与玉屏峰",
+    "caption": "莲花峰与玉屏峰",
+    "author": "De-Shao Liu (Terry850324)",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Huangshan,_September_2018_35_蓮花峰與玉屏峰.jpg"
+  },
+  "feilai": {
+    "src": "/images/pois/feilai.jpg",
+    "alt": "黄山飞来石",
+    "caption": "黄山飞来石",
+    "author": "Tiger@西北",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:安徽_黄山_-_飞来石_Mount._Huangshan_-_Flied_stone_-_panoramio.jpg"
+  },
+  "tiandu": {
+    "src": "/images/pois/tiandu.jpg",
+    "alt": "黄山天都峰登山石阶",
+    "caption": "天都峰登山道",
+    "author": "Jakemete",
+    "license": "Public domain",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-author",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Huangshan_-_Steps_to_Heaven.jpg"
+  },
+  "shixin": {
+    "src": "/images/pois/shixin.jpg",
+    "alt": "从黄山始信峰远眺群峰",
+    "caption": "始信峰远景",
+    "author": "JesseW900",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Huangshan_view.JPG"
+  },
+  "jiuxi-mist-tree": {
+    "src": "/images/pois/jiuxi.jpg",
+    "alt": "杭州九溪烟树题记与溪谷景观",
+    "caption": "九溪烟树",
+    "author": "Shizhao",
+    "license": "CC BY 1.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/1.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jiuxiyanshu.JPG"
+  },
+  "longjing-spring": {
+    "src": "/images/pois/longjing.jpg",
+    "alt": "杭州龙井茶村茶园",
+    "caption": "龙井泉周边龙井茶村景观",
+    "author": "Niklas Dougherty",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Longjing_tea_village_Hangzhou.jpg"
+  },
+  "paiyun": {
+    "src": "/images/pois/paiyun.jpg",
+    "alt": "黄山排云亭",
+    "caption": "排云亭",
+    "author": "Siyuwj",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Paiyun_Pavilion,_Huangshan,_2021-10-17_01.jpg"
+  }
+}

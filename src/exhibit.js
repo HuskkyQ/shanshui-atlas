@@ -1,22 +1,22 @@
 import './style.css';
 import huangshanLandmarks from './data/huangshan-landmarks.json';
-import westLakeLandmarks from './data/west-lake-landmarks.json';
-import originalWestLakeAttractions from './data/west-lake-attractions.json';
-import westLakeBuiltData from './data/west-lake-built-landmarks.json';
-import { getWestLakeBuiltPOIs } from './west-lake-built-pois.js';
-import westLakeTrailheads from './data/west-lake-trailheads.json';
-import westLakeHillSights from './data/west-lake-hill-sights.json';
+import { westLakePOIs, westLakePOIGroups } from './west-lake-pois.js';
+import { getScenicScene } from './scenic-scenes.js';
+import { createSceneSession } from './scene-session.js';
+import { createScenicUI } from './scenic-ui.js';
+import { createPOIPhoto } from './poi-photo.js';
 import westLakeRoutes from './data/west-lake-routes.json';
 import westLakeHikes from './data/west-lake-hikes.json';
 
 const isWestLake = new URLSearchParams(window.location.search).get('place') === 'west-lake';
-const westLakeAttractions = getWestLakeBuiltPOIs(westLakeBuiltData, originalWestLakeAttractions);
-document.title = isWestLake ? '西湖 · 山形志' : '黄山 · 山形志';
+const { mountains: westLakeLandmarks, attractions: westLakeAttractions, trailheads: westLakeTrailheads,
+  hillSights: westLakeHillSights } = westLakePOIGroups;
+document.title = isWestLake ? '西湖 · 山水志' : '黄山 · 山水志';
 document.querySelector('meta[name="description"]').content = isWestLake
   ? '以 Three.js 探索杭州西湖、真实湖岸与周边群山。'
   : '以 Three.js 探索黄山的奇峰、云海与迎客松。';
 const landmarks = isWestLake
-  ? [...westLakeTrailheads, ...westLakeHillSights, ...westLakeAttractions, ...westLakeLandmarks]
+  ? westLakePOIs
   : huangshanLandmarks;
 const westLakeRouteSource = 'https://wgly.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=c3ccb4250d3143a09047ee20fbe1170c.pdf';
 let renderRouteCredit;
@@ -90,15 +90,22 @@ const immersiveButton = document.querySelector('#immersive-toggle');
 const immersiveLabel = immersiveButton.querySelector('.immersive-label');
 const viewButtons = [...document.querySelectorAll('[data-view]')];
 const landmarkDetail = document.querySelector('#landmark-detail');
+const scenicEnter = document.querySelector('#scenic-enter');
+const showLandmarkPhoto = createPOIPhoto(document.querySelector('#landmark-photo'));
 
 function renderLandmark(landmark) {
+  const scenic = isWestLake && landmark.sceneId ? getScenicScene(landmark.sceneId) : null;
+  scenicEnter.hidden = !scenic?.enabled || scenic.hidden;
+  scenicEnter.dataset.sceneId = scenic?.id || '';
   const category = isWestLake
     ? (westLakeLandmarks.some((item) => item.id === landmark.id) ? '西湖群山' : landmark.category)
     : landmark.category === '上山口' ? '上山口' : null;
   document.querySelector('.landmark-kicker').innerHTML = `${category || '黄山名胜'} <b>LANDMARK</b>`;
   document.querySelector('#landmark-name').textContent = landmark.name;
-  document.querySelector('#landmark-description').textContent = landmark.description;
-  const source = category === '上山口' ? landmark.osm : (landmark.official || landmark.osm);
+  showLandmarkPhoto(landmark.id, landmark.name);
+  document.querySelector('#landmark-description').textContent = scenic?.description || landmark.description;
+  const source = scenic?.sources.find((item) => item.url === landmark.official)?.url
+    || (category === '上山口' ? landmark.osm : (landmark.official || landmark.osm));
   const sourceLink = document.querySelector('#landmark-source');
   sourceLink.hidden = !source;
   if (source) sourceLink.href = source;
@@ -146,6 +153,9 @@ try {
   const createScene = isWestLake ? (await import('./west-lake-scene.js')).createWestLakeScene
     : (await import('./scene.js')).createHuangshanScene;
   const exhibit = await createScene(document.querySelector('#canvas-wrap'), updateMotion, updateLightingStatus);
+  const scenicSession = isWestLake ? createSceneSession({ world: exhibit, scenes: getScenicScene }) : null;
+  const scenicUI = isWestLake ? createScenicUI({ session: scenicSession,
+    container: document.querySelector('#canvas-wrap'), entryButton: scenicEnter }) : null;
   updateMotion(exhibit.isMotionOn());
   updateCleanMode(exhibit.isCleanMode());
   let immersiveMode = false, pinnedHotspot = null;
@@ -154,7 +164,7 @@ try {
   const hotspots = [...canvasWrap.querySelectorAll('.scenic-hotspot, .trailhead-hotspot')];
 
   function hideImmersiveDetail() {
-    if (!immersiveMode) return;
+    if (!immersiveMode || scenicUI?.isOpen) return;
     pinnedHotspot?.classList.remove('is-pinned');
     pinnedHotspot = null;
     landmarkDetail.hidden = true;
@@ -206,7 +216,7 @@ try {
 
   immersiveButton.addEventListener('click', () => setImmersiveMode(!immersiveMode));
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && immersiveMode) {
+    if (event.key === 'Escape' && !event.defaultPrevented && immersiveMode && !scenicUI?.isOpen) {
       setImmersiveMode(false);
       immersiveButton.focus();
     }
@@ -219,8 +229,12 @@ try {
   });
   canvasWrap.addEventListener('click', (event) => {
     const hotspot = event.target.closest('.scenic-hotspot, .trailhead-hotspot');
-    if (immersiveMode && hotspot) {
+    if (immersiveMode && hotspot && !scenicUI?.isOpen) {
       event.stopPropagation();
+      if (isWestLake) {
+        const button = viewButtons.find((item) => item.dataset.view === hotspot.dataset.landmarkId);
+        if (button) selectView(button);
+      }
       showImmersiveDetail(hotspot, true);
     }
   }, true);
@@ -230,11 +244,11 @@ try {
   if (isWestLake) {
     exhibit.setPointCategory('上山口');
     document.querySelectorAll('.view-group').forEach((group) => group.addEventListener('toggle', () => {
-      if (group.open) exhibit.setPointCategory(group.dataset.pointCategory);
+      if (group.open && !immersiveMode) exhibit.setPointCategory(group.dataset.pointCategory);
     }));
   }
 
-  viewButtons.forEach((button) => button.addEventListener('click', () => {
+  function selectView(button) {
     exhibit.setView(button.dataset.view);
     const landmark = landmarks.find((item) => item.id === button.dataset.view);
     document.querySelector('#app').classList.toggle('is-trailheads', !isWestLake && button.dataset.view === 'trailheads');
@@ -259,11 +273,14 @@ try {
     } else if (isWestLake && button.dataset.view === 'top') {
       renderRouteCredit({ routes: westLakeRoutes.routes, title: '西湖步行路线', english: 'WALKING ROUTES', source: westLakeRouteSource });
     }
-  }));
+  }
+  viewButtons.forEach((button) => button.addEventListener('click', () => selectView(button)));
 
   motionButton.addEventListener('click', () => exhibit.toggleMotion());
   cleanButton.addEventListener('click', () => updateCleanMode(exhibit.toggleCleanMode()));
-  window.addEventListener('pagehide', (event) => { if (!event.persisted) exhibit.dispose(); });
+  window.addEventListener('pagehide', (event) => {
+    if (!event.persisted) { scenicUI?.dispose(); scenicSession?.dispose(); exhibit.dispose(); }
+  });
 } catch (error) {
   console.error('Failed to initialize landscape scene', error);
   document.querySelector('#scene-error').hidden = false;

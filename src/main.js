@@ -2,7 +2,15 @@ import './home.css';
 
 const place = new URLSearchParams(window.location.search).get('place');
 
-if (place === 'huangshan' || place === 'west-lake') {
+if (place === 'zhuozheng-garden') {
+  document.querySelector('.homepage').hidden = true;
+  const [{ default: gardenMarkup }] = await Promise.all([
+    import('./garden.html?raw'),
+    import('./garden.css'),
+  ]);
+  document.body.innerHTML = gardenMarkup;
+  await import('./garden.js');
+} else if (place === 'huangshan' || place === 'west-lake') {
   document.querySelector('.homepage').hidden = true;
   const [{ default: exhibitMarkup }] = await Promise.all([
     import('./exhibit.html?raw'),

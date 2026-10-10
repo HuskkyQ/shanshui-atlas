@@ -1,0 +1,45 @@
+{
+  "id": "santanyinyue",
+  "name": "三潭印月",
+  "englishName": "THREE POOLS MIRRORING THE MOON",
+  "description": "在湖面、三座石塔与小瀛洲岸线之间，近看西湖的园林意境。",
+  "modelNote": "三座石塔与局部岸线为艺术化近似，三塔布局未测绘；固定展陈日光，月影为文化介绍。",
+  "hotspots": [
+    {
+      "id": "towers",
+      "name": "三塔鼎立",
+      "description": "小瀛洲南面的湖水中，三座石塔按三角形分布，成为三潭印月的核心景观。模型只表达这种空间关系，不把艺术布局当作测绘位置。",
+      "source": {
+        "name": "杭州市文化广电旅游局 · 中秋赏月",
+        "url": "https://wgly.hangzhou.gov.cn/art/2023/8/23/art_1229733751_58948820.html"
+      }
+    },
+    {
+      "id": "tower-detail",
+      "name": "五孔石塔",
+      "description": "每座塔的中空塔体设有五个圆孔，传统赏月叙事中可在孔内置灯并以纸遮挡；模型用收腰瓶形轮廓概括塔形，未复原实测尺寸与构造。",
+      "source": {
+        "name": "杭州市文化广电旅游局 · 中秋赏月",
+        "url": "https://wgly.hangzhou.gov.cn/art/2023/8/23/art_1229733751_58948820.html"
+      }
+    },
+    {
+      "id": "island",
+      "name": "小瀛洲岸线",
+      "description": "小瀛洲是西湖三岛之一，岛上水面、堤岸和曲桥共同形成‘湖中有岛、岛中有湖’的江南园林格局；此处仅示意局部岸线。",
+      "source": {
+        "name": "杭州市文化广电旅游局 · 中秋赏月",
+        "url": "https://wgly.hangzhou.gov.cn/art/2023/8/23/art_1229733751_58948820.html"
+      }
+    },
+    {
+      "id": "moon-view",
+      "name": "月影意境",
+      "description": "灯烛、月光与湖面倒影共同构成‘三潭印月’的文化意境；本展以固定日光呈现石塔与湖面，不模拟实时月相或承诺实时倒影。",
+      "source": {
+        "name": "杭州市文化广电旅游局 · 中秋赏月",
+        "url": "https://wgly.hangzhou.gov.cn/art/2023/8/23/art_1229733751_58948820.html"
+      }
+    }
+  ]
+}

@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#182b31" />
-    <meta name="description" content="山形志：中国山水数字展陈。进入黄山与杭州西湖的三维微缩景观，在群峰与湖岸之间自由游望。" />
-    <title>山形志 · 中国山水数字展陈</title>
+    <meta name="description" content="山水志：中国山水与园林的三维漫游。进入黄山、西湖与拙政园的三维微缩景观，在群峰、湖岸与园林之间自由游望。" />
+    <title>山水志 · 中国山水与园林的三维漫游</title>
   </head>
   <body>
     <div class="homepage">
       <header class="home-header">
-        <a class="home-brand" href="./" aria-label="山形志首页">
+        <a class="home-brand" href="./" aria-label="山水志首页">
           <span class="home-brand-mark" aria-hidden="true">山</span>
-          <span class="home-brand-name">山形志</span>
-          <span class="home-brand-subtitle">中国山水数字展陈</span>
+          <span class="home-brand-name">山水志</span>
+          <span class="home-brand-subtitle">中国山水与园林</span>
         </a>
         <span class="home-header-note">山水有形，游望无界 <span aria-hidden="true">◆</span></span>
       </header>
@@ -24,7 +24,7 @@
             <p class="home-eyebrow"><span aria-hidden="true"></span> A DIGITAL LANDSCAPE COLLECTION</p>
             <h1 id="home-title">把山水，<em>放在眼前。</em></h1>
           </div>
-          <p class="home-intro-copy">从黄山的奇峰云海，到西湖的一湖碧水。<br />走进三维山水，换一个角度看风景。</p>
+          <p class="home-intro-copy">从黄山、西湖，到咫尺之间的江南园林。<br />走进三维山水，换一个角度看风景。</p>
         </section>
 
         <section id="landscapes" class="home-collection" aria-labelledby="collection-title">
@@ -76,11 +76,37 @@
             </article>
           </div>
         </section>
+        <section class="home-collection home-garden-collection" aria-labelledby="garden-collection-title">
+          <div class="home-collection-heading">
+            <h2 id="garden-collection-title">一方园林，自成山水</h2>
+            <span>01 <span aria-hidden="true">/</span> GARDENS</span>
+          </div>
+          <article class="landscape-card garden-card">
+            <a class="landscape-card-link" href="?place=zhuozheng-garden" aria-labelledby="garden-card-title garden-card-action">
+              <div class="landscape-image">
+                <img src="/src/assets/zhuozheng-preview.png" width="800" height="400" alt="拙政园中部园三维模型：中央池水、两座山岛与临水亭堂" loading="lazy" />
+                <span class="landscape-index" aria-hidden="true">03 <span>园</span></span>
+                <span class="landscape-coordinates" aria-hidden="true">31°N · 120°E</span>
+              </div>
+              <div class="landscape-info">
+                <div>
+                  <p class="landscape-location">江苏 · 苏州 <span>SUZHOU, CHINA</span></p>
+                  <h3 id="garden-card-title">拙政园 <span>ZHUOZHENG GARDEN</span></h3>
+                  <p class="landscape-description">池广林茂，亭廊相望。走近中部园的七处建筑。</p>
+                </div>
+                <span id="garden-card-action" class="landscape-action">进入园林 <span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+            <button class="landscape-favorite" type="button" data-place="zhuozheng-garden" data-name="拙政园" aria-label="收藏拙政园" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+            </button>
+          </article>
+        </section>
       </main>
 
       <footer class="home-footer">
         <p><span aria-hidden="true">◇</span> 进入景观后，拖动旋转 · 滚轮缩放 · 切换视角</p>
-        <span>山形志 <span aria-hidden="true">/</span> LANDSCAPE STUDY © 2026</span>
+        <span>山水志 <span aria-hidden="true">/</span> LANDSCAPE STUDY © 2026</span>
       </footer>
     </div>
     <script type="module" src="/src/main.js"></script>

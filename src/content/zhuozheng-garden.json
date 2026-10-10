@@ -1,0 +1,51 @@
+{
+  "id": "zhuozheng-garden",
+  "name": "拙政园",
+  "englishName": "HUMBLE ADMINISTRATOR’S GARDEN",
+  "description": "沿曲桥与池岸游望，在粉墙、黛瓦与荷风之间，读一座江南园林。",
+  "modelNote": "本场景展示中部园核心水景。布局参考公开地图与园林资料，建筑尺寸、山石、植被及构件为艺术化近似。",
+  "hotspots": [
+    {
+      "id": "yuanxiang-hall",
+      "name": "远香堂",
+      "description": "中部园的四面厅，北向面对主池与雪香云蔚亭。檐廊、窗扇和临水平台，让厅堂与水景彼此展开。名称取荷花的清香之意。",
+      "source": { "name": "苏州市园林局 · 建筑", "url": "https://ylj.suzhou.gov.cn/szsylj/ylys/201903/484421d38f504f5787a8f307925e3ad7.shtml" }
+    },
+    {
+      "id": "xuexiang-pavilion",
+      "name": "雪香云蔚亭",
+      "description": "依山形采用长方平面的山亭，与远香堂形成南北对景。亭名中的“雪香”指梅花，“云蔚”写山间树木的茂密。",
+      "source": { "name": "苏州市园林局 · 建筑与对景", "url": "https://ylj.suzhou.gov.cn/szsylj/ylys/201903/484421d38f504f5787a8f307925e3ad7.shtml" }
+    },
+    {
+      "id": "hefeng-pavilion",
+      "name": "荷风四面亭",
+      "description": "六角形的水景亭，周围荷叶与柳枝构成观景前景。从亭中可望香洲与倚玉轩，曲桥将池水分成相互连通的层次。",
+      "source": { "name": "苏州市园林局 · 荷风四面亭", "url": "https://ylj.suzhou.gov.cn/szsylj/ylwh/201604/2e7d818f206847ce9c1f74dd55d426bf.shtml" }
+    },
+    {
+      "id": "xiangzhou",
+      "name": "香洲",
+      "description": "一座临水的旱船，前、中、后三段高低错落，尾舱设楼。石基、窗扇与瓦顶勾勒画舫轮廓，南侧的小桥连接池岸。",
+      "source": { "name": "苏州市园林局 · 舫与临水建筑", "url": "https://ylj.suzhou.gov.cn/szsylj/ylys/201903/484421d38f504f5787a8f307925e3ad7.shtml" }
+    },
+    {
+      "id": "xiaofeihong",
+      "name": "小飞虹",
+      "description": "跨水的廊桥，既连接游览空间，又划分水面。开敞的柱间让桥两侧景物相互透见，转身便是不同的池岸层次。",
+      "source": { "name": "苏州市园林局 · 理水与桥廊", "url": "https://ylj.suzhou.gov.cn/szsylj/ylys/201903/df5a3bf3bdbd49b0b787076f355b1074.shtml" }
+    },
+    {
+      "id": "wuzhu-pavilion",
+      "name": "梧竹幽居",
+      "description": "方亭以梧桐与竹为主题植物。向西看，池水、山岛与临水建筑依次展开；亭与花木共同形成安静的观景角落。",
+      "source": { "name": "苏州市园林局 · 理水与观景", "url": "https://ylj.suzhou.gov.cn/szsylj/ylys/201903/df5a3bf3bdbd49b0b787076f355b1074.shtml" }
+    },
+    {
+      "id": "jianshan-lou",
+      "name": "见山楼",
+      "description": "中部园的重要楼阁。楼层与栏窗形成更高的观景位置，和低平的亭、廊、厅堂一起，组成沿水高低错落的园景。",
+      "source": { "name": "苏州市园林局 · 拙政园", "url": "https://ylj.suzhou.gov.cn/szsylj/sjyc/201905/c1df393edc8745abb20e8a9bd5525782.shtml" }
+    }
+  ]
+}

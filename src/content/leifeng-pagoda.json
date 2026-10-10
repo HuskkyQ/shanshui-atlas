@@ -1,0 +1,33 @@
+{
+  "id": "leifeng-pagoda",
+  "name": "雷峰塔",
+  "englishName": "LEIFENG PAGODA",
+  "description": "登临夕照山，在铜色檐廊与湖山之间游望。",
+  "modelNote": "现代塔形制的艺术化建模，周边湖山为示意；采用固定展陈日光。",
+  "hotspots": [
+    {
+      "id": "tower",
+      "name": "五层塔身",
+      "description": "现今雷峰塔于 2002 年重建。五层楼阁沿八面展开，钢架支撑着铜制柱、栏杆与屋瓦，呈现传统塔楼的轮廓。",
+      "source": { "name": "中国国家博物馆", "url": "https://www.chnmuseum.cn/zl/zlxw/202409/t20240918_270155.shtml" }
+    },
+    {
+      "id": "base",
+      "name": "塔基与遗址",
+      "description": "新塔下方保存着古塔遗址。保护罩将新塔与旧址联系在一起，让现代建筑承担文物保护与展示的功能。这里从外部观察台基，内部遗址未作复原。",
+      "source": { "name": "杭州网 · 宋韵迹忆", "url": "https://z.hangzhou.com.cn/2022/syjy/content/content_8421276.html" }
+    },
+    {
+      "id": "eaves",
+      "name": "铜檐与斗拱",
+      "description": "屋瓦、屋脊和斗拱以铜制作，涂层让构件呈现深沉的色调。斗拱在檐下层层承托，外挑的檐廊与栏杆构成楼阁式塔的节奏。",
+      "source": { "name": "中国国家博物馆", "url": "https://www.chnmuseum.cn/zl/zlxw/202409/t20240918_270155.shtml" }
+    },
+    {
+      "id": "lake-view",
+      "name": "西湖远眺",
+      "description": "雷峰塔立于西湖南岸夕照山。湖水、山色与塔影共同构成“雷峰夕照”的意境；转向湖面，体会塔与西湖之间的景观关系。",
+      "source": { "name": "杭州网 · 宋韵迹忆", "url": "https://z.hangzhou.com.cn/2022/syjy/content/content_8421276.html" }
+    }
+  ]
+}

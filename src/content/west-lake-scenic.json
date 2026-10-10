@@ -1,0 +1,57 @@
+[
+  {
+    "id": "leifeng-pagoda",
+    "poiId": "leifeng",
+    "name": "雷峰塔",
+    "status": "planned",
+    "description": "西湖南岸的塔景地标，与湖面和北岸群山相望。雷峰夕照是西湖十景之一；图中标记展示塔址，步行线经过附近步道。",
+    "sources": [
+      {
+        "name": "OpenStreetMap 建筑范围",
+        "url": "https://www.openstreetmap.org/way/229726934"
+      },
+      {
+        "name": "杭州市文化广电旅游局",
+        "url": "https://wgly.hangzhou.gov.cn/art/2022/12/1/art_1229696389_58943150.html"
+      }
+    ]
+  },
+  {
+    "id": "lingyin-temple",
+    "poiId": "lingyin-temple",
+    "name": "灵隐寺",
+    "status": "planned",
+    "description": "北高峰山麓、飞来峰旁的佛教寺院。可从模型观察寺院与北高峰登山步道的上下山关系。",
+    "sources": [
+      {
+        "name": "OpenStreetMap 点位",
+        "url": "https://www.openstreetmap.org/node/1218588822"
+      },
+      {
+        "name": "杭州网西湖名胜资料",
+        "url": "https://ywhz.hangzhou.com.cn/zjwh/content/content_6220379.htm"
+      }
+    ]
+  },
+  {
+    "id": "santanyinyue",
+    "poiId": "santan",
+    "name": "三潭印月",
+    "status": "planned",
+    "description": "小瀛洲南面的湖水中，三座瓶形石塔鼎立。塔腹各有五个圆孔，月夜灯影与水中倒影构成“三潭印月”的意境。",
+    "sources": [
+      {
+        "name": "OpenStreetMap 景区范围",
+        "url": "https://www.openstreetmap.org/way/975360503"
+      },
+      {
+        "name": "OpenStreetMap 已确认石塔点位",
+        "url": "https://www.openstreetmap.org/node/9025997767"
+      },
+      {
+        "name": "杭州市文化广电旅游局",
+        "url": "https://wgly.hangzhou.gov.cn/attach/538/2307051510367229.pdf"
+      }
+    ]
+  }
+]

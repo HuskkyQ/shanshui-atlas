@@ -19,7 +19,7 @@
       <header class="site-header">
         <a class="brand" href="./" aria-label="返回首页" title="返回首页">
           <span class="brand-mark" aria-hidden="true">山</span>
-          <span class="brand-name">山形志</span>
+          <span class="brand-name">山水志</span>
           <span class="brand-divider" aria-hidden="true"></span>
           <span class="brand-subtitle">← 返回首页</span>
         </a>
@@ -63,9 +63,11 @@
         <section id="landmark-detail" class="landmark-detail" aria-label="景点介绍" hidden>
           <span class="landmark-kicker">黄山名胜 <b>LANDMARK</b></span>
           <h2 id="landmark-name"></h2>
+          <div id="landmark-photo"></div>
           <p id="landmark-description"></p>
           <a id="landmark-source" target="_blank" rel="noreferrer">景区资料 ↗</a>
           <small>模型位置为公开地图近似坐标；实地通行以景区公告为准。</small>
+          <button id="scenic-enter" class="scenic-enter" hidden>进入景点 ↗</button>
         </section>
 
         <div class="scene-caption" aria-hidden="true"><span class="caption-cross">＋</span> 奇峰入云 <span> / </span> SCULPTED BY STONE & MIST</div>
@@ -97,4 +99,24 @@
         <span class="footer-credit">THREE-DIMENSIONAL LANDSCAPE STUDY <span>© 2026</span></span>
       </footer>
       <div id="scene-error" class="scene-error" role="alert" hidden>当前浏览器无法显示 3D 场景，请开启 WebGL 或更换浏览器。</div>
+      <section id="scenic-ui" class="scenic-ui" aria-label="独立景点浏览" hidden>
+        <header class="scenic-header">
+          <button id="scenic-back" class="scenic-back">← 返回西湖</button>
+          <div><span>西湖 · 景点近游</span><h1 id="scenic-title">景点近游</h1></div>
+          <button id="scenic-reset" class="scenic-reset">全景</button>
+        </header>
+        <div id="scenic-loading" class="scenic-loading" role="status" hidden>
+          <p id="scenic-status">正在准备景点…</p>
+          <button id="scenic-retry" class="scenic-enter" hidden>重试</button>
+        </div>
+        <aside id="scenic-content" class="scenic-content" aria-label="景点文化介绍" hidden>
+          <span class="scenic-kicker" id="scenic-kicker"></span>
+          <h2 id="scenic-hotspot-name"></h2>
+          <div id="scenic-photo"></div>
+          <p id="scenic-description"></p>
+          <a id="scenic-source" target="_blank" rel="noreferrer" hidden></a>
+          <nav id="scenic-hotspots" class="scenic-hotspots" aria-label="景点探索点"></nav>
+        </aside>
+        <footer class="scenic-footer"><span>左键旋转 · Shift＋左键平移 · 滚轮缩放</span><small id="scenic-note"></small></footer>
+      </section>
     </div>

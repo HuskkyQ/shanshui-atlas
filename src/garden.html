@@ -1,0 +1,37 @@
+<div id="garden-app">
+      <div class="garden-canvas-wrap" id="garden-canvas" aria-label="可旋转的拙政园中部园三维场景"></div>
+      <div class="garden-wash" aria-hidden="true"></div>
+      <header class="garden-header">
+        <a class="garden-brand" href="./" aria-label="返回首页"><span class="garden-mark" aria-hidden="true">园</span><span>山水志</span><small>拙政园 · 返回首页</small></a>
+        <button id="garden-immersive" class="garden-control" type="button" aria-pressed="false">沉浸式体验</button>
+      </header>
+      <main class="garden-main">
+        <section class="garden-intro" aria-labelledby="garden-title">
+          <p class="garden-eyebrow">JIANGNAN GARDEN · SUZHOU</p>
+          <h1 id="garden-title">拙政<span>园</span></h1>
+          <p id="garden-english" class="garden-english">ZHUOZHENG GARDEN</p>
+          <p id="garden-description" class="garden-description"></p>
+          <p class="garden-gesture">拖动旋转 · 滚轮缩放<br />Shift＋拖动平移</p>
+          <p id="garden-model-note" class="garden-model-note"></p>
+          <a class="garden-attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">地图轮廓 © OpenStreetMap 贡献者</a>
+        </section>
+        <aside class="garden-explorer" aria-label="拙政园景点探索">
+          <div class="garden-explorer-head"><span>中部园 · 七处景点</span><button id="garden-reset" type="button">总览</button></div>
+          <nav id="garden-hotspots" class="garden-hotspots" aria-label="选择景点"></nav>
+          <article id="garden-detail" class="garden-detail" aria-live="polite">
+            <p class="garden-detail-kicker">GARDEN VIEW</p>
+            <h2 id="garden-detail-name">拙政园中部园</h2>
+            <p id="garden-detail-description"></p>
+            <div id="garden-photo-empty" class="garden-photo-empty">照片资料暂未取得</div>
+            <a id="garden-source" target="_blank" rel="noreferrer"></a>
+          </article>
+        </aside>
+      </main>
+      <div id="garden-loading" class="garden-loading" role="status">正在展开庭园…</div>
+      <div id="garden-error" class="garden-error" hidden>
+        <p>园林暂时无法打开，请重试。</p>
+        <button id="garden-retry" type="button">重试</button>
+        <a href="./">返回首页</a>
+      </div>
+      <button id="garden-exit-immersive" class="garden-exit-immersive" type="button" hidden>退出沉浸</button>
+    </div>

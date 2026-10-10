@@ -1,0 +1,51 @@
+{
+  "id": "lingyin-temple",
+  "name": "灵隐寺",
+  "englishName": "LINGYIN TEMPLE",
+  "description": "沿五进院落向北高峰拾级而上，近看灵隐寺主轴与两翼殿堂的空间层次。",
+  "modelNote": "建筑外观为艺术化近似，平面参考 OSM 建筑轮廓；台地高差、构件尺寸与室内细节尚未测绘。场景采用固定展陈日光。",
+  "hotspots": [
+    {
+      "id": "tianwang",
+      "name": "天王殿",
+      "description": "山门内第一重殿，位于灵隐寺五进中轴的起点；殿前与飞来峰相对。",
+      "source": { "name": "灵隐寺官网 · 千年古寺 大慈灵隐", "url": "https://www.lingyinsi.org/detail_44_7946.html" }
+    },
+    {
+      "id": "daxiong",
+      "name": "大雄宝殿",
+      "description": "中轴第二重正殿，官方资料记为面阔七间、进深四间；本模型概括其单层殿身和多道歇山檐线。",
+      "source": { "name": "灵隐寺官方导览 · 大雄宝殿", "url": "https://jp.lingyinsi.org/list_163.html" }
+    },
+    {
+      "id": "yaoshi",
+      "name": "药师殿",
+      "description": "位于大雄宝殿之后的第三重殿，面阔七间、进深三间，采用单层重檐歇山顶。",
+      "source": { "name": "灵隐寺官网 · 千年古寺 大慈灵隐", "url": "https://www.lingyinsi.org/detail_44_7946.html" }
+    },
+    {
+      "id": "zhizhi",
+      "name": "直指堂",
+      "description": "中轴第四进。官方导览将同一建筑标为顶层藏经楼、中层法堂和底层文物展厅。",
+      "source": { "name": "灵隐寺官网 · 寺院导览", "url": "https://www.lingyinsi.org/map/default.html" }
+    },
+    {
+      "id": "huayan",
+      "name": "华严殿",
+      "description": "五进中轴的末端，位于寺院最高处；官方导览称其比法堂高约一百五十级台阶。",
+      "source": { "name": "灵隐寺官方导览 · 华严殿", "url": "https://jp.lingyinsi.org/list_166.html" }
+    },
+    {
+      "id": "luohan",
+      "name": "五百罗汉堂",
+      "description": "大雄宝殿西侧的附属建筑群，以卍字形平面和双檐、翘檐的外观特征辨识。",
+      "source": { "name": "灵隐寺官方导览 · 五百罗汉堂", "url": "https://jp.lingyinsi.org/list_168.html" }
+    },
+    {
+      "id": "jigong",
+      "name": "济公殿",
+      "description": "位于药师殿东侧、东禅堂下，是寺内纪念道济禅师的附属殿堂。",
+      "source": { "name": "灵隐寺官方导览 · 济公殿", "url": "https://jp.lingyinsi.org/list_167.html" }
+    }
+  ]
+}

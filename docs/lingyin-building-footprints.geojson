@@ -1,0 +1,588 @@
+{
+  "type": "FeatureCollection",
+  "name": "lingyin-research-building-footprints",
+  "retrievedAt": "2026-10-04",
+  "coordinateReferenceSystem": "WGS84 longitude, latitude (GeoJSON RFC 7946)",
+  "dataSource": "https://api.openstreetmap.org/api/0.6/map?bbox=120.094,30.241,120.099,30.246",
+  "attribution": "© OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "licenseUrl": "https://www.openstreetmap.org/copyright",
+  "scope": "10 selected named building outlines; not a temple boundary or exhaustive plan.",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "way/195072255",
+      "properties": {
+        "name": "五百罗汉堂",
+        "displayName": "五百罗汉堂",
+        "group": "wing",
+        "osmVersion": 5,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/195072255",
+        "osmTags": {
+          "building": "temple",
+          "building:levels": "1",
+          "colour": "yellow",
+          "name": "五百罗汉堂",
+          "note:en": "a swastika-shaped building filled with Buddha statues",
+          "source": "Bing"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0962524,
+              30.2427293
+            ],
+            [
+              120.0963018,
+              30.2425955
+            ],
+            [
+              120.0960824,
+              30.2425351
+            ],
+            [
+              120.0960983,
+              30.242492
+            ],
+            [
+              120.0963267,
+              30.2425549
+            ],
+            [
+              120.0963488,
+              30.242495
+            ],
+            [
+              120.096445,
+              30.242234
+            ],
+            [
+              120.0962815,
+              30.242189
+            ],
+            [
+              120.0962098,
+              30.2423834
+            ],
+            [
+              120.0961422,
+              30.2423648
+            ],
+            [
+              120.0962145,
+              30.2421687
+            ],
+            [
+              120.0958635,
+              30.2420721
+            ],
+            [
+              120.0958073,
+              30.2422245
+            ],
+            [
+              120.0960314,
+              30.2422862
+            ],
+            [
+              120.0960125,
+              30.2423374
+            ],
+            [
+              120.0957814,
+              30.2422738
+            ],
+            [
+              120.0956702,
+              30.2425754
+            ],
+            [
+              120.0958449,
+              30.2426234
+            ],
+            [
+              120.095912,
+              30.2424414
+            ],
+            [
+              120.0959681,
+              30.2424568
+            ],
+            [
+              120.0959031,
+              30.2426332
+            ],
+            [
+              120.0962524,
+              30.2427293
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434365023",
+      "properties": {
+        "name": "天王殿",
+        "displayName": "天王殿",
+        "group": "axis",
+        "osmVersion": 1,
+        "osmTimestamp": "2016-07-28T13:35:12Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434365023",
+        "osmTags": {
+          "amenity": "place_of_worship",
+          "building": "yes",
+          "name": "天王殿",
+          "religion": "buddhist",
+          "source": "bing, own photos, tourist map"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.096723,
+              30.2423951
+            ],
+            [
+              120.0967928,
+              30.2422142
+            ],
+            [
+              120.0971447,
+              30.2423156
+            ],
+            [
+              120.0970749,
+              30.2424965
+            ],
+            [
+              120.096723,
+              30.2423951
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434365024",
+      "properties": {
+        "name": "大雄宝殿",
+        "displayName": "大雄宝殿",
+        "group": "axis",
+        "osmVersion": 2,
+        "osmTimestamp": "2019-04-30T15:29:02Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434365024",
+        "osmTags": {
+          "amenity": "place_of_worship",
+          "building": "yes",
+          "name": "大雄宝殿",
+          "name:en": "Daxiong Hall",
+          "religion": "buddhist",
+          "source": "bing, own photos, tourist map"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0964059,
+              30.243163
+            ],
+            [
+              120.0965181,
+              30.2428747
+            ],
+            [
+              120.0969382,
+              30.2429968
+            ],
+            [
+              120.096826,
+              30.243285
+            ],
+            [
+              120.0964059,
+              30.243163
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434365025",
+      "properties": {
+        "name": "药师殿",
+        "displayName": "药师殿",
+        "group": "axis",
+        "osmVersion": 2,
+        "osmTimestamp": "2016-07-28T13:39:27Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434365025",
+        "osmTags": {
+          "amenity": "place_of_worship",
+          "building": "yes",
+          "name": "药师殿",
+          "religion": "buddhist"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.096187,
+              30.2436668
+            ],
+            [
+              120.0962164,
+              30.2435913
+            ],
+            [
+              120.0962549,
+              30.2434922
+            ],
+            [
+              120.0962831,
+              30.2434196
+            ],
+            [
+              120.0967222,
+              30.243547
+            ],
+            [
+              120.0967012,
+              30.2436008
+            ],
+            [
+              120.0966635,
+              30.243698
+            ],
+            [
+              120.0966261,
+              30.2437942
+            ],
+            [
+              120.096187,
+              30.2436668
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434365308",
+      "properties": {
+        "name": "济公殿",
+        "displayName": "济公殿",
+        "group": "wing",
+        "osmVersion": 2,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434365308",
+        "osmTags": {
+          "building": "yes",
+          "name": "济公殿"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0967902,
+              30.2435852
+            ],
+            [
+              120.0967758,
+              30.2436225
+            ],
+            [
+              120.096738,
+              30.2437196
+            ],
+            [
+              120.0967226,
+              30.2437594
+            ],
+            [
+              120.0969851,
+              30.2438355
+            ],
+            [
+              120.0970528,
+              30.2436614
+            ],
+            [
+              120.0967902,
+              30.2435852
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434366739",
+      "properties": {
+        "name": "灵隐寺文物展厅",
+        "displayName": "文物展厅",
+        "group": "candidate",
+        "osmVersion": 4,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434366739",
+        "osmTags": {
+          "amenity": "place_of_worship",
+          "building": "yes",
+          "name": "灵隐寺文物展厅",
+          "religion": "buddhist"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Possible footprint for the bottom exhibition floor of Zhizhi Hall; not confirmed for the entire hall."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.096123,
+              30.244038
+            ],
+            [
+              120.0962051,
+              30.2438296
+            ],
+            [
+              120.0965214,
+              30.2439225
+            ],
+            [
+              120.0964393,
+              30.244131
+            ],
+            [
+              120.096123,
+              30.244038
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/434366741",
+      "properties": {
+        "name": "华严殿",
+        "displayName": "华严殿",
+        "group": "axis",
+        "osmVersion": 1,
+        "osmTimestamp": "2016-07-28T13:42:19Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/434366741",
+        "osmTags": {
+          "amenity": "place_of_worship",
+          "building": "yes",
+          "name": "华严殿"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0958683,
+              30.2445939
+            ],
+            [
+              120.0959445,
+              30.2443982
+            ],
+            [
+              120.0963156,
+              30.2445061
+            ],
+            [
+              120.0962394,
+              30.2447017
+            ],
+            [
+              120.0958683,
+              30.2445939
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676045743",
+      "properties": {
+        "name": "大悲楼",
+        "displayName": "大悲楼",
+        "group": "wing",
+        "osmVersion": 2,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/676045743",
+        "osmTags": {
+          "building": "temple",
+          "name": "大悲楼"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0971826,
+              30.2434478
+            ],
+            [
+              120.097442,
+              30.2435208
+            ],
+            [
+              120.0975119,
+              30.2433356
+            ],
+            [
+              120.0972524,
+              30.2432626
+            ],
+            [
+              120.0971826,
+              30.2434478
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676045745",
+      "properties": {
+        "name": "联灯阁",
+        "displayName": "联灯阁",
+        "group": "wing",
+        "osmVersion": 2,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/676045745",
+        "osmTags": {
+          "building": "temple",
+          "name": "联灯阁"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0972839,
+              30.2431946
+            ],
+            [
+              120.0975381,
+              30.2432661
+            ],
+            [
+              120.0975982,
+              30.2431067
+            ],
+            [
+              120.097344,
+              30.2430351
+            ],
+            [
+              120.0972839,
+              30.2431946
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676045757",
+      "properties": {
+        "name": "方丈楼",
+        "displayName": "方丈楼",
+        "group": "wing",
+        "osmVersion": 2,
+        "osmTimestamp": "2025-07-17T13:53:08Z",
+        "sourceUrl": "https://www.openstreetmap.org/way/676045757",
+        "osmTags": {
+          "building": "temple",
+          "name": "方丈楼"
+        },
+        "accuracy": "Approximate OSM footprint; not a survey.",
+        "interpretation": "Name and outline as mapped in OSM."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.0977388,
+              30.2437163
+            ],
+            [
+              120.0975303,
+              30.2436559
+            ],
+            [
+              120.0975039,
+              30.2437238
+            ],
+            [
+              120.0974621,
+              30.2438317
+            ],
+            [
+              120.0974401,
+              30.2438884
+            ],
+            [
+              120.097465,
+              30.2438956
+            ],
+            [
+              120.0974513,
+              30.2439309
+            ],
+            [
+              120.0976349,
+              30.2439841
+            ],
+            [
+              120.0977388,
+              30.2437163
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "tagUse": "Raw OSM tags are mapping metadata. Height and building:levels are unverified; do not treat them as surveyed values or automatic model parameters."
+}

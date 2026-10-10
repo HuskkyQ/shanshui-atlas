@@ -55,15 +55,16 @@ button { font: inherit; }
 .trailhead-overlay { position: absolute; inset: 0; pointer-events: none; }
 .trailhead-hotspot { position: relative; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
 .trailhead-hotspot:focus-visible { outline: none; }
-.trailhead-label { position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; padding: 7px 10px; border: 1px solid rgba(240, 203, 134, 0.8); color: #f7f1df; background: rgba(15, 34, 38, 0.9); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22); white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.16s ease, visibility 0.16s ease; }
+.trailhead-label { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; padding: 7px 10px; border: 0; color: #f7f1df; background: transparent; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.65); white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: auto; transition: opacity 0.16s ease, visibility 0.16s ease; }
 .trailhead-hotspot:hover .trailhead-label, .trailhead-hotspot:focus-visible .trailhead-label, .trailhead-hotspot.is-open .trailhead-label { opacity: 1; visibility: visible; }
 .trailhead-number { color: #f0cb86; font-size: 10px; letter-spacing: 0.08em; }
 .trailhead-text { font: 500 13px/1.2 'Noto Serif SC', 'Songti SC', serif; letter-spacing: 0.07em; }
 .trailhead-text small { display: block; margin-top: 3px; color: #aebdb4; font: 9px/1.2 'DM Sans', 'PingFang SC', sans-serif; letter-spacing: 0.1em; }
 .scenic-hotspot { position: relative; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
 .scenic-hotspot:focus-visible { outline: none; }
-.scenic-hotspot span { position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); padding: 5px 8px; border: 1px solid rgba(240, 203, 134, 0.8); color: #f7f1df; background: rgba(15, 34, 38, 0.92); font: 500 11px/1.3 'Noto Serif SC', 'Songti SC', serif; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; }
+.scenic-hotspot span { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); padding: 5px 8px; border: 0; color: #f7f1df; background: transparent; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.65); font: 500 11px/1.3 'Noto Serif SC', 'Songti SC', serif; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: auto; }
 .scenic-hotspot:hover span, .scenic-hotspot:focus-visible span, .scenic-hotspot.is-active span { opacity: 1; visibility: visible; }
+.scenic-hotspot[data-importance="3"] span { opacity: 1; visibility: visible; }
 
 .compass { position: absolute; z-index: 3; right: 2.7%; bottom: 108px; width: 78px; height: 78px; border: 1px solid rgba(232, 235, 218, 0.28); border-radius: 50%; background: rgba(14, 33, 38, 0.72); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); pointer-events: none; }
 .compass svg { display: block; width: 100%; height: 100%; transform-origin: center; }
@@ -183,7 +184,7 @@ main { position: relative; z-index: 3; pointer-events: none; }
 #app.is-landmark .trailhead-credit { display: none; }
 #app.is-clean .trailhead-credit { display: none; }
 #app.is-trailheads .motion-toggle { display: none; }
-.landmark-detail { position: absolute; top: clamp(92px, 14vh, 150px); left: 9.3%; max-width: 260px; color: var(--ivory); pointer-events: auto; }
+.landmark-detail { position: absolute; top: clamp(50px, 8vh, 90px); left: 9.3%; width: 260px; max-width: 260px; max-height: calc(100dvh - 240px); overflow-y: auto; color: var(--ivory); pointer-events: auto; }
 .landmark-detail[hidden] { display: none; }
 .landmark-kicker { color: var(--gold); font-size: 10px; letter-spacing: 0.18em; }
 .landmark-kicker b { margin-left: 6px; font-size: 8px; font-weight: 500; }
@@ -191,6 +192,15 @@ main { position: relative; z-index: 3; pointer-events: none; }
 .landmark-detail p { margin: 0 0 12px; color: #d9e0d9; font: 12px/1.8 'Noto Serif SC', 'Songti SC', serif; }
 .landmark-detail a { color: var(--gold); font-size: 10px; text-decoration: none; }
 .landmark-detail small { display: block; margin-top: 12px; color: #aebdb4; font-size: 9px; line-height: 1.6; }
+.poi-photo { margin: 0 0 14px; }
+.poi-photo-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: rgba(18, 42, 44, 0.88); }
+.poi-photo-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.poi-photo-media img[hidden], .poi-photo-status[hidden] { display: none; }
+.poi-photo-status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 11px; }
+.poi-photo figcaption { display: grid; gap: 3px; margin-top: 6px; color: var(--muted); font-size: 9px; line-height: 1.5; overflow-wrap: anywhere; }
+.poi-photo figcaption a { font-size: 9px; }
+.poi-photo-credit { display: flex; flex-wrap: wrap; gap: 3px 8px; }
+.landmark-detail .poi-photo-empty, .scenic-content .poi-photo-empty { margin: 0; padding: 10px 0; color: var(--muted); font-size: 10px; }
 
 main { height: calc(100% - 182px); }
 
@@ -301,8 +311,8 @@ h1 span { display: inline-block; transform: translateY(25px); }
 #app.is-west-lake .route-legend i { background: var(--route-color); }
 .is-hiking-view .scenic-hotspot.is-mountain span { opacity: 1; visibility: visible; }
 .is-route-view .scenic-hotspot.is-attraction span { opacity: 1; visibility: visible; }
-.is-route-view .scenic-hotspot.label-below span { top: calc(100% + 2px); bottom: auto; }
-.is-hiking-view .scenic-hotspot.label-below span { top: calc(100% + 2px); bottom: auto; }
+.is-route-view .scenic-hotspot.label-below span { top: 100%; bottom: auto; }
+.is-hiking-view .scenic-hotspot.label-below span { top: 100%; bottom: auto; }
 .scenic-hotspot.is-trailhead, .scenic-hotspot.is-hill-sight { width: 29px; height: 29px; z-index: 1000 !important; }
 .scenic-hotspot.is-trailhead span, .scenic-hotspot.is-hill-sight span { opacity: 0; visibility: hidden; }
 .landmark-icon { display: block; width: 22px; height: 22px; margin: auto; overflow: visible; opacity: 0.86; transform: none; transform-origin: center; pointer-events: none; transition: opacity 0.18s ease, filter 0.18s ease; }
@@ -319,6 +329,7 @@ h1 span { display: inline-block; transform: translateY(25px); }
 .scenic-hotspot.is-trailhead::after, .scenic-hotspot.is-hill-sight::after { content: none !important; display: none; }
 .scenic-hotspot.is-trailhead:hover span, .scenic-hotspot.is-trailhead:focus-visible span, .scenic-hotspot.is-trailhead.is-active span,
 .scenic-hotspot.is-hill-sight:hover span, .scenic-hotspot.is-hill-sight:focus-visible span, .scenic-hotspot.is-hill-sight.is-active span { opacity: 1; visibility: visible; }
+.scenic-hotspot.is-hill-sight[data-importance="3"] span { opacity: 1; visibility: visible; }
 
 @media (min-width: 651px) {
   #app.is-west-lake .view-nav { padding: 12px 10px; background: rgba(13, 32, 37, 0.72); border: 1px solid var(--line); }
@@ -400,7 +411,7 @@ h1 span { display: inline-block; transform: translateY(25px); }
   .trailhead-credit { top: 86px; left: 9%; font-size: 10px; }
   #app.is-west-lake .trailhead-credit { top: 20px; padding: 9px; background: rgba(13, 32, 37, 0.85); border: 1px solid var(--line); }
   #app.is-immersive .immersive-toggle { top: 18px; right: 9%; padding: 8px 9px; font-size: 9px; }
-  .landmark-detail { top: 86px; left: 9%; max-width: 190px; }
+  .landmark-detail { top: 86px; left: 9%; max-width: 190px; max-height: calc(100dvh - 360px); }
   .landmark-detail h2 { margin-top: 9px; font-size: 27px; }
   .landmark-detail p { font-size: 10px; line-height: 1.6; }
   .landmark-detail small { margin-top: 7px; font-size: 8px; }
@@ -477,4 +488,55 @@ h1 span { display: inline-block; transform: translateY(25px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+.scenic-enter { display: inline-flex; align-items: center; margin-top: 16px; padding: 10px 15px; border: 1px solid var(--gold); color: var(--ivory); background: rgba(25, 51, 54, 0.9); cursor: pointer; font-size: 12px; letter-spacing: 0.08em; }
+.scenic-enter:hover, .scenic-enter:focus-visible { background: #48645d; outline: 1px solid var(--gold); outline-offset: 3px; }
+.scenic-enter[hidden], .scenic-ui[hidden], .scenic-ui [hidden], #canvas-wrap > [hidden] { display: none !important; }
+#app.is-scenic > .site-header, #app.is-scenic > main, #app.is-scenic > .site-footer, #app.is-scenic > .compass { visibility: hidden; }
+#app.is-scenic::before { background: linear-gradient(180deg, rgba(10, 29, 32, 0.35), transparent 22%, transparent 75%, rgba(10, 29, 32, 0.4)); }
+.scenic-ui { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+.scenic-header { position: absolute; top: 26px; left: 4%; right: 4%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.scenic-header > div { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; }
+.scenic-header span, .scenic-kicker { color: var(--gold); font-size: 10px; letter-spacing: 0.16em; }
+.scenic-header h1 { margin: 6px 0 0; font: 500 27px/1.3 'Noto Serif SC', serif; letter-spacing: 0.18em; }
+.scenic-back, .scenic-reset { pointer-events: auto; padding: 11px 16px; border: 1px solid var(--line); background: rgba(17, 39, 41, 0.85); color: var(--ivory); cursor: pointer; font-size: 12px; }
+.scenic-back:hover, .scenic-reset:hover, .scenic-hotspots button:hover { border-color: var(--gold); }
+.scenic-back:focus-visible, .scenic-reset:focus-visible, .scenic-hotspots button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.scenic-content { position: absolute; right: 4%; bottom: 95px; width: 290px; max-height: calc(100dvh - 190px); overflow-y: auto; padding: 20px; border: 1px solid rgba(211, 177, 122, 0.35); background: rgba(13, 34, 37, 0.92); pointer-events: auto; }
+.scenic-content h2 { margin: 10px 0; font: 500 25px/1.3 'Noto Serif SC', serif; letter-spacing: 0.08em; }
+.scenic-content p { margin: 0 0 12px; color: #d6dfd6; font-size: 12px; line-height: 1.8; }
+.scenic-content a { color: var(--gold); font-size: 10px; text-decoration: none; }
+.scenic-hotspots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 17px; }
+.scenic-hotspots button { padding: 9px 6px; border: 1px solid var(--line); color: var(--ivory); background: transparent; cursor: pointer; font-size: 11px; white-space: nowrap; }
+.scenic-hotspots button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); background: rgba(211, 177, 122, 0.08); }
+.scenic-footer { position: absolute; left: 4%; right: 4%; bottom: 30px; display: flex; gap: 20px; justify-content: space-between; color: #c1d0c6; font-size: 10px; }
+.scenic-footer small { max-width: 370px; font-size: 10px; line-height: 1.5; text-align: right; }
+.scenic-loading { position: absolute; inset: 92px 0 0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--ivory); background: rgba(13, 34, 37, 0.68); pointer-events: auto; }
+.scenic-loading p { max-width: 280px; padding: 0 20px; font-size: 14px; line-height: 1.7; text-align: center; }
+#app.is-entering-scenic .scenic-loading { inset: auto; bottom: 85px; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 40px); padding: 4px 12px; background: rgba(13, 34, 37, 0.82); border: 1px solid var(--line); }
+.scenic-arrival-canvas { position: absolute; inset: 0; z-index: 1; opacity: 0; }
+.leifeng-hotspot-overlay { z-index: 2; opacity: 0; }
+#app.is-leaving-scenic .scenic-ui { opacity: 0; transition: opacity 1.1s ease-in-out; }
+.leifeng-scene-hotspot span { opacity: 1; visibility: visible; }
+.lingyin-scene-hotspot span,
+#app.is-route-view .lingyin-scene-hotspot span { opacity: 0; visibility: hidden; }
+.lingyin-scene-hotspot:hover span, .lingyin-scene-hotspot:focus-visible span, .lingyin-scene-hotspot.is-active span,
+#app.is-route-view .lingyin-scene-hotspot:hover span, #app.is-route-view .lingyin-scene-hotspot:focus-visible span, #app.is-route-view .lingyin-scene-hotspot.is-active span { opacity: 1; visibility: visible; }
+
+@media (max-width: 650px) {
+  .scenic-header { top: 22px; left: 20px; right: 20px; gap: 8px; }
+  .scenic-header h1 { font-size: 21px; }
+  .scenic-header span { font-size: 8px; letter-spacing: 0.05em; }
+  .scenic-back, .scenic-reset { padding: 9px 10px; font-size: 11px; }
+  .scenic-content { left: 20px; right: 20px; bottom: 83px; width: auto; padding: 14px 16px; }
+  .scenic-content h2 { margin: 7px 0; font-size: 21px; }
+  .scenic-content p { margin-bottom: 8px; font-size: 11px; line-height: 1.6; }
+  .scenic-content .poi-photo-media { aspect-ratio: auto; height: 110px; }
+  .scenic-content .poi-photo-media img { object-fit: contain; }
+  .scenic-hotspots { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin-top: 12px; }
+  .scenic-hotspots button { padding: 9px 2px; font-size: 9px; }
+  .scenic-kicker { font-size: 8px; }
+  .scenic-footer { left: 20px; right: 20px; bottom: 22px; flex-direction: column; gap: 5px; font-size: 9px; }
+  .scenic-footer small { max-width: none; font-size: 8px; text-align: left; }
 }
