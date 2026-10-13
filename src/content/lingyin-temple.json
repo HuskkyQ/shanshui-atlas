@@ -3,7 +3,7 @@
   "name": "灵隐寺",
   "englishName": "LINGYIN TEMPLE",
   "description": "沿五进院落向北高峰拾级而上，近看灵隐寺主轴与两翼殿堂的空间层次。",
-  "modelNote": "建筑外观为艺术化近似，平面参考 OSM 建筑轮廓；台地高差、构件尺寸与室内细节尚未测绘。场景采用固定展陈日光。",
+  "modelNote": "主殿布局参考公开建筑轮廓，并用航拍核对院落关系；院墙、廊房、台地与构件为艺术化近似。场景采用固定展陈日光。",
   "hotspots": [
     {
       "id": "tianwang",
@@ -14,7 +14,7 @@
     {
       "id": "daxiong",
       "name": "大雄宝殿",
-      "description": "中轴第二重正殿，官方资料记为面阔七间、进深四间；本模型概括其单层殿身和多道歇山檐线。",
+      "description": "中轴第二重正殿，面阔七间、进深四间，单层殿身配三重歇山檐线。其前方为天王殿后侧的开放上香院；海岛观音群雕位于殿内后壁。",
       "source": { "name": "灵隐寺官方导览 · 大雄宝殿", "url": "https://jp.lingyinsi.org/list_163.html" }
     },
     {
@@ -25,7 +25,7 @@
     },
     {
       "id": "zhizhi",
-      "name": "直指堂",
+      "name": "直指堂／藏经楼",
       "description": "中轴第四进。官方导览将同一建筑标为顶层藏经楼、中层法堂和底层文物展厅。",
       "source": { "name": "灵隐寺官网 · 寺院导览", "url": "https://www.lingyinsi.org/map/default.html" }
     },

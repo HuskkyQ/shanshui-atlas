@@ -1,6 +1,16 @@
 # 景点实景图片来源
 
-图片用于景点详情卡片，文件保存在 `public/images/pois/`，并通过 `src/content/poi-photos.json` 按 POI id 关联。所有图片均从 Wikimedia Commons 页面下载为不超过 960px 宽的本地 JPEG；详情卡片应同时展示作者、许可和来源链接。
+全景地图图片用于景点详情卡片，文件保存在 `public/images/pois/`，并通过 `src/content/poi-photos.json` 按 POI id 关联。所有图片均从 Wikimedia Commons 页面下载为不超过 960px 宽的本地 JPEG；详情卡片应同时展示作者、许可和来源链接。
+
+## 独立景点的探索点配图
+
+雷峰塔、三潭印月和灵隐寺另有 3 张总览与 15 张探索点配图，位于 `public/images/scenic/`。`src/content/scenic-photos.json` 以 Scene id 关联总览，以 `Scene id:hotspot id` 关联探索点，避免同名热点跨景点串图。切换时图片、图注、作者、许可和来源一起更新；没有单独配图时显示缺图状态，不回退为其他探索点的图片。
+
+- [雷峰塔来源](scenic-photos-leifeng.md)：完整塔身、遗址内保存的塔基、塔檐下构件，以及从雷峰塔高处眺望西湖。
+- [三潭印月来源](scenic-photos-santan.md)：三塔同框、石塔孔洞近景、小瀛洲水岸；“月影意境”用叶肖岩《三潭印月》宋代绘画，并在图注明确标注非实景照片。
+- [灵隐寺来源](scenic-photos-lingyin.md)：山门总览及七处殿堂对应外观，替换单景中原先共用的飞来峰石刻照片。
+
+2026-10-13 核验：18 个本地 JPEG 均可解码且宽度不超过 960px，合计约 4 MB。保留各 Commons 文件页的署名与许可证；画作同时记录馆方出处。
 
 ## 已覆盖
 

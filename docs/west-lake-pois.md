@@ -39,4 +39,4 @@
 
 六座山的概览地点仍保存在 `src/data/west-lake-landmarks.json`；路线的节点、边和来源 way 保存在 `src/data/west-lake-hikes.json`。这些资料适合核对模型中的空间关系，不替代景区现场指引、开放信息或登山导航。
 
-验收：22 项自动测试和生产构建通过；原始 XML 核对通过。浏览器验证了桌面与手机的分组展开、点位介绍、来源链接、纯模型切换和黄山回归，未记录控制台错误。桌面新增九个景点的标记中心均能命中自身，手机列表最后的上山口和景点也能通过横向滚动访问。效果截图为 `preview-west-lake-trailheads.jpg`、`preview-west-lake-pois.jpg`、`preview-west-lake-pois-mobile.jpg`。
+验收：22 项自动测试和生产构建通过；原始 XML 核对通过。浏览器验证了桌面与手机的分组展开、点位介绍、来源链接、纯模型切换和黄山回归，未记录控制台错误。桌面新增九个景点的标记中心均能命中自身，手机列表最后的上山口和景点也能通过横向滚动访问。效果截图为 `../previews/preview-west-lake-trailheads.jpg`、`../previews/preview-west-lake-pois.jpg`、`../previews/preview-west-lake-pois-mobile.jpg`。

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import layout from '../src/data/lingyin-layout.json' with { type: 'json' };
-import { createLingyinModel } from '../src/models/lingyin-temple.js';
+import { createLingyinModel } from '../src/west-lake/lingyin-temple/model.js';
 
 function meshes(root) {
   const result = [];
@@ -16,12 +16,77 @@ function triangleCount(mesh) {
   return base * (mesh.isInstancedMesh ? mesh.count : 1);
 }
 
+const AXIS_ROTATION = 0.322;
+const METERS_PER_LON = 111320 * Math.cos(layout.originWgs84[1] * Math.PI / 180);
+const METERS_PER_LAT = 110540;
+
+function scenePoints(building) {
+  return building.footprintWgs84.map(([longitude, latitude]) => new THREE.Vector2(
+    (longitude - layout.originWgs84[0]) * METERS_PER_LON * layout.sceneUnitsPerMeter,
+    -(latitude - layout.originWgs84[1]) * METERS_PER_LAT * layout.sceneUnitsPerMeter,
+  ));
+}
+
+function expectedOrientedBoundsCenter(building) {
+  const points = scenePoints(building);
+  const first = points[0];
+  const last = points.at(-1);
+  const unique = first.distanceTo(last) < 1e-7 ? points.slice(0, -1) : points;
+  const cosine = Math.cos(AXIS_ROTATION);
+  const sine = Math.sin(AXIS_ROTATION);
+  const local = unique.map((point) => new THREE.Vector2(
+    cosine * point.x - sine * point.y,
+    sine * point.x + cosine * point.y,
+  ));
+  const minX = Math.min(...local.map((point) => point.x));
+  const maxX = Math.max(...local.map((point) => point.x));
+  const minZ = Math.min(...local.map((point) => point.y));
+  const maxZ = Math.max(...local.map((point) => point.y));
+  const localCenter = new THREE.Vector2((minX + maxX) / 2, (minZ + maxZ) / 2);
+  return new THREE.Vector2(
+    cosine * localCenter.x + sine * localCenter.y,
+    -sine * localCenter.x + cosine * localCenter.y,
+  );
+}
+
+function orientedLocalPoints(building) {
+  const points = scenePoints(building);
+  const first = points[0];
+  const last = points.at(-1);
+  const unique = first.distanceTo(last) < 1e-7 ? points.slice(0, -1) : points;
+  const cosine = Math.cos(AXIS_ROTATION);
+  const sine = Math.sin(AXIS_ROTATION);
+  const rotated = unique.map((point) => new THREE.Vector2(
+    cosine * point.x - sine * point.y,
+    sine * point.x + cosine * point.y,
+  ));
+  const minX = Math.min(...rotated.map((point) => point.x));
+  const maxX = Math.max(...rotated.map((point) => point.x));
+  const minZ = Math.min(...rotated.map((point) => point.y));
+  const maxZ = Math.max(...rotated.map((point) => point.y));
+  const center = new THREE.Vector2((minX + maxX) / 2, (minZ + maxZ) / 2);
+  return rotated.map((point) => point.sub(center));
+}
+
+function pointInPolygon(x, z, polygon) {
+  let inside = false;
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index, index += 1) {
+    const current = polygon[index];
+    const prior = polygon[previous];
+    if (((current.y > z) !== (prior.y > z))
+      && x < ((prior.x - current.x) * (z - current.y)) / (prior.y - current.y) + current.x) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
 test('Lingyin model has finite close-scene geometry within a restrained render budget', () => {
   const { group } = createLingyinModel();
   group.updateMatrixWorld(true);
   const rendered = meshes(group);
   assert.ok(rendered.length > 50, 'the exterior ensemble lacks visible architectural detail');
-  assert.ok(rendered.length < 100, `model uses ${rendered.length} render objects`);
+  assert.ok(rendered.length < 145, `model uses ${rendered.length} render objects`);
   assert.ok(rendered.reduce((sum, mesh) => sum + triangleCount(mesh), 0) < 70000, 'model exceeds the scene triangle budget');
   rendered.forEach((mesh) => {
     Object.values(mesh.geometry.attributes).forEach((attribute) => {
@@ -49,6 +114,34 @@ test('five central halls follow the researched south-to-north order and climb st
   assert.equal(group.userData.orientation, 'north=-z');
 });
 
+test('all building groups use the center of their oriented footprint bounds', () => {
+  const { group } = createLingyinModel();
+  layout.buildings.forEach((building) => {
+    const object = group.getObjectByName(`building-${building.key}`);
+    const expected = expectedOrientedBoundsCenter(building);
+    assert.ok(object.position.distanceTo(new THREE.Vector3(expected.x, 0, expected.y)) < 1e-4,
+      `${building.key} is not centered on its oriented footprint bounds`);
+  });
+});
+
+test('axis courtyards sit in the same local north direction and span each inter-hall gap', () => {
+  const { group } = createLingyinModel();
+  const courtyards = group.getObjectByName('stepped-axis-courtyards');
+  assert.equal(courtyards.userData.layoutMode, 'axis-aligned-open-courtyards');
+  assert.equal(courtyards.userData.courtyards.length, 5);
+  const axis = ['tianwang', 'daxiong', 'yaoshi', 'zhizhi', 'huayan'];
+  axis.forEach((key, index) => {
+    const building = group.getObjectByName(`building-${key}`);
+    const court = courtyards.userData.courtyards[index];
+    const center = new THREE.Vector3(court.center[0], 0, court.center[1]);
+    const delta = center.clone().sub(building.position);
+    const localNorth = new THREE.Vector3(Math.sin(AXIS_ROTATION), 0, Math.cos(AXIS_ROTATION));
+    assert.ok(delta.dot(localNorth) > 0, `${key} courtyard is not in front of the hall`);
+    assert.ok(Math.abs(delta.x * localNorth.z - delta.z * localNorth.x) < 0.05,
+      `${key} courtyard drifts off the axis`);
+  });
+});
+
 test('main halls retain their distinguishing bay and swept-roof forms', () => {
   const { group } = createLingyinModel();
   const daxiong = group.getObjectByName('building-daxiong');
@@ -61,6 +154,10 @@ test('main halls retain their distinguishing bay and swept-roof forms', () => {
   assert.equal(yaoshi.userData.roofLayers, 2);
   assert.equal(zhizhi.userData.architecturalForm, 'three-function-levels');
   assert.equal(zhizhi.getObjectByName('zhizhi-floor-bands').userData.functionalLevels, 3);
+  const daxiongBase = layout.buildings.find((building) => building.key === 'daxiong').terraceY + 0.36;
+  const daxiongBounds = new THREE.Box3().setFromObject(daxiong);
+  assert.ok(daxiongBounds.max.y - daxiongBase < 10.752 + 0.35, 'Daxiong exceeds the official relative height');
+  assert.ok(daxiong.getObjectByName('daxiong-eave-wall-bands'), 'Daxiong lacks solid bands between roof layers');
   for (const key of ['tianwang', 'daxiong', 'yaoshi', 'zhizhi', 'huayan']) {
     const roof = group.getObjectByName(`${key}-swept-xieshan-roofs`);
     assert.equal(roof.userData.style, 'xieshan');
@@ -68,8 +165,8 @@ test('main halls retain their distinguishing bay and swept-roof forms', () => {
     assert.equal(roof.userData.lowerHipUpperGable, true);
     const gables = group.getObjectByName(`${key}-roof-gables`);
     assert.ok(gables, `${key} has no physical gable geometry`);
-    assert.equal(gables.userData.gableCount, roof.userData.layers * 2);
-    assert.equal(gables.geometry.getAttribute('position').count, roof.userData.layers * 6);
+    assert.equal(gables.userData.gableCount, 2);
+    assert.equal(gables.geometry.getAttribute('position').count, gables.userData.gableCount * 3);
     const normals = roof.geometry.getAttribute('normal');
     let upward = 0;
     for (let index = 0; index < normals.count; index += 1) if (normals.getY(index) > 0.05) upward += 1;
@@ -83,18 +180,62 @@ test('Luohan Hall is a multi-wing wan-plan compound rather than a single block',
   assert.equal(luohan.userData.planSymbol, '卍');
   assert.equal(luohan.userData.architecturalForm, 'wan-plan-compound-hall');
   assert.equal(luohan.userData.interiorCopperHallModeled, false);
-  assert.equal(luohan.getObjectByName('luohan-wan-plan-walls').userData.sectionCount, 9);
-  assert.equal(luohan.getObjectByName('luohan-upper-eaves').userData.doubleEave, true);
+  assert.equal(luohan.getObjectByName('luohan-wan-plan-walls').userData.sourceOutlinePointCount, 21);
+  assert.equal(luohan.getObjectByName('luohan-wan-plan-walls').userData.centralVoidModeled, false);
+  assert.equal(luohan.getObjectByName('luohan-wing-roofs').userData.doubleEave, true);
   assert.equal(luohan.getObjectByName('luohan-central-copper-hall-silhouette'), undefined);
   const bounds = new THREE.Box3().setFromObject(luohan);
   assert.ok(bounds.max.x - bounds.min.x > 17 && bounds.max.z - bounds.min.z > 17, 'wan-plan wings do not read at campus scale');
+});
+
+test('Luohan roof segments cover the source outline while preserving its concave notches', () => {
+  const { group } = createLingyinModel();
+  group.updateMatrixWorld(true);
+  const building = group.getObjectByName('building-luohan');
+  const source = orientedLocalPoints(layout.buildings.find((item) => item.key === 'luohan'));
+  const lower = building.getObjectByName('luohan-lower-eaves');
+  const upper = building.getObjectByName('luohan-wing-roofs');
+  let samples = 0;
+  let covered = 0;
+  for (let z = -9.25; z <= 9.25; z += 0.5) {
+    for (let x = -9.25; x <= 9.25; x += 0.5) {
+      if (!pointInPolygon(x, z, source)) continue;
+      samples += 1;
+      const origin = building.localToWorld(new THREE.Vector3(x, 30, z));
+      const hit = new THREE.Raycaster(origin, new THREE.Vector3(0, -1, 0))
+        .intersectObjects([lower, upper], false)[0];
+      if (hit) covered += 1;
+    }
+  }
+  assert.ok(samples > 1000, 'source outline sampling is too small');
+  assert.ok(covered / samples >= 0.95, `roof coverage is ${(covered / samples * 100).toFixed(1)}%`);
+});
+
+test('Luohan wall mesh preserves source concave notches without inventing a central hole', () => {
+  const { group } = createLingyinModel();
+  group.updateMatrixWorld(true);
+  const building = layout.buildings.find((item) => item.key === 'luohan');
+  const polygon = orientedLocalPoints(building);
+  const wall = group.getObjectByName('luohan-wan-plan-walls');
+  const toWorldRay = (x, z) => {
+    const point = group.getObjectByName('building-luohan').localToWorld(new THREE.Vector3(x, 30, z));
+    return new THREE.Raycaster(point, new THREE.Vector3(0, -1, 0)).intersectObject(wall, false)[0];
+  };
+  for (const [x, z] of [[-2, -8], [3, 5]]) {
+    assert.equal(pointInPolygon(x, z, polygon), false);
+    assert.equal(toWorldRay(x, z), undefined, `source concave notch at ${x},${z} was filled`);
+  }
+  for (const [x, z] of [[0, 0], [-8, 0]]) {
+    assert.equal(pointInPolygon(x, z, polygon), true);
+    assert.ok(toWorldRay(x, z), `source interior at ${x},${z} lost wall geometry`);
+  }
 });
 
 test('OSM footprint plinths support every building and all five terraces are joined by stairs', () => {
   const { group } = createLingyinModel();
   group.updateMatrixWorld(true);
   const plinths = group.getObjectByName('osm-building-plinths');
-  assert.equal(plinths.userData.count, 10);
+  assert.equal(plinths.userData.count, layout.buildings.length);
   layout.buildings.forEach((building) => {
     const object = group.getObjectByName(`building-${building.key}`);
     const center = new THREE.Vector3();
@@ -113,9 +254,10 @@ test('OSM footprint plinths support every building and all five terraces are joi
   assert.ok(stairBounds.max.y > 6.9, 'stairs do not reach the upper court');
   stairs.userData.flights.forEach((flight) => {
     assert.ok(flight.treadDepth > flight.treadRun, `${flight.from}-${flight.to} treads do not overlap`);
-    assert.equal(flight.treadCount, Math.ceil(
-      Math.hypot(flight.end[0] - flight.start[0], flight.end[1] - flight.start[1]) / 1.05,
-    ));
+    assert.equal(flight.treadCount, Math.max(2, Math.ceil((flight.upperTop - flight.lowerTop) / 0.18)));
+    assert.ok(flight.flatLength > flight.stairLength, `${flight.from}-${flight.to} lacks an open landing run`);
+    assert.ok(flight.stairLength > 0 && flight.flatLength > 0, `${flight.from}-${flight.to} has invalid channel lengths`);
+    assert.ok(Array.isArray(flight.stairStart) && flight.stairStart.length === 2, `${flight.from}-${flight.to} has no stair start`);
     for (let sample = 0; sample <= flight.treadCount * 4; sample += 1) {
       const t = sample / (flight.treadCount * 4);
       const x = THREE.MathUtils.lerp(flight.start[0], flight.end[0], t);

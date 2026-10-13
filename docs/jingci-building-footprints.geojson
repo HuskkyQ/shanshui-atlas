@@ -1,0 +1,1106 @@
+{
+  "type": "FeatureCollection",
+  "name": "Jingci Temple OSM building footprints",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "way/229726935",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726935,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726935",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1446682,
+              30.2308817
+            ],
+            [
+              120.1450263,
+              30.2309087
+            ],
+            [
+              120.1450384,
+              30.2307885
+            ],
+            [
+              120.1446803,
+              30.2307615
+            ],
+            [
+              120.1446682,
+              30.2308817
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726936",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726936,
+        "version": 4,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726936",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1446267,
+              30.2311454
+            ],
+            [
+              120.1445739,
+              30.2314429
+            ],
+            [
+              120.1447289,
+              30.2314634
+            ],
+            [
+              120.1447346,
+              30.2314312
+            ],
+            [
+              120.1447699,
+              30.2312323
+            ],
+            [
+              120.1447817,
+              30.2311659
+            ],
+            [
+              120.1446267,
+              30.2311454
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726937",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726937,
+        "version": 4,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726937",
+        "building": "yes",
+        "roofShape": "hipped",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1441431,
+              30.2314857
+            ],
+            [
+              120.1441309,
+              30.2315751
+            ],
+            [
+              120.1441184,
+              30.2316659
+            ],
+            [
+              120.1441168,
+              30.2316774
+            ],
+            [
+              120.1442545,
+              30.2316928
+            ],
+            [
+              120.1443933,
+              30.2317057
+            ],
+            [
+              120.1443985,
+              30.2316683
+            ],
+            [
+              120.1444142,
+              30.2315539
+            ],
+            [
+              120.1444196,
+              30.231514
+            ],
+            [
+              120.1442808,
+              30.2314998
+            ],
+            [
+              120.1441431,
+              30.2314857
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726938",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726938,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726938",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1429583,
+              30.2310725
+            ],
+            [
+              120.1433381,
+              30.2311235
+            ],
+            [
+              120.1433689,
+              30.2309523
+            ],
+            [
+              120.1429891,
+              30.2309013
+            ],
+            [
+              120.1429583,
+              30.2310725
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726939",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726939,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726939",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1451633,
+              30.2318668
+            ],
+            [
+              120.1451394,
+              30.2319776
+            ],
+            [
+              120.1456503,
+              30.23206
+            ],
+            [
+              120.1456742,
+              30.2319492
+            ],
+            [
+              120.1451633,
+              30.2318668
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726940",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726940,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726940",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "orange",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1443444,
+              30.2305268
+            ],
+            [
+              120.1445679,
+              30.2305585
+            ],
+            [
+              120.1445983,
+              30.2303981
+            ],
+            [
+              120.1443749,
+              30.2303665
+            ],
+            [
+              120.1443444,
+              30.2305268
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726941",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726941,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726941",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1439491,
+              30.2308065
+            ],
+            [
+              120.1441068,
+              30.2308231
+            ],
+            [
+              120.1441288,
+              30.2306669
+            ],
+            [
+              120.143971,
+              30.2306503
+            ],
+            [
+              120.1439491,
+              30.2308065
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726944",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726944,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726944",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1446281,
+              30.2310943
+            ],
+            [
+              120.1450321,
+              30.2311309
+            ],
+            [
+              120.1450475,
+              30.2310037
+            ],
+            [
+              120.1446435,
+              30.2309672
+            ],
+            [
+              120.1446281,
+              30.2310943
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726945",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726945,
+        "version": 3,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726945",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1443497,
+              30.2300864
+            ],
+            [
+              120.1446359,
+              30.2301086
+            ],
+            [
+              120.1446728,
+              30.2297532
+            ],
+            [
+              120.1443866,
+              30.229731
+            ],
+            [
+              120.1443497,
+              30.2300864
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726946",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726946,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726946",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1439375,
+              30.2310117
+            ],
+            [
+              120.1440785,
+              30.2310241
+            ],
+            [
+              120.1440982,
+              30.2308566
+            ],
+            [
+              120.1439571,
+              30.2308442
+            ],
+            [
+              120.1439375,
+              30.2310117
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726947",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726947,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726947",
+        "building": "yes",
+        "roofShape": "hipped",
+        "roofColour": "orange",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1441657,
+              30.2310455
+            ],
+            [
+              120.1445795,
+              30.2310914
+            ],
+            [
+              120.1446208,
+              30.2308134
+            ],
+            [
+              120.144207,
+              30.2307674
+            ],
+            [
+              120.1441657,
+              30.2310455
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/229726948",
+      "properties": {
+        "osmType": "way",
+        "osmId": 229726948,
+        "version": 3,
+        "sourceUrl": "https://www.openstreetmap.org/way/229726948",
+        "building": "yes",
+        "roofShape": "gabled",
+        "roofColour": "black",
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.144901,
+              30.2313826
+            ],
+            [
+              120.1451958,
+              30.2314217
+            ],
+            [
+              120.1452186,
+              30.2312931
+            ],
+            [
+              120.1449238,
+              30.2312541
+            ],
+            [
+              120.1449193,
+              30.2312795
+            ],
+            [
+              120.144901,
+              30.2313826
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314610",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314610,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314610",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1435499,
+              30.2312132
+            ],
+            [
+              120.1437877,
+              30.2312411
+            ],
+            [
+              120.143815,
+              30.2310668
+            ],
+            [
+              120.1435773,
+              30.231039
+            ],
+            [
+              120.1435499,
+              30.2312132
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314611",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314611,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314611",
+        "building": "yes",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1433992,
+              30.2314858
+            ],
+            [
+              120.1434978,
+              30.2314937
+            ],
+            [
+              120.1435286,
+              30.2312077
+            ],
+            [
+              120.14343,
+              30.2311998
+            ],
+            [
+              120.1433992,
+              30.2314858
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314612",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314612,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314612",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1438977,
+              30.2314714
+            ],
+            [
+              120.1439913,
+              30.2314822
+            ],
+            [
+              120.1440058,
+              30.2313877
+            ],
+            [
+              120.1439122,
+              30.2313769
+            ],
+            [
+              120.1438977,
+              30.2314714
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314613",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314613,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314613",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1443985,
+              30.2316683
+            ],
+            [
+              120.1445493,
+              30.2316837
+            ],
+            [
+              120.144565,
+              30.2315694
+            ],
+            [
+              120.1444142,
+              30.2315539
+            ],
+            [
+              120.1443985,
+              30.2316683
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314614",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314614,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314614",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1441184,
+              30.2316659
+            ],
+            [
+              120.1439748,
+              30.2316511
+            ],
+            [
+              120.1439464,
+              30.2316482
+            ],
+            [
+              120.1438666,
+              30.23164
+            ],
+            [
+              120.143879,
+              30.2315493
+            ],
+            [
+              120.1441309,
+              30.2315751
+            ],
+            [
+              120.1441184,
+              30.2316659
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314615",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314615,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314615",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1438464,
+              30.2317869
+            ],
+            [
+              120.1439263,
+              30.2317951
+            ],
+            [
+              120.1439464,
+              30.2316482
+            ],
+            [
+              120.1438666,
+              30.23164
+            ],
+            [
+              120.1438464,
+              30.2317869
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314616",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314616,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314616",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1447204,
+              30.2315949
+            ],
+            [
+              120.1448132,
+              30.2316072
+            ],
+            [
+              120.1448419,
+              30.2314454
+            ],
+            [
+              120.1448065,
+              30.2314408
+            ],
+            [
+              120.1447491,
+              30.2314332
+            ],
+            [
+              120.1447221,
+              30.2315855
+            ],
+            [
+              120.1447204,
+              30.2315949
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314619",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314619,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314619",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1447346,
+              30.2314312
+            ],
+            [
+              120.1447491,
+              30.2314332
+            ],
+            [
+              120.1448065,
+              30.2314408
+            ],
+            [
+              120.1448371,
+              30.2312686
+            ],
+            [
+              120.1448418,
+              30.2312418
+            ],
+            [
+              120.1447699,
+              30.2312323
+            ],
+            [
+              120.1447346,
+              30.2314312
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314620",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314620,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314620",
+        "building": "temple",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1448065,
+              30.2314408
+            ],
+            [
+              120.1448419,
+              30.2314454
+            ],
+            [
+              120.1448888,
+              30.2314517
+            ],
+            [
+              120.144901,
+              30.2313826
+            ],
+            [
+              120.1449193,
+              30.2312795
+            ],
+            [
+              120.1448371,
+              30.2312686
+            ],
+            [
+              120.1448065,
+              30.2314408
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314621",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314621,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314621",
+        "building": "yes",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.145261,
+              30.2318602
+            ],
+            [
+              120.1455518,
+              30.231912
+            ],
+            [
+              120.1455829,
+              30.2317819
+            ],
+            [
+              120.1453529,
+              30.2317408
+            ],
+            [
+              120.1453358,
+              30.2318123
+            ],
+            [
+              120.145275,
+              30.2318015
+            ],
+            [
+              120.145261,
+              30.2318602
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314622",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314622,
+        "version": 2,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314622",
+        "building": "yes",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1448247,
+              30.2318567
+            ],
+            [
+              120.1449787,
+              30.2318819
+            ],
+            [
+              120.1450032,
+              30.2317704
+            ],
+            [
+              120.1448492,
+              30.2317452
+            ],
+            [
+              120.1448247,
+              30.2318567
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/676314628",
+      "properties": {
+        "osmType": "way",
+        "osmId": 676314628,
+        "version": 1,
+        "sourceUrl": "https://www.openstreetmap.org/way/676314628",
+        "building": "yes",
+        "roofShape": null,
+        "roofColour": null,
+        "name": null,
+        "note": "OSM未命名建筑轮廓"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.1445953,
+              30.2306938
+            ],
+            [
+              120.1447913,
+              30.230716
+            ],
+            [
+              120.1447988,
+              30.2306666
+            ],
+            [
+              120.1448847,
+              30.2306764
+            ],
+            [
+              120.1449021,
+              30.2305618
+            ],
+            [
+              120.144781,
+              30.230548
+            ],
+            [
+              120.1447745,
+              30.2305906
+            ],
+            [
+              120.1446138,
+              30.2305724
+            ],
+            [
+              120.1445953,
+              30.2306938
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

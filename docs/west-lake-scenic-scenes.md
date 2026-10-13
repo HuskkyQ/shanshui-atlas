@@ -31,6 +31,10 @@ loader: (context) => import('./scenes/leifeng-pagoda.js')
 
 界面返回调用 `session.exit({ animate: true })`。已完成进入且具有 `conceal()` 的实例进入 `returning` 状态：先恢复进入前的 World 快照并渲染一帧，再冻结为可见底图，等待近景用 1.1 秒逐渐淡出。完成后释放近景，再次恢复快照并恢复 World 渲染；重复动画返回复用同一 Promise。加载或显现途中返回、没有 `conceal()` 的实例、默认 `exit()` 和 `dispose()` 都立即取消并释放。
 
+2026-10-13 相机衔接：World 飞行沿当前观察方向推进，加载与飞行结束后由 `world.captureScenicView(poiId)` 采集实际镜头，session 只将新增的 `entryView` 交给 `mount()`，不修改 loader 或调用方的 context。雷峰塔与三潭印月把相机、目标点转换到微缩模型的局部坐标，并继承有效视场角与画面偏移；三潭近景同时沿用 World 三塔的相对位置和朝向，使渐变首帧的塔体投影对齐。灵隐寺尚无 World 建筑微缩模型，按相同地理朝向和俯仰角对寺院建筑范围构图，不再次叠加建筑自身的轴线旋转。
+
+`src/shared/scenic-entry-view.js` 负责采集镜头和计算构图。近景在 1.1 秒渐变期间保持传入镜头，之后平滑调整距离与目标点，保持观察方向；手动操作取消这段调整。点击热点或“全景”才恢复原有预设镜头参数。手机构图将主体放在下方介绍卡上方；三潭的“全景”和“三塔鼎立”根据当前三塔范围计算预设，避免重排后被卡片遮挡或裁切。
+
 新一次 `enter`、默认 `exit()` 或 `dispose` 会通过 AbortSignal 取消飞行和渐变动画，并取消旧的加载结果。飞行和渐变接口返回 Promise：完成为 `true`，取消为 `false`，并负责移除取消监听；渐变动画也会在实例释放时取消。已取消的 loader 如果稍后完成，session 会直接释放它返回的 instance，不会再挂载。加载、飞行或显现错误都会恢复原快照，并由 `enter()` 拒绝，让 UI 显示重试入口；退场错误也会释放近景、恢复 World，并使返回 Promise 拒绝，由 UI 完成恢复。
 
 session 拥有 loader 返回的 instance，但不拥有 World、注册表、传入的 context 或 loader 外部缓存的共享资产。共享纹理、模型缓存等应由提供缓存的上层统一释放，instance 的 `dispose()` 不应销毁仍被其他场景使用的共享资源。session 不调用 `update()`，也不创建渲染循环。
@@ -40,7 +44,7 @@ session 拥有 loader 返回的 instance，但不拥有 World、注册表、传�
 - `src/models/leifeng-pagoda.js`：原创近景模型与四个锚点；西湖 World 的小塔复用同一塔体与材质构造，仅缩放至 0.02 倍并省略周边近景环境。World 另按 DEM 密集采样构建小范围水平台基、贴地坡岸与入口短坡，保留原塔址，避免将塔直接叠在斜坡上。建筑外形和环境为艺术化近似，资料与边界见[雷峰塔资料](leifeng-pagoda-sources.md)。
 - `src/scenes/leifeng-pagoda.js`：独立 Three.js renderer、CSS2D 热点、镜头移动、Shift 平移与固定展陈光照。WebGL 仅在 `mount()` 时创建；`reveal()` 与 `conceal()` 使用可取消的 Web Animations 同步渐变画布与热点；`dispose()` 清理渐变动画、渲染循环、观察器、监听、实例资源、阴影、几何、材质、DOM 和 WebGL 上下文。
 - `src/content/leifeng-pagoda.json`：四处热点的名称、描述和来源，不把文化介绍写进模型代码。
-- `src/scenic-ui.js`：进入/渐变返回/错误重试、介绍卡和热点按钮。每次进入从注册项读取当前景点的文案与 `poiId` 照片，替换导航、名称、说明与来源，并隔离已经退出的 Scene 回调。进入期间隐藏并保留 World UI 与原来的 inert 状态，同时锁定画布交互，保留可点击的返回按钮；返回期间锁定交互并淡出景点 UI，完成后恢复普通或沉浸模式，Escape 返回只由当前 Scene 处理一次。系统开启减少动态效果时，西湖直接定位到目标并跳过飞行和渐变动画。
+- `src/west-lake/scenic-ui.js`：进入/渐变返回/错误重试、介绍卡和热点按钮。每次进入从注册项读取当前景点文案，按 `src/content/scenic-photos.json` 中的 Scene id 显示总览配图，选择热点时按 `Scene id:hotspot id` 同步替换图片、图注、署名及内容；重置恢复总览，并隔离已经退出的 Scene 回调。进入期间隐藏并保留 World UI 与原来的 inert 状态，同时锁定画布交互，保留可点击的返回按钮；返回期间锁定交互并淡出景点 UI，完成后恢复普通或沉浸模式，Escape 返回只由当前 Scene 处理一次。系统开启减少动态效果时，西湖直接定位到目标并跳过飞行和渐变动画。
 
 `session.activeScene` 在挂载成功后提供当前实例；显现期间 session 仍处于 `loading` 状态，完成后才进入 `scenic` 状态并开放热点交互。界面通过实例调用 `selectHotspot(id)` 与 `resetView()`；退出或取消后实例变回 `null`。Scene 的 `onHotspot(id)` 回调更新介绍卡和按钮的选中状态。
 
@@ -48,7 +52,7 @@ session 拥有 loader 返回的 instance，但不拥有 World、注册表、传�
 
 - `src/models/santanyinyue.js`：三座瓶形石塔、五孔塔腹、局部小瀛洲岸线与植被的原创艺术化模型，以及四个热点锚点。
 - `src/scenes/santanyinyue.js`：独立 renderer 和 CSS2D 热点，沿用进入/返回渐变、镜头探索与资源清理接口，不改变 World 和 session。
-- `src/content/santanyinyue.json`：「三塔鼎立」「五孔石塔」「小瀛洲岸线」「月影意境」四个带官方来源的文化热点；图片复用 `santan` 的已授权本地实景照片。
+- `src/content/santanyinyue.json`：「三塔鼎立」「五孔石塔」「小瀛洲岸线」「月影意境」四个带官方来源的文化热点；前三者使用各自实景，“月影意境”使用明确标注的宋代《三潭印月》画作，来源见[配图记录](scenic-photos-santan.md)。
 - 三塔尺寸、相对布局与近景岸线没有测绘依据；月影是文化介绍，近景使用固定展陈日光。只制作局部岛岸，具体资料见[三潭印月建模边界](santanyinyue-sources.md)。
 
 ## 灵隐寺实现
@@ -56,7 +60,7 @@ session 拥有 loader 返回的 instance，但不拥有 World、注册表、传�
 - `src/data/lingyin-layout.json`：十处建筑的 WGS84 OSM 轮廓、出处与明确标为近似的台地高度；原始 `building:levels` 不用作实测尺寸。
 - `src/models/lingyin-temple.js`：五进主殿、罗汉堂卍字形外观和两翼建筑，包含真实屋顶山墙、檐线、柱网、门窗格和逐级院落。四段主轴台阶按实际场景净距连续生成，测试沿路线向下投射射线验证几何无空隙。罗汉堂内部铜殿不做室外轮廓。每个实例分别拥有几何与材质。
 - `src/scenes/lingyin-temple.js`：按需创建独立 renderer、七个 CSS2D 热点和固定日光；沿用可取消的双画布进入/返回渐变及资源释放接口。桌面留出右侧卡片位置，手机构图将寺院和选中的殿堂显示在下方卡片上方。
-- `src/content/lingyin-temple.json`：天王殿、大雄宝殿、药师殿、直指堂、华严殿、五百罗汉堂和济公殿七处官方来源说明；照片复用已有灵隐景区石刻照片，不称作建筑实景。
+- `src/content/lingyin-temple.json`：天王殿、大雄宝殿、药师殿、直指堂、华严殿、五百罗汉堂和济公殿七处官方来源说明；七个热点分别使用对应殿堂外观照片，来源见[配图记录](scenic-photos-lingyin.md)。
 - 建筑外观、台地高差和背景均为艺术化近似；未制作室内佛像、飞来峰完整景区或实测构件。布局与结构依据见[建模调查](lingyin-model-research.md)。
 
 历史模式、自动导览、第一人称与 AI 导游仍未实现。
@@ -65,4 +69,8 @@ session 拥有 loader 返回的 instance，但不拥有 World、注册表、传�
 
 2026-10-04 验证：95 项 Node 测试与生产构建通过，规格及资源生命周期独立审核通过。桌面与 390×844 浏览器检查了两景点内容、照片、热点、进入/返回；实际测得渐变期间两个 canvas 同时显示且近景 opacity 位于 0 与 1 之间。三潭反复进入、加载中取消和手机返回后无近景 DOM 残留，沉浸返回保持原模式，控制台 error/warn 为空。GPU 帧率、heap 和测绘精度未测量。
 
-同日灵隐寺增量验证：102 项 Node 测试与生产构建通过，模型为 89 个渲染对象、33,346 个三角形。1280×720 和 390×844 浏览器检查了全景、近景、七处内容与选中同步、模型图标和名称点击、全景复位、重复进入/返回、进入中取消及沉浸状态恢复。进入时两个 canvas 同时显示，近景 opacity 实测约 0.0009；返回中约 0.91，均保留 World 底图。返回与取消后只剩一个 World canvas，灵隐热点为零。手机无横向溢出，已检查的主体显示在卡片上方，控制台 error/warn 为空。Shift＋左键完整拖拽由控制集成测试验证；未测 GPU FPS、heap 或实测精度。预览：[桌面全景](../preview-lingyin-scenic.png)、[大雄宝殿近景](../preview-lingyin-daxiong.png)、[手机全景](../preview-lingyin-mobile.png)。修改仅在本地，未同步网站。
+同日灵隐寺增量验证：102 项 Node 测试与生产构建通过，模型为 89 个渲染对象、33,346 个三角形。1280×720 和 390×844 浏览器检查了全景、近景、七处内容与选中同步、模型图标和名称点击、全景复位、重复进入/返回、进入中取消及沉浸状态恢复。进入时两个 canvas 同时显示，近景 opacity 实测约 0.0009；返回中约 0.91，均保留 World 底图。返回与取消后只剩一个 World canvas，灵隐热点为零。手机无横向溢出，已检查的主体显示在卡片上方，控制台 error/warn 为空。Shift＋左键完整拖拽由控制集成测试验证；未测 GPU FPS、heap 或实测精度。预览：[桌面全景](../previews/preview-lingyin-scenic.png)、[大雄宝殿近景](../previews/preview-lingyin-daxiong.png)、[手机全景](../previews/preview-lingyin-mobile.png)。修改仅在本地，未同步网站。
+
+2026-10-13 相机衔接验证：140 项测试与生产构建通过。投影测试覆盖缩放及旋转模型、有效视场角、手机画面偏移、不同场景原点、无微缩模型的朝向继承，以及三塔预设的显示范围。1280×720 浏览器逐帧检查三个景点的飞行与渐变，另外调整三潭与灵隐寺的入场角度；390×844 检查三个景点的最终构图。三潭桌面和手机预设完整显示塔身，手动旋转可接管入场后的镜头调整。渐变中返回后只剩一个 World canvas、零个三潭热点，控制台 error/warn 为空。仅本地更新，未测 GPU FPS 或 heap。
+
+同日配图增量验证：143 项测试与生产构建通过。浏览器逐一选择 15 个探索点，确认图片、图注与名称对应且均已加载，点击模型上的名称也会换图；重置恢复总览。390×844 检查三个景点的配图、署名和文化画作标注，页面无横向溢出，控制台 error/warn 为空。详情媒体保持完整图片，避免裁掉殿堂和塔体。配图与出处见[来源清单](poi-photo-sources.md)，仅本地更新。

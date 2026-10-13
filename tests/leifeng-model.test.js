@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { createLeifengModel, createLeifengOverviewFoundation, createLeifengOverviewTower } from '../src/models/leifeng-pagoda.js';
+import { createLeifengModel, createLeifengOverviewFoundation, createLeifengOverviewTower } from '../src/west-lake/leifeng-pagoda/model.js';
 
 function meshes(root) {
   const result = [];
@@ -74,6 +74,74 @@ test('interaction anchors cover the facade, base, eaves and lakeward terrace', (
   assert.ok(anchors.lakeView[2] < 0, 'lake-view anchor should sit on the -z side');
 });
 
+test('photo-based silhouette has a broad lower eave and a tall curved crown', () => {
+  const { group } = createLeifengModel();
+  const roof = group.getObjectByName('tower-roofs');
+  const positions = roof.geometry.getAttribute('position');
+  const floors = group.getObjectByName('leifeng-tower').children
+    .filter((object) => /^tower-floor-\d$/.test(object.name));
+  const roofBounds = (floor, nextFloor) => {
+    const bounds = new THREE.Box3();
+    for (let index = 0; index < positions.count; index += 1) {
+      const point = new THREE.Vector3().fromBufferAttribute(positions, index);
+      if (point.y >= floor.userData.roofY - 1e-5
+        && (!nextFloor || point.y < nextFloor.userData.roofY - 1e-5)) bounds.expandByPoint(point);
+    }
+    return bounds;
+  };
+  const lower = roofBounds(floors[0], floors[1]);
+  const regular = roofBounds(floors[1], floors[2]);
+  const crown = roofBounds(floors[4]);
+  assert.ok(lower.max.x - lower.min.x > floors[0].userData.footprintRadius * 3.2,
+    'lower eave should spread far beyond the first-storey facade');
+  assert.ok(crown.max.y - crown.min.y > (regular.max.y - regular.min.y) * 2.5,
+    'top roof should form a tall crown rather than another low umbrella');
+  const crownRings = new Set();
+  for (let index = 0; index < positions.count; index += 1) {
+    if (positions.getY(index) >= floors[4].userData.roofY) crownRings.add(positions.getY(index).toFixed(4));
+  }
+  assert.ok(crownRings.size >= 7, 'crown needs intermediate curved roof samples');
+});
+
+test('narrow facade windows sit outside octagonal face planes and railings stay on the balconies', () => {
+  const { group } = createLeifengModel();
+  const windows = group.getObjectByName('tower-windows').geometry.getAttribute('position');
+  const floors = group.getObjectByName('leifeng-tower').children
+    .filter((object) => /^tower-floor-\d$/.test(object.name));
+  const faceDirections = Array.from({ length: 8 }, (_, side) => side * Math.PI / 4);
+  for (let index = 0; index < windows.count; index += 1) {
+    const point = new THREE.Vector3().fromBufferAttribute(windows, index);
+    const floor = floors.findLast((object) => point.y >= object.userData.baseY);
+    assert.ok(floor, 'window drops below tower');
+    const projection = Math.max(...faceDirections.map((angle) => point.x * Math.sin(angle) + point.z * Math.cos(angle)));
+    assert.ok(projection >= floor.userData.footprintRadius * Math.cos(Math.PI / 8) - 0.01,
+      'window is buried in the octagonal wall');
+  }
+  const balconies = group.getObjectByName('tower-balconies');
+  assert.ok(balconies, 'upper railings need projecting balcony slabs');
+  const bounds = new THREE.Box3().setFromObject(balconies);
+  assert.ok(bounds.max.x > floors[1].userData.footprintRadius);
+});
+
+test('gold finial grows continuously from the crown with stacked disks and a slender mast', () => {
+  const { group } = createLeifengModel();
+  const crown = group.getObjectByName('tower-roofs');
+  const finial = group.getObjectByName('tower-finial');
+  const crownBounds = new THREE.Box3().setFromObject(crown);
+  const finialBounds = new THREE.Box3().setFromObject(finial);
+  assert.ok(finialBounds.min.y <= crownBounds.max.y + 0.01, 'finial floats above the crown');
+  assert.ok(finialBounds.max.y - crownBounds.max.y > 5, 'finial is missing its tall mast');
+  const disks = finial.getObjectByName('tower-finial-disks');
+  const ornament = finial.getObjectByName('tower-finial-ornament');
+  assert.ok(disks && ornament, 'finial needs stepped disks and the round mast ornament');
+  const diskBounds = new THREE.Box3().setFromObject(disks);
+  const ornamentBounds = new THREE.Box3().setFromObject(ornament);
+  assert.ok(diskBounds.max.y - diskBounds.min.y > 2);
+  assert.ok(ornamentBounds.min.y > diskBounds.max.y);
+  const color = disks.material.color;
+  assert.ok(color.r > color.g && color.g > color.b, 'finial should read as gold rather than green');
+});
+
 test('solid entrance steps rise continuously from the path to the tower platform', () => {
   const { group } = createLeifengModel();
   group.updateMatrixWorld(true);
@@ -116,6 +184,14 @@ test('overview tower reuses the detailed tower form at a map-scale size', () => 
   for (const name of ['tower-base', 'entry-steps', 'tower-roofs', 'tower-windows', 'tower-finial']) {
     assert.ok(overviewCore.getObjectByName(name), `overview omits ${name}`);
   }
+  for (const name of ['tower-base', 'entry-steps', 'tower-walls', 'tower-roofs', 'tower-balconies']) {
+    assert.deepEqual(overviewCore.getObjectByName(name).geometry.getAttribute('position').array,
+      closeCore.getObjectByName(name).geometry.getAttribute('position').array,
+      `overview changes the shared ${name} silhouette`);
+    assert.equal(overviewCore.getObjectByName(name).material.color.getHex(),
+      closeCore.getObjectByName(name).material.color.getHex());
+  }
+  assert.ok(!overviewCore.getObjectByName('tower-roof-tiles'), 'overview should omit fine tile seams');
   const bounds = new THREE.Box3().setFromObject(tower);
   const closeBounds = new THREE.Box3().setFromObject(closeCore);
   assert.ok(bounds.min.y >= -0.0001);

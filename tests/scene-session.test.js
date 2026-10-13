@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getScenicScene } from '../src/scenic-scenes.js';
-import { createSceneSession } from '../src/scene-session.js';
+import { getScenicScene } from '../src/west-lake/scenic-scenes.js';
+import { createSceneSession } from '../src/west-lake/scene-session.js';
 
 function deferred() {
   let resolve;
@@ -13,7 +13,7 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
-function makeWorld(events, { flyToScenic } = {}) {
+function makeWorld(events, { flyToScenic, captureScenicView } = {}) {
   return {
     captureState() { events.push('world:capture'); return { view: 'overview' }; },
     restoreState(state) { events.push(`world:restore:${state.view}`); },
@@ -21,6 +21,7 @@ function makeWorld(events, { flyToScenic } = {}) {
       events.push(options?.keepVisible ? `world:pause:${paused}:keep-visible` : `world:pause:${paused}`);
     },
     ...(flyToScenic ? { flyToScenic } : {}),
+    ...(captureScenicView ? { captureScenicView } : {}),
   };
 }
 
@@ -229,6 +230,163 @@ test('a completed fly-to waits for the scene instance before mounting', async ()
     'world:capture', 'world:fly:ready-poi',
     'world:pause:true', 'scene:mount:panel',
   ]);
+});
+
+test('captures the arrived scenic view after a flight that finishes before loading', async () => {
+  const events = [];
+  const loaded = deferred();
+  const callerContext = { slot: 'panel', source: 'world' };
+  let loaderContext;
+  let mountedContext;
+  const scene = readyScene('ready', (context) => {
+    loaderContext = context;
+    events.push('scene:load');
+    return loaded.promise;
+  });
+  scene.poiId = 'ready-poi';
+  const world = makeWorld(events, {
+    async flyToScenic() {
+      events.push('world:fly');
+      return true;
+    },
+    captureScenicView(poiId) {
+      events.push(`world:capture-scenic:${poiId}`);
+      return { direction: [1, 2, 3], distance: 14 };
+    },
+  });
+  const session = createSceneSession({ world, scenes: () => scene });
+
+  const entering = session.enter('ready', callerContext);
+  await Promise.resolve();
+  assert.deepEqual(events, ['world:capture', 'scene:load', 'world:fly']);
+
+  loaded.resolve({
+    mount(context) {
+      mountedContext = context;
+      events.push(`scene:mount:${context.slot}:${context.entryView.direction.join(',')}`);
+    },
+    dispose() {},
+  });
+
+  assert.equal(await entering, true);
+  assert.deepEqual(events, [
+    'world:capture',
+    'scene:load',
+    'world:fly',
+    'world:capture-scenic:ready-poi',
+    'world:pause:true',
+    'scene:mount:panel:1,2,3',
+  ]);
+  assert.equal(loaderContext, callerContext);
+  assert.deepEqual(mountedContext, {
+    slot: 'panel',
+    source: 'world',
+    entryView: { direction: [1, 2, 3], distance: 14 },
+  });
+  assert.deepEqual(callerContext, { slot: 'panel', source: 'world' });
+});
+
+test('captures the arrived scenic view after loading finishes before the flight', async () => {
+  const events = [];
+  const flown = deferred();
+  const callerContext = { slot: 'panel', selected: 'tower' };
+  let mountedContext;
+  const scene = readyScene('ready', async (context) => {
+    assert.equal(context, callerContext);
+    events.push('scene:load');
+    return {
+      mount(mountContext) {
+        mountedContext = mountContext;
+        events.push(`scene:mount:${mountContext.entryView.direction.join(',')}`);
+      },
+      dispose() {},
+    };
+  });
+  scene.poiId = 'ready-poi';
+  const world = makeWorld(events, {
+    flyToScenic() {
+      events.push('world:fly');
+      return flown.promise;
+    },
+    captureScenicView() {
+      events.push('world:capture-scenic');
+      return { direction: [-1, 0, 2], pitch: 0.4 };
+    },
+  });
+  const session = createSceneSession({ world, scenes: () => scene });
+
+  const entering = session.enter('ready', callerContext);
+  await Promise.resolve();
+  assert.deepEqual(events, ['world:capture', 'scene:load', 'world:fly']);
+
+  flown.resolve(true);
+  assert.equal(await entering, true);
+  assert.deepEqual(events, [
+    'world:capture',
+    'scene:load',
+    'world:fly',
+    'world:capture-scenic',
+    'world:pause:true',
+    'scene:mount:-1,0,2',
+  ]);
+  assert.deepEqual(mountedContext, {
+    slot: 'panel',
+    selected: 'tower',
+    entryView: { direction: [-1, 0, 2], pitch: 0.4 },
+  });
+  assert.deepEqual(callerContext, { slot: 'panel', selected: 'tower' });
+});
+
+test('does not capture a scenic view when the flight is cancelled', async () => {
+  const events = [];
+  let captures = 0;
+  const scene = readyScene('cancelled', async () => ({
+    mount() { events.push('scene:mount'); },
+    dispose() { events.push('scene:dispose'); },
+  }));
+  scene.poiId = 'cancelled-poi';
+  const world = makeWorld(events, {
+    async flyToScenic() {
+      events.push('world:fly');
+      return false;
+    },
+    captureScenicView() {
+      captures += 1;
+      events.push('world:capture-scenic');
+      return { direction: [0, 0, 1] };
+    },
+  });
+  const session = createSceneSession({ world, scenes: () => scene });
+
+  assert.equal(await session.enter('cancelled', { slot: 'panel' }), false);
+  assert.equal(captures, 0);
+  assert.equal(events.includes('world:capture-scenic'), false);
+  assert.equal(events.includes('scene:mount'), false);
+});
+
+test('keeps scenic entry compatible when captureScenicView is unavailable', async () => {
+  const events = [];
+  const callerContext = { slot: 'panel', source: 'legacy' };
+  let mountedContext;
+  const scene = readyScene('ready', async () => ({
+    mount(context) {
+      mountedContext = context;
+      events.push('scene:mount');
+    },
+    dispose() {},
+  }));
+  scene.poiId = 'ready-poi';
+  const world = makeWorld(events, {
+    async flyToScenic() {
+      events.push('world:fly');
+      return true;
+    },
+  });
+  const session = createSceneSession({ world, scenes: () => scene });
+
+  assert.equal(await session.enter('ready', callerContext), true);
+  assert.deepEqual(mountedContext, callerContext);
+  assert.deepEqual(callerContext, { slot: 'panel', source: 'legacy' });
 });
 
 test('exit during fly-to aborts the flight, restores immediately, and disposes a late instance', async () => {

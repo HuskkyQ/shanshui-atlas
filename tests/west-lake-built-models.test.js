@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
-import { createWestLakeBuiltModels } from '../src/west-lake-built-models.js';
-import { getWestLakeBuiltPOIs } from '../src/west-lake-built-pois.js';
+import { createWestLakeBuiltModels } from '../src/west-lake/built-models.js';
+import { createSantanOverviewTower } from '../src/west-lake/santanyinyue/model.js';
+import { getWestLakeBuiltPOIs } from '../src/west-lake/built-pois.js';
 
 const data = JSON.parse(readFileSync(new URL('../src/data/west-lake-built-landmarks.json', import.meta.url)));
 const WATER_HEIGHT = 3.5;
@@ -205,6 +206,66 @@ test('three pools expose three tower source positions or an explicit artistic fa
     const [longitude, latitude] = tower.userData.coordinate;
     assert.equal(createTerrain().isWater(...createTerrain().toWorld(longitude, latitude)), true, `${tower.name} is inside the island`);
   });
+});
+
+test('overview pools reuse the shared tower silhouette at bounded scale', () => {
+  const models = createModels();
+  const towers = [1, 2, 3].map((index) => models.group.getObjectByName(`santan-tower-${index}`));
+  assert.ok(towers.every(Boolean), 'overview must expose all three tower roots');
+  const source = createSantanOverviewTower(0.003 * 3.6);
+  source.updateMatrixWorld(true);
+  const sourceBounds = new THREE.Box3().setFromObject(source);
+  towers.forEach((tower) => {
+    tower.updateMatrixWorld(true);
+    const bounds = new THREE.Box3().setFromObject(tower);
+    assert.ok(bounds.min.y >= WATER_HEIGHT - 0.006, `${tower.name} is below water seating height`);
+    assert.ok(bounds.max.y - bounds.min.y > sourceBounds.getSize(new THREE.Vector3()).y * 0.95,
+      `${tower.name} lost the shared tower height`);
+    assert.ok(bounds.max.y - bounds.min.y < sourceBounds.getSize(new THREE.Vector3()).y * 1.05,
+      `${tower.name} changed the shared tower height`);
+  });
+  const first = towers[0];
+  const mapped = data.landmarks.find(({ id }) => id === 'santan').points[0];
+  assert.deepEqual(first.userData.coordinate, [mapped.longitude, mapped.latitude]);
+  const anchor = models.anchors.get('santan');
+  assert.ok(anchor.y > new THREE.Box3().setFromObject(first).max.y - 0.001, 'anchor should clear the tower crown');
+});
+
+test('overview batching preserves a real radial opening beside solid wall geometry', () => {
+  const models = createModels();
+  const tower = models.group.getObjectByName('santan-tower-1');
+  assert.ok(tower);
+  const localCore = createSantanOverviewTower(1);
+  const opening = [];
+  localCore.traverse((object) => {
+    if (object.isMesh && object.userData.openingType === 'through-hole') opening.push(object);
+  });
+  assert.equal(opening.length, 5, 'shared tower must retain five genuine through-hole panels before batching');
+  let batchedOpeningPanel = false;
+  tower.traverse((object) => {
+    if (object.isMesh && object.userData.openingType) batchedOpeningPanel = true;
+  });
+  assert.equal(batchedOpeningPanel, false, 'overview tower should batch source panels into low-detail meshes');
+  tower.updateMatrixWorld(true);
+  const center = tower.getWorldPosition(new THREE.Vector3());
+  const scale = 0.003 * 3.6;
+  for (const panel of opening) {
+    const wallCenter = panel.getWorldPosition(new THREE.Vector3()).multiplyScalar(scale).add(center);
+    const normal = new THREE.Vector3(0, 0, 1).transformDirection(panel.matrixWorld);
+    const tangent = new THREE.Vector3(1, 0, 0).transformDirection(panel.matrixWorld);
+    const origin = wallCenter.clone().addScaledVector(normal, 0.9 * scale);
+    const ray = new THREE.Raycaster(origin, normal.clone().negate(), 0, 1.5 * scale);
+    assert.equal(ray.intersectObject(tower, true).length, 0, `${panel.name} is blocked after batching`);
+    ray.ray.origin.addScaledVector(tangent, 0.8 * scale);
+    assert.ok(ray.intersectObject(tower, true).length > 0, `${panel.name} lost the surrounding solid wall`);
+  }
+  const camera = new THREE.PerspectiveCamera(39, 1, 0.1, 200);
+  camera.position.set(0, 12, 18); camera.lookAt(0, 0, 0); camera.updateMatrixWorld(true);
+  assert.doesNotThrow(() => models.update(camera, 800, 1));
+  camera.position.set(0, 180, 180); camera.lookAt(0, 0, 0); camera.updateMatrixWorld(true);
+  assert.doesNotThrow(() => models.update(camera, 800, 2));
+  models.group.traverse((object) => { if (object.isMesh) object.geometry.dispose(); });
+  localCore.traverse((object) => { if (object.isMesh) object.geometry.dispose(); });
 });
 
 test('built data supports the island and POI handoff without duplicate IDs', () => {

@@ -19,4 +19,4 @@
 
 渲染采用随 DEM 起伏的彩色带，白堤和苏堤处高于湖面，「去除光影」模式隐藏路线与标记。点击“游览路线”切换到湖区俯瞰；点击标记或侧栏进入景点视角。路线和点位只在西湖场景生效。
 
-验收：`npm test` 共10项通过，`npm run build` 通过。浏览器检查了1280×720与390×844布局、8个景点切换和来源链接、模型热点点击、纯模型隐藏/恢复、黄山原登山路线及景点。两场景未记录到控制台错误。截图为项目根目录的 `preview-west-lake-routes.jpg` 和 `preview-west-lake-routes-mobile.jpg`。
+验收：`npm test` 共10项通过，`npm run build` 通过。浏览器检查了1280×720与390×844布局、8个景点切换和来源链接、模型热点点击、纯模型隐藏/恢复、黄山原登山路线及景点。两场景未记录到控制台错误。截图为 `../previews/preview-west-lake-routes.jpg` 和 `../previews/preview-west-lake-routes-mobile.jpg`。

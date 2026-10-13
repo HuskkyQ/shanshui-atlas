@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { createSantanModel } from '../src/models/santanyinyue.js';
+import { createSantanModel } from '../src/west-lake/santanyinyue/model.js';
 
 function meshes(root) {
   const result = [];
@@ -48,6 +48,51 @@ test('three bottle-shaped stone towers form a stable triangular composition', ()
   assert.ok(doubledArea > 80, `tower layout is nearly collinear: ${doubledArea}`);
 });
 
+test('stone tower belly is rounded in height and circular around the five openings', () => {
+  const { group } = createSantanModel();
+  const tower = group.getObjectByName('santan-stone-tower-1');
+  tower.updateMatrixWorld(true);
+  const shell = tower.children.filter((object) => object.userData.openingType === 'through-hole');
+  const outerRadius = (y, angle) => {
+    const direction = new THREE.Vector3(Math.sin(angle), 0, Math.cos(angle));
+    const ray = new THREE.Raycaster(tower.localToWorld(direction.clone().multiplyScalar(4).setY(y)),
+      direction.clone().negate().transformDirection(tower.matrixWorld), 0, 3.5);
+    const hits = ray.intersectObjects(shell);
+    assert.ok(hits.length, `rounded wall is missing at height ${y}`);
+    return Math.hypot(hits[0].point.x - tower.position.x, hits[0].point.z - tower.position.z);
+  };
+  const radii = Array.from({ length: 20 }, (_, index) => outerRadius(2.25, index / 20 * Math.PI * 2 + 0.0001));
+  assert.ok(Math.max(...radii) - Math.min(...radii) < 0.06,
+    'wall should be circular, not a five-sided prism');
+  assert.ok(outerRadius(3.1, Math.PI / 5 + 0.0001) > outerRadius(1.8, Math.PI / 5 + 0.0001) * 1.2,
+    'belly should bulge above its lower neck');
+  for (const [z, directionZ, expectedSign] of [[4, -1, 1], [0, 1, -1]]) {
+    const origin = tower.localToWorld(new THREE.Vector3(0, 2.25, z));
+    const direction = new THREE.Vector3(0, 0, directionZ).transformDirection(tower.matrixWorld);
+    const hit = new THREE.Raycaster(origin, direction, 0, 4).intersectObjects(shell)[0];
+    assert.ok(hit, 'single-sided shell should be visible from outside and from its cavity');
+    const radial = new THREE.Vector3(0, 0, 1).transformDirection(tower.matrixWorld);
+    assert.ok(hit.face.normal.clone().transformDirection(hit.object.matrixWorld).dot(radial) * expectedSign > 0.7,
+      'inner and outer walls should face opposite radial directions');
+  }
+});
+
+test('photo silhouette has two compact eave disks and a continuous pointed gourd', () => {
+  const { group } = createSantanModel();
+  const tower = group.getObjectByName('santan-stone-tower-1');
+  const lower = tower.getObjectByName('tower-1-lower-eave');
+  const upper = tower.getObjectByName('tower-1-upper-eave');
+  const gourd = tower.getObjectByName('tower-1-gourd-finial');
+  assert.ok(lower && upper && gourd, 'tower needs both eave disks and a gourd');
+  const lowerBounds = new THREE.Box3().setFromObject(lower);
+  const upperBounds = new THREE.Box3().setFromObject(upper);
+  const gourdBounds = new THREE.Box3().setFromObject(gourd);
+  assert.ok(lowerBounds.max.x - lowerBounds.min.x > upperBounds.max.x - upperBounds.min.x);
+  assert.ok(upperBounds.min.y > lowerBounds.max.y, 'eave disks need a short separating neck');
+  assert.ok(gourdBounds.min.y <= upperBounds.max.y + 0.01, 'gourd floats above its upper eave');
+  assert.ok(gourdBounds.max.y - gourdBounds.min.y > 2.5, 'gourd should form the elongated upper silhouette');
+});
+
 test('each tower has five circular openings that pass through its stone wall', () => {
   const { group } = createSantanModel();
   group.updateMatrixWorld(true);
@@ -60,25 +105,38 @@ test('each tower has five circular openings that pass through its stone wall', (
     assert.equal(openings.length, 5, `tower ${towerIndex} does not expose five openings`);
     assert.deepEqual(openings.map((opening) => opening.userData.holeIndex).sort(), [1, 2, 3, 4, 5]);
     openings.forEach((opening) => {
-      assert.equal(opening.geometry.parameters.shapes.holes.length, 1, `${opening.name} is not cut from its wall shape`);
       const center = new THREE.Vector3(...opening.userData.localOpeningCenter);
-      const origin = opening.localToWorld(center.clone().add(new THREE.Vector3(0, 0, 1)));
+      for (const [depth, directionZ] of [[1, -1], [-0.65, 1]]) {
+        for (const [x, y] of [[0, 0], [0.22, 0], [-0.22, 0], [0, 0.22], [0, -0.22]]) {
+          const origin = opening.localToWorld(center.clone().add(new THREE.Vector3(x, y, depth)));
+          const direction = new THREE.Vector3(0, 0, directionZ).transformDirection(opening.matrixWorld);
+          assert.equal(new THREE.Raycaster(origin, direction, 0, 1.5).intersectObject(opening).length, 0,
+            `${opening.name} is blocked from the ${depth > 0 ? 'outside' : 'inside'}`);
+        }
+      }
+      const origin = opening.localToWorld(center.clone().add(new THREE.Vector3(0.75, 0, 1)));
       const direction = new THREE.Vector3(0, 0, -1).transformDirection(opening.matrixWorld);
-      const hits = new THREE.Raycaster(origin, direction, 0, 2).intersectObject(opening, false);
-      assert.equal(hits.length, 0, `${opening.name} is visually painted rather than open`);
+      assert.ok(new THREE.Raycaster(origin, direction, 0, 2).intersectObject(opening).length,
+        `${opening.name} lost the solid wall surrounding its aperture`);
     });
   }
 });
 
-test('the perforated wall overlaps the shoulder without a horizontal seam', () => {
+test('the rounded wall meets its base and lower eave without horizontal gaps', () => {
   const { group } = createSantanModel();
   group.updateMatrixWorld(true);
   for (let towerIndex = 1; towerIndex <= 3; towerIndex += 1) {
     const tower = group.getObjectByName(`santan-stone-tower-${towerIndex}`);
-    const origin = tower.localToWorld(new THREE.Vector3(0, 5.32, 4));
-    const direction = new THREE.Vector3(0, 0, -1).transformDirection(tower.matrixWorld);
-    const hits = new THREE.Raycaster(origin, direction, 0, 2.5).intersectObject(tower, true);
-    assert.ok(hits.length > 0, `tower ${towerIndex} has an open seam below its shoulder`);
+    for (const y of [1.58, 1.62, 1.66, 4.47, 4.52, 4.61]) {
+      for (let sample = 0; sample < 20; sample += 1) {
+        const angle = sample / 20 * Math.PI * 2 + 0.0001;
+        const radial = new THREE.Vector3(Math.sin(angle), 0, Math.cos(angle));
+        const origin = tower.localToWorld(radial.clone().multiplyScalar(4).setY(y));
+        const direction = radial.negate().transformDirection(tower.matrixWorld);
+        assert.ok(new THREE.Raycaster(origin, direction, 0, 3.5).intersectObject(tower, true).length,
+          `tower ${towerIndex} has a horizontal gap at ${y}`);
+      }
+    }
   }
 });
 
@@ -89,7 +147,7 @@ test('hotspot anchors are finite Vector3 points covering towers, detail, island 
     assert.ok(anchor.isVector3, `${name} is not a THREE.Vector3`);
     assert.ok(anchor.toArray().every(Number.isFinite), `${name} contains a non-finite coordinate`);
   });
-  assert.ok(anchors.towerDetail.y > anchors.towers.y, 'detail anchor should point at the perforated tower body');
+  assert.ok(anchors.towerDetail.y > 1.6 && anchors.towerDetail.y < 4.6, 'detail anchor should point at the perforated tower belly');
   assert.ok(anchors.island.z < anchors.towers.z, 'island anchor should sit behind the three towers');
   assert.ok(anchors.moonView.y < 1, 'moon-view anchor should stay close to the lake surface');
 });

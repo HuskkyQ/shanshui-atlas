@@ -46,5 +46,5 @@
 - 95 项测试、生产构建、规格与质量审查通过；只保留既有大 chunk 警告。
 - 桌面/390×844 两处景点进入、照片、热点与返回已在浏览器检查；三潭名称点击、全景复位、重复进出、加载取消及沉浸状态恢复通过。
 - 两画布交叠 opacity 已实际检查；返回后 World canvas 为 1，三潭近景热点为 0，控制台无 error/warn。
-- 手机镜头构图避免介绍卡挡住主体；预览 preview-santan-scenic.png 与 preview-santan-mobile.png。
+- 手机镜头构图避免介绍卡挡住主体；预览 `../../../previews/preview-santan-scenic.png` 与 `../../../previews/preview-santan-mobile.png`。
 - 未测 GPU FPS、heap、真实测绘精度；不提交、不发布。

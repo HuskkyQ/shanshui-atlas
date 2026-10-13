@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { createForest } from '../src/forest.js';
+import { createForest } from '../src/shared/forest.js';
 
 const VARIANTS = new Set([
   'layered-pine',

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getScenicScene } from '../src/scenic-scenes.js';
+import { getScenicScene } from '../src/west-lake/scenic-scenes.js';
 
 test('all three ready scenes have their own POI, content, and lazy loader', () => {
   const leifeng = getScenicScene('leifeng-pagoda');

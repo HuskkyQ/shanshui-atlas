@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { enableShiftPan } from '../src/scene-controls.js';
+import { enableShiftPan } from '../src/shared/scene-controls.js';
 
 class EventTargetStub {
   constructor(root = this) {

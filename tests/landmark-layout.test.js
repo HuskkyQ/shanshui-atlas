@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { layoutLandmarkLabels } from '../src/landmark-layout.js';
+import { layoutLandmarkLabels } from '../src/shared/landmark-layout.js';
 
 const WIDTH = 200;
 const HEIGHT = 100;
 
-function label(position, className = 'is-hill-sight') {
+function label(position, className = 'is-hill-sight', hitSize) {
   const object = new THREE.Object3D();
   object.position.copy(position);
   object.element = {
@@ -14,6 +14,7 @@ function label(position, className = 'is-hill-sight') {
     dataset: {},
     style: { setProperty(name, value) { this[name] = value; } },
   };
+  object.userData = hitSize ? { landmarkHitSize: hitSize } : {};
   object.center = new THREE.Vector2(0.5, 0.5);
   return object;
 }
@@ -29,7 +30,7 @@ function camera() {
 
 function boxFor(labelObject, cameraObject) {
   const anchor = labelObject.getWorldPosition(new THREE.Vector3()).project(cameraObject);
-  const size = 29;
+  const size = labelObject.userData.landmarkHitSize || 29;
   const x = (anchor.x + 1) * WIDTH / 2;
   const y = (1 - anchor.y) * HEIGHT / 2;
   const offsetX = (0.5 - labelObject.center.x) * size;
@@ -103,4 +104,36 @@ test('invisible ancestors are skipped and edge labels remain inside the viewport
   const box = boxFor(edge, view);
   assert.ok(box.left >= 0 && box.right <= WIDTH);
   assert.ok(box.top >= 0 && box.bottom <= HEIGHT);
+});
+
+test('edge labels use the actual 34px button size and preserve the projected center offset', () => {
+  const view = camera();
+  const edge = label(new THREE.Vector3(95, 45, 0), 'is-hill-sight', 34);
+  const parent = new THREE.Group();
+  parent.add(edge);
+  parent.updateMatrixWorld(true);
+
+  layoutLandmarkLabels([edge], view, WIDTH, HEIGHT);
+
+  const box = boxFor(edge, view);
+  assert.ok(box.left >= 0 && box.right <= WIDTH);
+  assert.ok(box.top >= 0 && box.bottom <= HEIGHT);
+  assert.ok(Math.abs(edge.center.x - (0.5 - Number(edge.element.dataset.offsetX) / 34)) < 1e-12);
+  assert.ok(Math.abs(edge.center.y - (0.5 - Number(edge.element.dataset.offsetY) / 34)) < 1e-12);
+});
+
+test('dense 34px labels receive stable non-overlapping screen offsets', () => {
+  const view = camera();
+  const parent = new THREE.Group();
+  const labels = Array.from({ length: 4 }, () => label(new THREE.Vector3(0, 0, 0), 'is-hill-sight', 34));
+  parent.add(...labels);
+  parent.updateMatrixWorld(true);
+
+  layoutLandmarkLabels(labels, view, WIDTH, HEIGHT);
+
+  const boxes = labels.map((item) => boxFor(item, view));
+  assert.ok(boxes.every((box, index) => boxes.every((other, otherIndex) => index === otherIndex || !overlaps(box, other))));
+  const centers = labels.map((item) => item.center.clone());
+  layoutLandmarkLabels(labels, view, WIDTH, HEIGHT);
+  labels.forEach((item, index) => assert.deepEqual(item.center, centers[index]));
 });

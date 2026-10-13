@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import layout from '../src/data/zhuozheng-layout.json' with { type: 'json' };
-import { createZhuozhengGardenModel, pointInRing } from '../src/models/zhuozheng-garden.js';
+import { createZhuozhengGardenModel, pointInRing } from '../src/zhuozheng-garden/model.js';
 
 const keys = ['yuanxiang-hall', 'xuexiang-pavilion', 'hefeng-pavilion', 'xiangzhou', 'xiaofeihong', 'wuzhu-pavilion', 'jianshan-lou'];
 

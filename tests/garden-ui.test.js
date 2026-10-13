@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGardenUI } from '../src/garden-ui.js';
+import { createGardenUI } from '../src/zhuozheng-garden/ui.js';
 import content from '../src/content/zhuozheng-garden.json' with { type: 'json' };
 
 class Element {

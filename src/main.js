@@ -1,23 +1,32 @@
 import './home.css';
 
 const place = new URLSearchParams(window.location.search).get('place');
+const model = new URLSearchParams(window.location.search).get('model');
 
-if (place === 'zhuozheng-garden') {
+if (model === 'house') {
+  const [{ default: houseMarkup }] = await Promise.all([
+    import('./models/house/view.html?raw'),
+    import('./models/house/preview.css'),
+  ]);
+  document.body.innerHTML = houseMarkup;
+  document.title = '一间山居 · 房屋模型 · 山水志';
+  await import('./models/house/preview.js');
+} else if (place === 'zhuozheng-garden') {
   document.querySelector('.homepage').hidden = true;
   const [{ default: gardenMarkup }] = await Promise.all([
-    import('./garden.html?raw'),
-    import('./garden.css'),
+    import('./zhuozheng-garden/view.html?raw'),
+    import('./zhuozheng-garden/garden.css'),
   ]);
   document.body.innerHTML = gardenMarkup;
-  await import('./garden.js');
+  await import('./zhuozheng-garden/index.js');
 } else if (place === 'huangshan' || place === 'west-lake') {
   document.querySelector('.homepage').hidden = true;
   const [{ default: exhibitMarkup }] = await Promise.all([
-    import('./exhibit.html?raw'),
-    import('./style.css'),
+    import('./landscape/exhibit.html?raw'),
+    import('./landscape/style.css'),
   ]);
   document.body.innerHTML = exhibitMarkup;
-  await import('./exhibit.js');
+  await import('./landscape/exhibit.js');
 } else {
   document.querySelectorAll('.landscape-favorite').forEach((button) => {
     const storageKey = `landscape-favorite:${button.dataset.place}`;

@@ -1,0 +1,164 @@
+{
+  "leifeng-pagoda": {
+    "src": "/images/scenic/leifeng/overview.jpg",
+    "alt": "从登塔台阶正面看到的雷峰塔",
+    "caption": "雷峰塔总览：现存塔体与登塔台阶",
+    "author": "螺钉",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leifeng_Pagoda,_Hangzhou.JPG"
+  },
+  "leifeng-pagoda:tower": {
+    "src": "/images/scenic/leifeng/tower.jpg",
+    "alt": "西湖对岸远望雷峰塔完整塔身",
+    "caption": "五层塔身与层层出檐",
+    "author": "Mywood",
+    "license": "Public domain",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:China_Hangzhou_Leifeng_Pagoda.JPG"
+  },
+  "leifeng-pagoda:base": {
+    "src": "/images/scenic/leifeng/base.jpg",
+    "alt": "雷峰塔遗址博物馆内的砖砌塔基遗迹",
+    "caption": "塔基与遗址：雷峰塔遗址内保存的砖砌结构",
+    "author": "画室与照相馆",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E6%9D%AD%E5%B7%9E%E9%9B%B7%E5%B3%B0%E5%A1%94_%E5%A1%94%E5%9F%BA%E9%81%97%E8%BF%B9.jpg"
+  },
+  "leifeng-pagoda:eaves": {
+    "src": "/images/scenic/leifeng/eaves.jpg",
+    "alt": "雷峰塔本塔檐下的斗拱、椽条与檐口构件",
+    "caption": "铜檐与斗拱：雷峰塔本塔檐下构件细节",
+    "author": "HALUK COMERTEL",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hangzhou-leifeng_pagoda-excellent_sample_for_wooden_construction_-_panoramio.jpg"
+  },
+  "leifeng-pagoda:lake-view": {
+    "src": "/images/scenic/leifeng/lake-view.jpg",
+    "alt": "从雷峰塔高处眺望西湖、湖岸建筑与绿地",
+    "caption": "西湖远眺：从雷峰塔高处俯瞰西湖湖面与岸线",
+    "author": "HALUK COMERTEL",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hangzhou-west_lake_wiew_from_leifeng_pagoda_-_panoramio_-_HALUK_COMERTEL_(6).jpg"
+  },
+  "santanyinyue": {
+    "src": "/images/scenic/santan/overview.jpg",
+    "alt": "三潭印月湖面、远山与湖中石塔",
+    "caption": "三潭印月湖面远眺",
+    "author": "Ten Thousand Strangers",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Three_Pools_Mirroring_the_Moon.jpg"
+  },
+  "santanyinyue:towers": {
+    "src": "/images/scenic/santan/towers.jpg",
+    "alt": "西湖水面三座石塔同框",
+    "caption": "三塔鼎立",
+    "author": "Takashishin",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:West_Lake,_Hangzhou_2025.jpg"
+  },
+  "santanyinyue:tower-detail": {
+    "src": "/images/scenic/santan/tower-detail.jpg",
+    "alt": "两座三潭石塔近景，可清楚看到塔身圆孔与葫芦形塔刹",
+    "caption": "五孔石塔",
+    "author": "lienyuan lee",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E4%B8%89%E6%BD%AD%E5%8D%B0%E6%9C%88_Three_Ponds_MirrorIng_the_Moon_-_panoramio.jpg"
+  },
+  "santanyinyue:island": {
+    "src": "/images/scenic/santan/island.jpg",
+    "alt": "小瀛洲岛内水岸、园林与临水建筑",
+    "caption": "小瀛洲岸线",
+    "author": "User:CatOnMars",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bank_of_the_Xiaoyingzhou_Island.jpg"
+  },
+  "santanyinyue:moon-view": {
+    "src": "/images/scenic/santan/moon-view.jpg",
+    "alt": "叶肖岩《西湖十景图·三潭印月》宋代绘画",
+    "caption": "叶肖岩《三潭印月》（宋代绘画，非实景照片）",
+    "author": "叶肖岩（Ye Xiaoyan）",
+    "license": "Public domain / Public Domain Mark 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E5%AE%8B_%E8%91%89%E8%82%96%E5%B7%96_%E8%A5%BF%E6%B9%96%E5%8D%81%E6%99%AF%E5%9C%96_%E4%B8%89%E6%BD%AD%E5%8D%B0%E6%9C%88.jpg"
+  },
+  "lingyin-temple": {
+    "src": "/images/scenic/lingyin/overview.jpg",
+    "alt": "灵隐寺山门入口",
+    "caption": "灵隐寺山门入口与寺院围墙",
+    "author": "Liuxingy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:西湖_灵隐寺之山门入口.jpg"
+  },
+  "lingyin-temple:tianwang": {
+    "src": "/images/scenic/lingyin/tianwang.jpg",
+    "alt": "灵隐寺天王殿外观",
+    "caption": "天王殿南面外观与中轴石阶",
+    "author": "Siyuwj",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lingyin_Temple,_2020-11-29_22.jpg"
+  },
+  "lingyin-temple:daxiong": {
+    "src": "/images/scenic/lingyin/daxiong.jpg",
+    "alt": "灵隐寺大雄宝殿",
+    "caption": "大雄宝殿前的佛像与殿门",
+    "author": "Tyg728",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hangzhou_Lingyin-Temple_20161003.jpg"
+  },
+  "lingyin-temple:yaoshi": {
+    "src": "/images/scenic/lingyin/yaoshi.jpg",
+    "alt": "灵隐寺药师殿",
+    "caption": "药师殿正立面与东方三圣供奉空间",
+    "author": "Siyuwj",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lingyin_Temple,_2020-11-29_15.jpg"
+  },
+  "lingyin-temple:zhizhi": {
+    "src": "/images/scenic/lingyin/zhizhi.jpg",
+    "alt": "灵隐寺直指堂",
+    "caption": "直指堂外观与石刻台基",
+    "author": "Siyuwj",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lingyin_Temple,_2020-11-29_17.jpg"
+  },
+  "lingyin-temple:huayan": {
+    "src": "/images/scenic/lingyin/huayan.jpg",
+    "alt": "灵隐寺华严殿",
+    "caption": "华严殿前的台阶、香炉与殿堂立面",
+    "author": "Siyuwj",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lingyin_Temple,_2020-11-29_18.jpg"
+  },
+  "lingyin-temple:luohan": {
+    "src": "/images/scenic/lingyin/luohan.jpg",
+    "alt": "灵隐寺五百罗汉堂",
+    "caption": "五百罗汉堂门额与传统屋檐细部",
+    "author": "zhiyin586@163.com",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:杭州.灵隐寺（五百罗汉堂）_-_panoramio.jpg"
+  },
+  "lingyin-temple:jigong": {
+    "src": "/images/scenic/lingyin/jigong.jpg",
+    "alt": "灵隐寺济公殿",
+    "caption": "济公殿入口与殿前香炉",
+    "author": "zhiyin586@163.com",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:杭州.灵隐寺（济公殿）_-_panoramio_(1).jpg"
+  }
+}

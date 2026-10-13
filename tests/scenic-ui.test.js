@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createScenicUI } from '../src/scenic-ui.js';
+import { createScenicUI } from '../src/west-lake/scenic-ui.js';
+import scenicPhotos from '../src/content/scenic-photos.json' with { type: 'json' };
+import { leifengContent, santanContent, lingyinContent } from '../src/west-lake/scenic-content.js';
+import { existsSync } from 'node:fs';
 
 // Only the DOM operations used by the UI are needed; rendering is checked in-browser.
 class Element {
@@ -71,6 +74,67 @@ function setup(t) {
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
 
+test('hotspot selection changes its photo and reset restores the overview photo', async (t) => {
+  const { get, entryButton } = setup(t);
+  const photo = () => get('#scenic-photo').children[0].children[0].children[0];
+  entryButton.dataset.sceneId = 'santanyinyue';
+  await entryButton.emit('click');
+  const overview = photo().src;
+  await get('#scenic-hotspots').children[1].emit('click');
+  const detail = photo().src;
+  assert.notEqual(detail, overview, 'stone tower detail must not keep the overview photo');
+  await get('#scenic-hotspots').children[2].emit('click');
+  assert.notEqual(photo().src, detail, 'island shore must not keep the stone tower photo');
+  await get('#scenic-reset').emit('click');
+  assert.equal(photo().src, overview);
+});
+
+test('all scenic hotspots have distinct local photos with source and credit metadata', () => {
+  for (const content of [leifengContent, santanContent, lingyinContent]) {
+    const sources = new Set();
+    for (const id of [content.id, ...content.hotspots.map((item) => `${content.id}:${item.id}`)]) {
+      const photo = scenicPhotos[id];
+      assert.ok(photo, `missing photo for ${id}`);
+      assert.ok(existsSync(new URL(`../public${photo.src}`, import.meta.url)), `missing local asset for ${id}`);
+      for (const field of ['alt', 'caption', 'author', 'license', 'licenseUrl', 'sourceUrl']) {
+        assert.ok(photo[field], `missing ${field} for ${id}`);
+      }
+      if (id !== content.id) {
+        assert.ok(!sources.has(photo.src), `hotspots reuse the same photo in ${content.id}`);
+        sources.add(photo.src);
+      }
+    }
+  }
+});
+
+test('each hotspot updates image, accessible description and credits together', async (t) => {
+  const { get, entryButton } = setup(t);
+  for (const content of [leifengContent, santanContent, lingyinContent]) {
+    entryButton.dataset.sceneId = content.id;
+    await entryButton.emit('click');
+    for (const [index, item] of content.hotspots.entries()) {
+      await get('#scenic-hotspots').children[index].emit('click');
+      const expected = scenicPhotos[`${content.id}:${item.id}`];
+      const figure = get('#scenic-photo').children[0];
+      const [image, status] = figure.children[0].children;
+      const [caption, credits] = figure.children[1].children;
+      assert.equal(image.src, expected.src);
+      assert.equal(image.alt, expected.alt);
+      assert.equal(caption.textContent, expected.caption);
+      assert.equal(credits.children[0].href, expected.sourceUrl);
+      assert.equal(credits.children[0].getAttribute('aria-label'), `${item.name}照片来源：${expected.author}`);
+      assert.equal(credits.children[1].href, expected.licenseUrl);
+      await image.emit('load');
+      assert.equal(image.hidden, false);
+      assert.equal(status.hidden, true);
+    }
+    await get('#scenic-reset').emit('click');
+    assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, scenicPhotos[content.id].src);
+    await get('#scenic-back').emit('click');
+    await settle();
+  }
+});
+
 test('entering different scenes replaces title, photo, navigation, and hotspot content', async (t) => {
   const { get, callbacks, worldPanels, entryButton } = setup(t);
   entryButton.dataset.sceneId = 'santanyinyue';
@@ -78,7 +142,7 @@ test('entering different scenes replaces title, photo, navigation, and hotspot c
   assert.equal(get('#scenic-title').textContent, '三潭印月');
   assert.equal(get('#scenic-status').textContent, '正在飞向三潭印月…');
   assert.equal(get('#scenic-hotspots').getAttribute('aria-label'), '三潭印月探索点');
-  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, '/images/pois/santan.jpg');
+  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, scenicPhotos.santanyinyue.src);
   assert.equal(get('#scenic-hotspots').children.length, 4);
   await get('#scenic-hotspots').children[1].emit('click');
   assert.equal(get('#scenic-hotspot-name').textContent, '五孔石塔');
@@ -91,7 +155,7 @@ test('entering different scenes replaces title, photo, navigation, and hotspot c
   entryButton.dataset.sceneId = 'leifeng-pagoda';
   await entryButton.emit('click');
   assert.equal(get('#scenic-title').textContent, '雷峰塔');
-  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, '/images/pois/leifeng.jpg');
+  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, scenicPhotos['leifeng-pagoda'].src);
   assert.equal(get('#scenic-hotspots').children.length, 4);
   assert.equal(get('#scenic-hotspots').children[0].dataset.scenicHotspot, 'tower');
   assert.equal(get('#scenic-source').hidden, true);
@@ -100,6 +164,7 @@ test('entering different scenes replaces title, photo, navigation, and hotspot c
   // A late callback from the released scene must not modify the current panel.
   callbacks[0]('tower-detail');
   assert.equal(get('#scenic-hotspot-name').textContent, '雷峰塔');
+  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, scenicPhotos['leifeng-pagoda'].src);
   await get('#scenic-hotspots').children[2].emit('click');
   assert.equal(get('#scenic-hotspot-name').textContent, '铜檐与斗拱');
   await get('#scenic-reset').emit('click');
@@ -110,7 +175,7 @@ test('entering different scenes replaces title, photo, navigation, and hotspot c
   entryButton.dataset.sceneId = 'lingyin-temple';
   await entryButton.emit('click');
   assert.equal(get('#scenic-title').textContent, '灵隐寺');
-  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, '/images/pois/lingyin.jpg');
+  assert.equal(get('#scenic-photo').children[0].children[0].children[0].src, scenicPhotos['lingyin-temple'].src);
   assert.equal(get('#scenic-hotspots').children.length, 7);
   assert.equal(get('#scenic-hotspots').children[0].dataset.scenicHotspot, 'tianwang');
   await get('#scenic-hotspots').children[1].emit('click');

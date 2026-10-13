@@ -5,9 +5,9 @@ import originalAttractions from '../src/data/west-lake-attractions.json' with { 
 import builtLandmarkData from '../src/data/west-lake-built-landmarks.json' with { type: 'json' };
 import trailheads from '../src/data/west-lake-trailheads.json' with { type: 'json' };
 import hillSights from '../src/data/west-lake-hill-sights.json' with { type: 'json' };
-import { getWestLakeBuiltPOIs } from '../src/west-lake-built-pois.js';
-import { isPOIVisible } from '../src/poi-visibility.js';
-import { westLakePOIGroups, westLakePOIs } from '../src/west-lake-pois.js';
+import { getWestLakeBuiltPOIs } from '../src/west-lake/built-pois.js';
+import { isPOIVisible } from '../src/shared/poi-visibility.js';
+import { westLakePOIGroups, westLakePOIs } from '../src/west-lake/pois.js';
 
 test('core POIs remain visible at every distance', () => {
   for (const id of ['leifeng', 'lingyin-temple', 'santan']) {
