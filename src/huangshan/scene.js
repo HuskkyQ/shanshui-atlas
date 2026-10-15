@@ -399,10 +399,29 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     nightCloud: new THREE.Color('#7390a2'), dayCloud: new THREE.Color('#ffffff'),
   };
   let cleanMode = false;
+  let immersiveMode = false;
   let savedView = null;
 
   function updateLighting() {
-    if (cleanMode) return;
+    if (cleanMode || immersiveMode) {
+      renderer.shadowMap.enabled = false;
+      scene.background.set('#65787a');
+      scene.fog = null;
+      ambient.color.set('#ffffff');
+      ambient.groundColor.set('#ffffff');
+      ambient.intensity = 3;
+      sunlight.intensity = 0;
+      sunlight.visible = false;
+      sunlight.castShadow = false;
+      moonLight.intensity = 0;
+      moonLight.visible = false;
+      moonLight.castShadow = false;
+      renderer.toneMappingExposure = 1.25;
+      sun.visible = false;
+      clouds.forEach((cloud) => { cloud.visible = false; });
+      return;
+    }
+    renderer.shadowMap.enabled = true;
     const lighting = getLightingForDate(new Date());
     const { daylight, twilight, moonlight, sun: sunPosition, moon, period, time } = lighting;
     const [sunX, sunY, sunZ] = skyDirection(sunPosition);
@@ -410,10 +429,13 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     sunlight.position.set(sunX * 35, sunY * 35, sunZ * 35);
     sunlight.intensity = 3.5 * clamp(sunPosition.altitude / 16, 0, 1);
     sunlight.color.copy(colors.noonSun).lerp(colors.lowSun, twilight * 0.8);
+    sunlight.castShadow = true;
     moonLight.position.set(moonX * 35, moonY * 35, moonZ * 35);
     moonLight.color.set('#a9c5e5');
     moonLight.intensity = 1.6 * moonlight;
     moonLight.castShadow = true;
+    sunlight.visible = true;
+    moonLight.visible = true;
     ambient.color.copy(colors.nightAmbient).lerp(colors.dayAmbient, daylight);
     ambient.groundColor.copy(colors.nightGround).lerp(colors.dayGround, daylight);
     ambient.intensity = 1.05 + 1.05 * daylight;
@@ -434,7 +456,6 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
 
   function setCleanMode(enabled) {
     cleanMode = enabled;
-    renderer.shadowMap.enabled = !enabled;
     ascentRoutes.visible = !enabled && (activeView === 'overview' || activeView === 'trailheads');
     trailheads.group.visible = !enabled;
     scenicPoints.group.visible = !enabled;
@@ -458,17 +479,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     controls.maxDistance = 90;
     resize();
     controls.update();
-    scene.background.set('#65787a');
-    scene.fog = null;
-    ambient.color.set('#ffffff');
-    ambient.groundColor.set('#ffffff');
-    ambient.intensity = 3;
-    sunlight.intensity = 0;
-    moonLight.intensity = 0;
-    moonLight.castShadow = false;
-    renderer.toneMappingExposure = 1.25;
-    sun.visible = false;
-    clouds.forEach((cloud) => { cloud.visible = false; });
+    updateLighting();
   }
   clouds.forEach((cloud) => { cloud.userData.baseOpacity = cloud.material.opacity; });
   updateLighting();
@@ -490,7 +501,6 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   const compassDial = document.querySelector('#compass-dial');
 
   let motion = !reducedMotion;
-  let immersiveMode = false;
   let activeView = 'overview';
   let viewTween = null;
   let frameId;
@@ -527,7 +537,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     landmarkIconScaler();
     compassDial.style.transform = `rotate(${Math.atan2(camera.position.x - controls.target.x, camera.position.z - controls.target.z)}rad)`;
     forest.update(camera, container.clientHeight, elapsed);
-    if (motion && !cleanMode) clouds.forEach((cloud) => {
+    if (motion && !cleanMode && !immersiveMode) clouds.forEach((cloud) => {
       cloud.position.x = cloud.userData.originX + Math.sin(elapsed * cloud.userData.speed + cloud.userData.phase) * 0.55;
     });
     renderer.render(scene, camera);
@@ -537,7 +547,10 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   animate();
 
   return {
-    setImmersiveMode(value) { immersiveMode = value; },
+    setImmersiveMode(value) {
+      immersiveMode = value;
+      updateLighting();
+    },
     setView(name) {
       const view = VIEWS[name] || scenicViews[name];
       if (!view) return;

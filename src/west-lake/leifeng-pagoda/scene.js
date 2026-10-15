@@ -6,7 +6,8 @@ import { createLeifengModel } from './model.js';
 import { enableShiftPan } from '../../shared/scene-controls.js';
 import { createLandmarkIconScaler } from '../../shared/landmark-scale.js';
 import { layoutLandmarkLabels } from '../../shared/landmark-layout.js';
-import { applyScenicEntryProjection, applyScenicEntryView } from '../../shared/scenic-entry-view.js';
+import { applyScenicEntryProjection, applyScenicEntryView, fitScenicEntryView } from '../../shared/scenic-entry-view.js';
+import { LEIFENG_SITE } from './site-layout.js';
 import { leifengContent as content } from '../scenic-content.js';
 
 const INITIAL_VIEW = {
@@ -39,7 +40,7 @@ function vectorFrom(value, fallback) {
 }
 
 function createLake() {
-  const geometry = new THREE.PlaneGeometry(180, 140, 1, 1);
+  const geometry = new THREE.PlaneGeometry(1200, 1100, 1, 1);
   const material = new THREE.MeshPhysicalMaterial({
     color: '#477b80',
     roughness: 0.34,
@@ -50,33 +51,10 @@ function createLake() {
   const lake = new THREE.Mesh(geometry, material);
   lake.name = 'leifeng-exhibition-lake';
   lake.rotation.x = -Math.PI / 2;
-  lake.position.set(0, -1.1, -82);
+  lake.position.set(0, (7.5 - LEIFENG_SITE.originElevation)
+    * LEIFENG_SITE.source.verticalExaggeration * LEIFENG_SITE.unitsPerMetre + 0.03, -300);
   lake.receiveShadow = true;
   return lake;
-}
-
-function createDistantMountains() {
-  const group = new THREE.Group();
-  group.name = 'leifeng-distant-mountains';
-  const material = new THREE.MeshStandardMaterial({ color: '#42645e', roughness: 1, flatShading: true });
-  [
-    [-72, -1.1, -137, 38, 11, 20],
-    [-35, -1.1, -139, 42, 15, 22],
-    [4, -1.1, -141, 34, 10, 19],
-    [40, -1.1, -138, 41, 16, 22],
-    [78, -1.1, -136, 35, 12, 20],
-  ].forEach(([x, y, z, radius, height, depth]) => {
-    const mountain = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 12, 5, 0, Math.PI * 2, 0, Math.PI / 2),
-      material,
-    );
-    mountain.position.set(x, y, z);
-    mountain.scale.set(radius, height, depth);
-    mountain.rotation.y = x * 0.013;
-    mountain.receiveShadow = true;
-    group.add(mountain);
-  });
-  return group;
 }
 
 function disposeSceneResources(scene) {
@@ -124,6 +102,7 @@ export function createScene(initialContext = {}) {
   const views = new Map();
   let entryView = null;
   let entrySettlement = null;
+  let precinctBounds = null;
 
   function resize() {
     if (!mounted || !container?.clientWidth || !container?.clientHeight) return;
@@ -144,8 +123,8 @@ export function createScene(initialContext = {}) {
     if (!entryView) return;
     entryView = null;
     entrySettlement = null;
-    scene.fog.near = 78;
-    scene.fog.far = 190;
+    scene.fog.near = 900;
+    scene.fog.far = 1800;
     resize();
   }
 
@@ -191,11 +170,12 @@ export function createScene(initialContext = {}) {
     if (!mounted) return false;
     restorePresetProjection();
     setActive(null);
-    const view = container.clientWidth < 650 ? MOBILE_INITIAL_VIEW : INITIAL_VIEW;
-    moveTo({
-      position: new THREE.Vector3(...view.position),
-      target: new THREE.Vector3(...view.target),
-    });
+    const view = fitScenicEntryView({
+      direction: new THREE.Vector3(0.8, 1.1, 1.4).normalize().toArray(),
+      fov: camera.getEffectiveFOV(), projection: { x: 0, y: 0 },
+    }, precinctBounds, container.clientWidth, container.clientHeight);
+    controls.maxDistance = Math.max(controls.maxDistance, view.position.distanceTo(view.target) * 1.4);
+    moveTo(view);
     onHotspot?.(null);
     return true;
   }
@@ -275,8 +255,8 @@ export function createScene(initialContext = {}) {
     scene.name = 'leifeng-pagoda-scenic-scene';
     scene.userData.lightingMode = 'fixed-exhibition-lighting';
     scene.background = new THREE.Color('#456064');
-    scene.fog = new THREE.Fog('#456064', 78, 190);
-    camera = new THREE.PerspectiveCamera(39, 1, 0.1, 260);
+    scene.fog = new THREE.Fog('#456064', 900, 1800);
+    camera = new THREE.PerspectiveCamera(39, 1, 0.1, 2400);
     const initialView = container.clientWidth < 650 ? MOBILE_INITIAL_VIEW : INITIAL_VIEW;
     camera.position.set(...initialView.position);
 
@@ -295,7 +275,8 @@ export function createScene(initialContext = {}) {
     container.appendChild(labelRenderer.domElement);
 
     const model = createLeifengModel();
-    scene.add(model.group, createLake(), createDistantMountains());
+    scene.add(model.group, createLake());
+    precinctBounds = new THREE.Box3().setFromObject(model.group);
     addHotspots(model);
 
     const ambient = new THREE.HemisphereLight('#f4f5ef', '#244541', 2.25);
@@ -420,6 +401,7 @@ export function createScene(initialContext = {}) {
     tween = null;
     entryView = null;
     entrySettlement = null;
+    precinctBounds = null;
   }
 
   return { mount, reveal, conceal, selectHotspot, resetView, dispose };

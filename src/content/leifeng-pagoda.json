@@ -2,8 +2,8 @@
   "id": "leifeng-pagoda",
   "name": "雷峰塔",
   "englishName": "LEIFENG PAGODA",
-  "description": "登临夕照山，在铜色檐廊与湖山之间游望。",
-  "modelNote": "现代塔形制的艺术化建模，周边湖山为示意；采用固定展陈日光。",
+  "description": "沿夕照山的林间步道走向雷峰塔，游望遗址保护基座、放生池与西湖。",
+  "modelNote": "山坡、步道与放生池依据公开地图和高程整理；塔基、局部连接与植被为艺术化近似，内部遗址未复原。采用固定展陈日光。数据：© OpenStreetMap 贡献者／Copernicus DEM。",
   "hotspots": [
     {
       "id": "tower",

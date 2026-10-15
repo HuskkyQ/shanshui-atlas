@@ -1,0 +1,75 @@
+{
+  "id": "jingci-temple",
+  "name": "净慈寺",
+  "englishName": "JINGCI TEMPLE",
+  "description": "循入口庭院、大雄宝殿、后轴殿堂和高台大阁，探索山林环抱的净慈寺多院落建筑群。",
+  "modelNote": "整体布局按所选净慈寺复建效果图艺术化复原，灰瓦配色也随方案图；实景照片展示现有建筑，可能与方案不同。尺寸、栋位、台地及周边坡面为展示级近似；后部大阁和侧院的正式名称尚待编号总图核实。",
+  "hotspots": [
+    {
+      "id": "gate",
+      "name": "山门",
+      "description": "中轴入口殿，现状图文也称金刚殿。现有山门以黄色墙体、深红门殿、灰瓦屋面和石阶构成入口界面。模型中的位置和体量按复建效果图近似表达。",
+      "source": {
+        "name": "Wikimedia Commons · 净慈寺山门原图",
+        "url": "https://commons.wikimedia.org/wiki/File:%E8%A5%BF%E6%B9%96_%E5%87%80%E6%85%88%E5%AF%BA%E4%B9%8B%E5%B1%B1%E9%97%A8.jpg"
+      }
+    },
+    {
+      "id": "daxiong",
+      "name": "大雄宝殿",
+      "description": "寺院中轴的核心主殿，现状资料与照片可确认其单层重檐、黄瓦木构的外观。本版模型采用所选复建效果图中的灰瓦形态，并扩大主殿前石庭、台阶和两侧配殿。",
+      "source": {
+        "name": "杭州网 · 净慈诗 济公",
+        "url": "https://ori.hangzhou.com.cn/ornews/content/2011-04/27/content_3706962.htm"
+      }
+    },
+    {
+      "id": "bell",
+      "name": "南屏晚钟",
+      "description": "资料确认钟楼位于金刚殿西侧，为两层三重檐楼阁；上层悬钟，下层为地藏殿。模型沿用这一粗略位置关系；前院另一座对称小楼的名称尚未确认。",
+      "source": {
+        "name": "杭州市政府英文资料 · Evening Bell at Nanping Hill",
+        "url": "https://eng.hangzhou.gov.cn/art/2021/3/10/art_811216_58875578.html"
+      }
+    },
+    {
+      "id": "courtyard",
+      "name": "石庭与台阶",
+      "description": "入口殿与主殿之间留出宽阔石庭，中央步道和台阶贯通，两侧楼阁、配殿与树木形成庭院边界。庭院比例按所选方案图表达，照片为现有大雄宝殿石庭。",
+      "source": {
+        "name": "Wikimedia Commons · 2025 年大雄宝殿原图",
+        "url": "https://commons.wikimedia.org/wiki/File:20250310_Daxiong_Baodian,_Jingci_Si.jpg"
+      }
+    },
+    {
+      "id": "rear-hall",
+      "name": "后轴殿堂",
+      "photoStatus": "unverified-layout",
+      "description": "效果图中位于大雄宝殿后方的横向殿堂，与两侧廊房共同围成下一进院落。资料可确认寺内有三圣殿，但没有编号总图证明它与图中这一栋一一对应，因此暂用分区名称。",
+      "source": {
+        "name": "木建筑研究中心 · 净慈寺复建项目",
+        "url": "https://www.mu-tect.com/Architecture/118.html"
+      }
+    },
+    {
+      "id": "rear-pavilion",
+      "name": "后部高台大阁",
+      "photoStatus": "unverified-layout",
+      "description": "按效果图建立后山最高一进的三檐木构大阁、石砌高台和轴线台阶。公开项目页没有给出它的殿名，暂不命名为释迦殿、千佛阁或其他历史殿堂。",
+      "source": {
+        "name": "木建筑研究中心 · 净慈寺复建项目",
+        "url": "https://www.mu-tect.com/Architecture/118.html"
+      }
+    },
+    {
+      "id": "side-courts",
+      "name": "两翼院落",
+      "photoStatus": "unverified-layout",
+      "description": "按照效果图补齐两侧围合廊院、二层小楼和入口旁的独立院落群。寺内有济公殿、观音殿、演法堂、永明塔院、运木古井等名称，但缺少与方案逐栋对应的图纸，这些房屋目前仅按分区标注。",
+      "source": {
+        "name": "木建筑研究中心 · 净慈寺复建项目",
+        "url": "https://www.mu-tect.com/Architecture/118.html"
+      }
+    }
+  ]
+}

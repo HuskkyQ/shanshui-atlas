@@ -28,6 +28,25 @@ if (model === 'house') {
   document.body.innerHTML = exhibitMarkup;
   await import('./landscape/exhibit.js');
 } else {
+  const sourceDialog = document.querySelector('#home-sources-dialog');
+  const copernicus = ['地形数据：Copernicus DEM GLO-30 ↗', 'https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM'];
+  const sources = {
+    huangshan: [copernicus, ['路线与点位位置：© OpenStreetMap 贡献者 ↗', 'https://www.openstreetmap.org/copyright']],
+    'west-lake': [copernicus, ['湖岸、路线与点位：© OpenStreetMap 贡献者 ↗', 'https://www.openstreetmap.org/copyright'],
+      ['地貌参考：Google Maps 地形视图 ↗', 'https://www.google.com/maps/@30.238,120.125,13z/data=!5m1!1e4']],
+  };
+  document.querySelectorAll('[data-source-place]').forEach((button) => button.addEventListener('click', () => {
+    document.querySelector('#home-sources-title').textContent = `${button.dataset.name} · 数据来源`;
+    document.querySelector('#home-sources-links').replaceChildren(...sources[button.dataset.sourcePlace].map(([label, url]) => {
+      const link = document.createElement('a');
+      link.textContent = label;
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+      return link;
+    }));
+    sourceDialog.showModal();
+  }));
   document.querySelectorAll('.landscape-favorite').forEach((button) => {
     const storageKey = `landscape-favorite:${button.dataset.place}`;
     const setFavorite = (favorite) => {

@@ -32,13 +32,6 @@ if (isWestLake) {
   document.querySelector('.english-title').textContent = 'WEST LAKE · HANGZHOU';
   document.querySelector('.intro-copy').innerHTML = '三面云山，一湖碧水，<br />在湖岸与山脊之间游望。';
   document.querySelector('.intro-caption').textContent = '西湖与周边群山 · 高程数据驱动的微缩景观';
-  document.querySelector('.terrain-source a:nth-child(2)').textContent = '湖岸、路线与点位：© OpenStreetMap 贡献者 ↗';
-  const reference = document.createElement('a');
-  reference.href = 'https://www.google.com/maps/@30.238,120.125,13z/data=!5m1!1e4';
-  reference.target = '_blank';
-  reference.rel = 'noreferrer';
-  reference.textContent = '地貌参考：Google Maps 地形视图 ↗';
-  document.querySelector('.terrain-source').insertBefore(reference, document.querySelector('.terrain-source p'));
   document.querySelector('.scene-caption').innerHTML = '<span class="caption-cross">＋</span> 湖山相依 <span> / </span> BETWEEN WATER & WOODED HILLS';
   document.querySelector('.view-group-heading').innerHTML = '西湖群山 <i></i> HILLS';
   document.querySelector('.landmark-kicker').innerHTML = '西湖群山 <b>LANDMARK</b>';
@@ -191,7 +184,6 @@ try {
 
   function setImmersiveMode(value) {
     immersiveMode = value;
-    if (value && exhibit.isCleanMode()) updateCleanMode(exhibit.toggleCleanMode());
     document.querySelector('#app').classList.toggle('is-immersive', value);
     immersiveButton.setAttribute('aria-pressed', String(value));
     immersiveLabel.textContent = value ? '退出沉浸' : '沉浸式体验';

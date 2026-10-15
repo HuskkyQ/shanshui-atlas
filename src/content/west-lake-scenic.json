@@ -53,5 +53,26 @@
         "url": "https://wgly.hangzhou.gov.cn/attach/538/2307051510367229.pdf"
       }
     ]
+  },
+  {
+    "id": "jingci-temple",
+    "poiId": "jingci-temple",
+    "name": "净慈寺",
+    "status": "planned",
+    "description": "按复建效果图展开的净慈寺建筑群：中轴殿堂、后山高阁、两翼廊院与南屏山林。",
+    "sources": [
+      {
+        "name": "OpenStreetMap 寺院代表点",
+        "url": "https://www.openstreetmap.org/node/4427428610"
+      },
+      {
+        "name": "杭州市政府 · 南屏晚钟",
+        "url": "https://eng.hangzhou.gov.cn/art/2021/3/10/art_811216_58875578.html"
+      },
+      {
+        "name": "木建筑研究中心 · 净慈寺复建方案",
+        "url": "https://www.mu-tect.com/Architecture/118.html"
+      }
+    ]
   }
 ]

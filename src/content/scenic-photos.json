@@ -160,5 +160,50 @@
     "license": "CC BY 3.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:杭州.灵隐寺（济公殿）_-_panoramio_(1).jpg"
+  },
+  "jingci-temple": {
+    "src": "/images/scenic/jingci/overview.jpg",
+    "alt": "从雷峰塔高处俯瞰净慈寺、道路与南屏山林",
+    "caption": "从雷峰塔高处俯瞰净慈寺与南屏山（2008）",
+    "author": "HALUK COMERTEL",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hangzhou-west_lake_wiew_from_leifeng_pagoda_-_panoramio_-_HALUK_COMERTEL_(7).jpg"
+  },
+  "jingci-temple:gate": {
+    "src": "/images/scenic/jingci/gate.jpg",
+    "alt": "净慈寺山门正面、黄色墙体、灰瓦屋面与石狮",
+    "caption": "净慈寺山门正面（2025）",
+    "author": "Liuxingy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E8%A5%BF%E6%B9%96_%E5%87%80%E6%85%88%E5%AF%BA%E4%B9%8B%E5%B1%B1%E9%97%A8.jpg"
+  },
+  "jingci-temple:daxiong": {
+    "src": "/images/scenic/jingci/daxiong.jpg",
+    "alt": "净慈寺大雄宝殿正面、黄色琉璃瓦与深红木构",
+    "caption": "大雄宝殿正面（2016）",
+    "author": "Tyg728",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E5%87%80%E6%85%88%E5%AF%BA%E5%A4%A7%E9%9B%84%E5%AE%9D%E6%AE%BF.jpg"
+  },
+  "jingci-temple:bell": {
+    "src": "/images/scenic/jingci/bell.jpg",
+    "alt": "净慈寺钟楼正面、灰瓦三重檐与红木栏杆",
+    "caption": "钟楼正面与三重檐（2016）",
+    "author": "Tyg728",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E5%87%80%E6%85%88%E5%AF%BA%E9%92%9F%E6%A5%BC.jpg"
+  },
+  "jingci-temple:courtyard": {
+    "src": "/images/scenic/jingci/courtyard.jpg",
+    "alt": "净慈寺大雄宝殿前石庭、中央香炉与台阶",
+    "caption": "大雄宝殿前石庭与台阶（2025）",
+    "author": "Yumeto",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:20250310_Daxiong_Baodian,_Jingci_Si.jpg"
   }
 }

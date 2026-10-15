@@ -5,11 +5,12 @@ import trailheads from '../data/west-lake-trailheads.json' with { type: 'json' }
 import hillSights from '../data/west-lake-hill-sights.json' with { type: 'json' };
 import { getWestLakeBuiltPOIs } from './built-pois.js';
 
-const CORE_POI_IDS = new Set(['leifeng', 'lingyin-temple', 'santan']);
+const CORE_POI_IDS = new Set(['leifeng', 'lingyin-temple', 'santan', 'jingci-temple']);
 const FUTURE_SCENE_IDS = {
   leifeng: 'leifeng-pagoda',
   'lingyin-temple': 'lingyin-temple',
   santan: 'santanyinyue',
+  'jingci-temple': 'jingci-temple',
 };
 const BRIDGE_IDS = new Set(['yingbo', 'suolan', 'wangshan', 'yadi', 'dongpu', 'kuahong', 'jindai']);
 
@@ -22,6 +23,7 @@ function decorate(items, entityType) {
       ...item,
       entityType,
       importance,
+      presentation: importance === 3 ? 'core' : ['sudi', 'baidi'].includes(item.id) ? 'region' : 'dot',
       ...(sceneId ? { sceneId } : {}),
     };
   });

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createScenicUI } from '../src/west-lake/scenic-ui.js';
 import scenicPhotos from '../src/content/scenic-photos.json' with { type: 'json' };
-import { leifengContent, santanContent, lingyinContent } from '../src/west-lake/scenic-content.js';
+import { leifengContent, santanContent, lingyinContent, jingciContent } from '../src/west-lake/scenic-content.js';
 import { existsSync } from 'node:fs';
 
 // Only the DOM operations used by the UI are needed; rendering is checked in-browser.
@@ -89,11 +89,18 @@ test('hotspot selection changes its photo and reset restores the overview photo'
   assert.equal(photo().src, overview);
 });
 
-test('all scenic hotspots have distinct local photos with source and credit metadata', () => {
-  for (const content of [leifengContent, santanContent, lingyinContent]) {
+test('verified scenic hotspots have distinct credited photos and unlocated proposal areas stay explicit', () => {
+  for (const content of [leifengContent, santanContent, lingyinContent, jingciContent]) {
     const sources = new Set();
     for (const id of [content.id, ...content.hotspots.map((item) => `${content.id}:${item.id}`)]) {
       const photo = scenicPhotos[id];
+      const hotspot = content.hotspots.find((item) => `${content.id}:${item.id}` === id);
+      if (hotspot?.photoStatus === 'unverified-layout') {
+        assert.equal(content.id, 'jingci-temple');
+        assert.ok(['rear-hall', 'rear-pavilion', 'side-courts'].includes(hotspot.id));
+        assert.equal(photo, undefined, 'an unlocated proposal building must not use an unrelated photo');
+        continue;
+      }
       assert.ok(photo, `missing photo for ${id}`);
       assert.ok(existsSync(new URL(`../public${photo.src}`, import.meta.url)), `missing local asset for ${id}`);
       for (const field of ['alt', 'caption', 'author', 'license', 'licenseUrl', 'sourceUrl']) {
@@ -109,13 +116,21 @@ test('all scenic hotspots have distinct local photos with source and credit meta
 
 test('each hotspot updates image, accessible description and credits together', async (t) => {
   const { get, entryButton } = setup(t);
-  for (const content of [leifengContent, santanContent, lingyinContent]) {
+  for (const content of [leifengContent, santanContent, lingyinContent, jingciContent]) {
     entryButton.dataset.sceneId = content.id;
     await entryButton.emit('click');
     for (const [index, item] of content.hotspots.entries()) {
       await get('#scenic-hotspots').children[index].emit('click');
       const expected = scenicPhotos[`${content.id}:${item.id}`];
       const figure = get('#scenic-photo').children[0];
+      if (item.photoStatus === 'unverified-layout') {
+        assert.equal(figure.children.length, 1);
+        assert.equal(figure.children[0].textContent, '暂无实景照片');
+        assert.equal(get('#scenic-hotspot-name').textContent, item.name);
+        assert.equal(get('#scenic-description').textContent, item.description);
+        assert.equal(get('#scenic-source').href, item.source.url);
+        continue;
+      }
       const [image, status] = figure.children[0].children;
       const [caption, credits] = figure.children[1].children;
       assert.equal(image.src, expected.src);

@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { createLeifengModel, createLeifengOverviewFoundation, createLeifengOverviewTower } from '../src/west-lake/leifeng-pagoda/model.js';
+import { createLeifengCore, createLeifengModel, getLeifengGroundHeight,
+  getLeifengRawGroundHeight } from '../src/west-lake/leifeng-pagoda/model.js';
+import { LEIFENG_SITE } from '../src/west-lake/leifeng-pagoda/site-layout.js';
 
 function meshes(root) {
   const result = [];
@@ -13,6 +15,57 @@ function triangleCount(mesh) {
   const positions = mesh.geometry.getAttribute('position');
   const base = mesh.geometry.index ? mesh.geometry.index.count / 3 : positions.count / 3;
   return base * (mesh.isInstancedMesh ? mesh.count : 1);
+}
+
+function indexedTriangles(mesh) {
+  const positions = mesh.geometry.getAttribute('position');
+  const index = mesh.geometry.index;
+  const result = [];
+  for (let offset = 0; offset < index.count; offset += 3) {
+    result.push([index.getX(offset), index.getX(offset + 1), index.getX(offset + 2)]
+      .map((vertex) => new THREE.Vector3().fromBufferAttribute(positions, vertex)));
+  }
+  return result;
+}
+
+function assertAboveGround(mesh, terrain, name) {
+  mesh.updateMatrixWorld(true);
+  const raycaster = new THREE.Raycaster();
+  const bounds = new THREE.Box3().setFromObject(mesh);
+  const samples = [];
+  indexedTriangles(mesh).forEach(([a, b, c]) => {
+    samples.push(a, b, c, a.clone().lerp(b, 0.5), b.clone().lerp(c, 0.5), c.clone().lerp(a, 0.5),
+      a.clone().add(b).add(c).multiplyScalar(1 / 3));
+  });
+  samples.filter((point, index) => index % 7 === 0).forEach((point) => {
+    raycaster.set(new THREE.Vector3(point.x, bounds.max.y + 2, point.z), new THREE.Vector3(0, -1, 0));
+    const hit = raycaster.intersectObject(terrain, false)[0];
+    assert.ok(hit, `${name} has no rendered surface under (${point.x}, ${point.z})`);
+    assert.ok(point.y >= hit.point.y - 0.08,
+      `${name} penetrates the displayed ground at (${point.x.toFixed(2)}, ${point.z.toFixed(2)})`);
+  });
+}
+
+function assertPathAgainstTerrain(path, terrain) {
+  const position = path.geometry.getAttribute('position');
+  const terrainBounds = new THREE.Box3().setFromObject(terrain);
+  const raycaster = new THREE.Raycaster();
+  for (let index = 0; index < position.count; index += 1) {
+    const point = new THREE.Vector3().fromBufferAttribute(position, index);
+    raycaster.set(new THREE.Vector3(point.x, terrainBounds.max.y + 4, point.z), new THREE.Vector3(0, -1, 0));
+    const hit = raycaster.intersectObject(terrain, false)[0];
+    assert.ok(hit, `${path.name} has no terrain below vertex ${index}`);
+    assert.ok(point.y >= hit.point.y - 0.08, `${path.name} penetrates the displayed hillside`);
+  }
+}
+
+function pointInPolygon(x, z, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, zi] = polygon[i], [xj, zj] = polygon[j];
+    if (((zi > z) !== (zj > z)) && x < (xj - xi) * (z - zi) / (zj - zi) + xi) inside = !inside;
+  }
+  return inside;
 }
 
 test('Leifeng model has finite bounded geometry for a close-range scene', () => {
@@ -28,7 +81,7 @@ test('Leifeng model has finite bounded geometry for a close-range scene', () => 
     });
   });
   const bounds = new THREE.Box3().setFromObject(group);
-  assert.ok(bounds.min.y >= -0.01, 'model drops below its local ground plane');
+  assert.ok(bounds.min.y < -70 && bounds.min.y > -100, 'model contains an invalidly deep site shell');
   assert.ok(bounds.max.y > 30 && bounds.max.y < 38, `unexpected tower height: ${bounds.max.y}`);
 });
 
@@ -142,21 +195,23 @@ test('gold finial grows continuously from the crown with stacked disks and a sle
   assert.ok(color.r > color.g && color.g > color.b, 'finial should read as gold rather than green');
 });
 
-test('solid entrance steps rise continuously from the path to the tower platform', () => {
+test('entrance steps and mapped ascending route share the same precinct', () => {
   const { group } = createLeifengModel();
   group.updateMatrixWorld(true);
   const steps = group.getObjectByName('entry-steps');
   const base = group.getObjectByName('tower-base');
-  const path = group.getObjectByName('approach-path');
-  assert.ok(steps && base && path);
+  const ascending = LEIFENG_SITE.paths.filter(({ kind }) => kind === 'ascending');
+  assert.ok(steps && base && ascending.length > 0);
   assert.equal(steps.userData.treadCount, 12);
   const stepBounds = new THREE.Box3().setFromObject(steps);
   const baseBounds = new THREE.Box3().setFromObject(base);
-  const pathBounds = new THREE.Box3().setFromObject(path);
-  assert.ok(Math.abs(stepBounds.min.y) < 1e-6, 'stairs float above local ground');
+  assert.ok(stepBounds.min.y <= getLeifengGroundHeight(0, stepBounds.min.z) + 0.08,
+    'stairs should meet or slightly embed into the displayed slope');
   assert.ok(Math.abs(stepBounds.max.y - base.userData.topY) < 1e-6, 'stairs miss the platform height');
-  assert.ok(stepBounds.max.z >= pathBounds.min.z, 'approach path does not reach the stairs');
   assert.ok(stepBounds.min.z <= baseBounds.max.z, 'top tread does not reach the tower platform');
+  ascending.forEach(({ points }) => {
+    points.forEach(([x, z]) => assert.ok(Number.isFinite(getLeifengGroundHeight(x, z))));
+  });
 });
 
 test('model identifies itself as an artistic approximation', () => {
@@ -168,64 +223,83 @@ test('model identifies itself as an artistic approximation', () => {
   assert.equal(group.userData.lakeDirection, '-z');
 });
 
-test('overview tower reuses the detailed tower form at a map-scale size', () => {
-  const tower = createLeifengOverviewTower();
-  const { group: closeModel } = createLeifengModel();
-  tower.updateMatrixWorld(true);
-  closeModel.updateMatrixWorld(true);
-  const overviewCore = tower.getObjectByName('leifeng-tower');
-  const closeCore = closeModel.getObjectByName('leifeng-tower');
-  assert.ok(overviewCore && closeCore);
-  const floors = overviewCore.children.filter((object) => /^tower-floor-\d$/.test(object.name));
-  assert.equal(floors.length, 5);
-  assert.equal(tower.userData.sides, 8);
-  const rendered = meshes(tower);
-  assert.ok(rendered.reduce((sum, mesh) => sum + triangleCount(mesh), 0) < 10000, 'overview tower exceeds map-scale budget');
-  for (const name of ['tower-base', 'entry-steps', 'tower-roofs', 'tower-windows', 'tower-finial']) {
-    assert.ok(overviewCore.getObjectByName(name), `overview omits ${name}`);
+test('site geometry is grounded, pond-contained, and topologically closed', () => {
+  const { group } = createLeifengModel();
+  group.updateMatrixWorld(true);
+  const terrain = group.getObjectByName('leifeng-closed-hillside');
+  assert.ok(terrain, 'missing displayed hillside for grounding checks');
+  for (const name of ['tower-base', 'protection-terrace']) {
+    const mesh = group.getObjectByName(name);
+    assert.ok(mesh, `missing ${name}`);
+    assertAboveGround(mesh, terrain, name);
   }
-  for (const name of ['tower-base', 'entry-steps', 'tower-walls', 'tower-roofs', 'tower-balconies']) {
-    assert.deepEqual(overviewCore.getObjectByName(name).geometry.getAttribute('position').array,
-      closeCore.getObjectByName(name).geometry.getAttribute('position').array,
-      `overview changes the shared ${name} silhouette`);
-    assert.equal(overviewCore.getObjectByName(name).material.color.getHex(),
-      closeCore.getObjectByName(name).material.color.getHex());
+
+  const pond = group.getObjectByName('release-pond');
+  assert.ok(pond, 'missing mapped release pond');
+  indexedTriangles(pond).forEach(([a, b, c]) => {
+    const center = a.clone().add(b).add(c).multiplyScalar(1 / 3);
+    assert.ok(pointInPolygon(center.x, center.z, LEIFENG_SITE.pond), 'pond triangle leaves mapped outline');
+    assert.ok(Math.abs(a.y - b.y) < 0.001 && Math.abs(b.y - c.y) < 0.001,
+      'pond surface is not flattened to a single pond-bed level');
+    const raycaster = new THREE.Raycaster();
+    const terrainBounds = new THREE.Box3().setFromObject(terrain);
+    raycaster.set(new THREE.Vector3(center.x, terrainBounds.max.y + 4, center.z), new THREE.Vector3(0, -1, 0));
+    const hit = raycaster.intersectObject(terrain, false)[0];
+    assert.ok(hit, 'pond triangle has no displayed pond bed below it');
+    assert.ok(center.y >= hit.point.y - 0.08 && center.y <= hit.point.y + 0.35,
+      'pond water is detached from or buried in the displayed pond bed');
+  });
+
+  const pathMeshes = [];
+  group.traverse((object) => { if (object.name.startsWith('leifeng-path-')) pathMeshes.push(object); });
+  assert.equal(pathMeshes.length, LEIFENG_SITE.paths.length);
+  pathMeshes.forEach((path) => {
+    const position = path.geometry.getAttribute('position');
+    for (let index = 0; index < position.count; index += 1) {
+      const point = new THREE.Vector3().fromBufferAttribute(position, index);
+      assert.ok(Number.isFinite(getLeifengRawGroundHeight(point.x, point.z)));
+    }
+    assertPathAgainstTerrain(path, terrain);
+  });
+
+  const hillside = group.getObjectByName('leifeng-closed-hillside');
+  assert.ok(hillside, 'missing closed displayed hillside');
+  const edgeUse = new Map();
+  const index = hillside.geometry.index;
+  for (let offset = 0; offset < index.count; offset += 3) {
+    const triangle = [index.getX(offset), index.getX(offset + 1), index.getX(offset + 2)];
+    for (let edge = 0; edge < 3; edge += 1) {
+      const a = triangle[edge], b = triangle[(edge + 1) % 3];
+      const key = [a, b].sort((left, right) => left - right).join(':');
+      edgeUse.set(key, (edgeUse.get(key) || 0) + 1);
+    }
   }
-  assert.ok(!overviewCore.getObjectByName('tower-roof-tiles'), 'overview should omit fine tile seams');
-  const bounds = new THREE.Box3().setFromObject(tower);
-  const closeBounds = new THREE.Box3().setFromObject(closeCore);
-  assert.ok(bounds.min.y >= -0.0001);
-  const heightRatio = (bounds.max.y - bounds.min.y) / (closeBounds.max.y - closeBounds.min.y);
-  assert.ok(heightRatio > 0.019 && heightRatio < 0.021, `unexpected overview scale ratio: ${heightRatio}`);
-  assert.ok(bounds.max.y > 0.6 && bounds.max.y < 0.75, `unexpected overview height: ${bounds.max.y}`);
+  assert.ok(edgeUse.size > 100, 'displayed hillside is still a trivial surface');
+  edgeUse.forEach((uses, edge) => assert.equal(uses, 2, `open or non-manifold hillside edge ${edge}`));
 });
 
-test('overview foundation samples interior terrain and keeps an upward, non-intersecting slope', () => {
-  const bell = (x, z, cx, cz, radius, height) => height * Math.max(0, 1 - Math.hypot(x - cx, z - cz) / radius);
-  const getHeight = (x, z) => 0.2 + bell(x, z, 0.2, 0, 0.07, 1) + bell(x, z, -0.30, 0.25, 0.055, 0.62);
-  const { group, baseY } = createLeifengOverviewFoundation({ x: 0, z: 0, getHeight });
-  assert.ok(baseY > 1.19, `interior peak was not sampled: ${baseY}`);
+test('shared precinct has a closed hillside, narrow continuous branches and a lakeward pond', () => {
+  const { group } = createLeifengCore({ detailed: false });
   group.updateMatrixWorld(true);
-  const pathRay = new THREE.Raycaster(new THREE.Vector3(0, baseY + 1, group.userData.platformRadius), new THREE.Vector3(0, -1, 0));
-  const pathHit = pathRay.intersectObject(group.getObjectByName('leifeng-overview-approach'))[0];
-  assert.ok(pathHit && pathHit.point.y >= baseY, 'approach sinks into the platform across its center');
-  const slope = group.getObjectByName('leifeng-overview-slope');
-  const assertAboveTerrain = (mesh, name) => {
-    const position = mesh.geometry.getAttribute('position');
-    const index = mesh.geometry.index;
-    for (let offset = 0; offset < index.count; offset += 3) {
-      const a = new THREE.Vector3().fromBufferAttribute(position, index.getX(offset));
-      const b = new THREE.Vector3().fromBufferAttribute(position, index.getX(offset + 1));
-      const c = new THREE.Vector3().fromBufferAttribute(position, index.getX(offset + 2));
-      if (name === 'slope') assert.ok(new THREE.Vector3().subVectors(b, a).cross(new THREE.Vector3().subVectors(c, a)).y > 0, 'slope face points downward');
-      for (const [wa, wb, wc] of [[1 / 3, 1 / 3, 1 / 3], [0.5, 0.5, 0], [0, 0.5, 0.5], [0.5, 0, 0.5]]) {
-        const point = a.clone().multiplyScalar(wa).addScaledVector(b, wb).addScaledVector(c, wc);
-        assert.ok(point.y >= getHeight(point.x, point.z) - 0.005, `${name} triangle intersects sampled terrain`);
-      }
-    }
-  };
-  assertAboveTerrain(slope, 'slope');
-  const approach = group.getObjectByName('leifeng-overview-approach');
-  assert.ok(approach.geometry.getAttribute('position').count > 4, 'approach should follow the foundation in multiple segments');
-  assertAboveTerrain(approach, 'approach');
+  assert.ok(group.getObjectByName('leifeng-protection-base'));
+  assert.ok(group.getObjectByName('leifeng-site-details'));
+  const paths = [];
+  group.traverse((object) => { if (object.name.startsWith('leifeng-path-')) paths.push(object); });
+  assert.equal(paths.length, LEIFENG_SITE.paths.length);
+  const pond = group.getObjectByName('release-pond');
+  const pondMeanZ = LEIFENG_SITE.pond.reduce((sum, [, z]) => sum + z, 0) / LEIFENG_SITE.pond.length;
+  const pondBounds = new THREE.Box3().setFromObject(pond);
+  assert.ok(pond && Math.abs(pondBounds.getCenter(new THREE.Vector3()).z - pondMeanZ) < 2,
+    'release pond should follow the mapped outline');
+  const { group: exhibition } = createLeifengModel();
+  const hillside = exhibition.getObjectByName('leifeng-closed-hillside');
+  assert.ok(hillside, 'standalone scene should include a closed hillside');
+  const positions = hillside.geometry.getAttribute('position');
+  let minimum = Infinity;
+  for (let index = 0; index < positions.count; index += 1) minimum = Math.min(minimum, positions.getY(index));
+  assert.ok(minimum < -3, 'hillside needs a visible underside closure');
+  assert.equal(exhibition.getObjectByName('nearby-hills'), undefined);
+  let ponds = 0;
+  exhibition.traverse((object) => { if (object.name === 'release-pond') ponds += 1; });
+  assert.equal(ponds, 1, 'single-scene precinct should not duplicate its pond');
 });

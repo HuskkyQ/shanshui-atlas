@@ -39,8 +39,8 @@ function readyScene(id, loader) {
   return { id, status: 'ready', enabled: true, hidden: false, loader };
 }
 
-test('the registry enables three implemented scenic scenes without invented assets', () => {
-  for (const id of ['leifeng-pagoda', 'santanyinyue', 'lingyin-temple']) {
+test('the registry enables four implemented scenic scenes without invented assets', () => {
+  for (const id of ['leifeng-pagoda', 'santanyinyue', 'lingyin-temple', 'jingci-temple']) {
     const scene = getScenicScene(id);
     assert.equal(scene.status, 'ready');
     assert.equal(scene.enabled, true);

@@ -38,6 +38,22 @@ body { margin: 0; min-width: 320px; background: #182b31; }
 .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
 .landscape-card { position: relative; overflow: hidden; border: 1px solid var(--home-line); background: #1a3035; transition: border-color 0.25s, transform 0.25s; }
 .landscape-card-link { display: block; }
+.landscape-card-tools { padding: 0 24px 15px; }
+.has-sources .landscape-info { padding-bottom: 8px; }
+.landscape-sources { padding: 5px 0; border: 0; background: none; color: var(--home-muted); font: inherit; font-size: 10px; cursor: pointer; }
+.landscape-sources span { margin-right: 4px; color: var(--home-gold); }
+.landscape-sources:hover, .landscape-sources:focus-visible { color: var(--home-gold); }
+.landscape-sources:focus-visible { outline: 1px solid var(--home-gold); outline-offset: 4px; }
+#home-sources-dialog { box-sizing: border-box; width: min(520px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: 75dvh; padding: 24px; overflow-y: auto; border: 1px solid var(--home-gold); color: var(--home-ivory); background: #10282c; font: 13px/1.6 'DM Sans', 'PingFang SC', sans-serif; }
+#home-sources-dialog::backdrop { background: rgba(5, 17, 20, 0.72); backdrop-filter: blur(3px); }
+.home-sources-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--home-line); }
+.home-sources-header h2 { margin: 0; font: 500 20px/1.4 'Noto Serif SC', 'Songti SC', serif; }
+.home-sources-header form { margin: 0; }
+.home-sources-close { width: 32px; height: 32px; border: 1px solid var(--home-line); color: var(--home-gold); background: none; font-size: 20px; cursor: pointer; }
+.home-sources-links { display: grid; gap: 12px; margin-top: 18px; }
+.home-sources-links a { color: var(--home-gold); }
+.home-sources-links a:hover { color: var(--home-ivory); }
+.home-sources-copyright { margin: 16px 0 0; padding: 12px; border: 1px solid var(--home-line); color: var(--home-muted); font-size: 11px; overflow-wrap: anywhere; }
 .landscape-card:hover { border-color: var(--home-gold); transform: translateY(-4px); }
 .homepage a:focus-visible { outline: 2px solid var(--home-gold); outline-offset: 6px; }
 .homepage .landscape-card-link:focus-visible { outline-offset: -3px; }
@@ -98,6 +114,7 @@ body { margin: 0; min-width: 320px; background: #182b31; }
   .landscape-coordinates { top: 16px; right: 61px; font-size: 8px; }
   .landscape-favorite { top: 5px; right: 5px; }
   .landscape-info { padding: 17px 17px 20px; gap: 7px; }
+  .landscape-card-tools { padding-inline: 17px; }
   .landscape-info h3 { font-size: 26px; gap: 10px; }
   .landscape-info h3 span { font-size: 8px; }
   .landscape-location span { margin-left: 7px; font-size: 7px; }

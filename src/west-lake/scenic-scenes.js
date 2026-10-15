@@ -1,5 +1,5 @@
 import content from '../content/west-lake-scenic.json' with { type: 'json' };
-import { leifengContent, santanContent, lingyinContent } from './scenic-content.js';
+import { leifengContent, santanContent, lingyinContent, jingciContent } from './scenic-content.js';
 
 const implementations = {
   'leifeng-pagoda': {
@@ -15,6 +15,11 @@ const implementations = {
   'lingyin-temple': {
     content: lingyinContent,
     loader: (context) => import('./lingyin-temple/scene.js')
+      .then((module) => module.createScene(context)),
+  },
+  'jingci-temple': {
+    content: jingciContent,
+    loader: (context) => import('./jingci-temple/scene.js')
       .then((module) => module.createScene(context)),
   },
 };

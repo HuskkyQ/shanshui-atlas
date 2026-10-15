@@ -5,17 +5,19 @@ const DISTANCE_LIMITS = {
 };
 
 /**
- * Applies only the distance/selection layer. Category and screen-overlap
- * decisions belong to the caller so core POIs can remain discoverable.
+ * Compact markers stay eligible at every distance. The caller applies category,
+ * zoom density, and screen-overlap rules to the eligible candidates.
  */
 export function isPOIVisible({
   importance,
+  presentation,
   distance,
   selected = false,
   focused = false,
   previousVisible = false,
 }) {
   if (selected || focused) return true;
+  if (['core', 'region', 'dot'].includes(presentation)) return true;
 
   const limit = DISTANCE_LIMITS[importance];
   if (limit === Infinity) return true;

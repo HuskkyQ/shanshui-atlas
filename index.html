@@ -33,7 +33,7 @@
             <span>02 <span aria-hidden="true">/</span> LANDSCAPES</span>
           </div>
           <div class="home-grid">
-            <article class="landscape-card">
+            <article class="landscape-card has-sources">
               <a class="landscape-card-link" href="?place=huangshan" aria-labelledby="huangshan-card-title huangshan-card-action">
               <div class="landscape-image">
                 <img src="/src/assets/huangshan-preview.jpg" width="1024" height="540" alt="黄山三维模型：起伏的陡峭群峰与点缀山脊的松树" fetchpriority="high" />
@@ -49,12 +49,13 @@
                 <span id="huangshan-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
               </div>
               </a>
+              <div class="landscape-card-tools"><button class="landscape-sources" type="button" data-source-place="huangshan" data-name="黄山" aria-label="查看黄山数据来源"><span aria-hidden="true">ⓘ</span> 数据来源</button></div>
               <button class="landscape-favorite" type="button" data-place="huangshan" data-name="黄山" aria-label="收藏黄山" aria-pressed="false">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
               </button>
             </article>
 
-            <article class="landscape-card">
+            <article class="landscape-card has-sources">
               <a class="landscape-card-link" href="?place=west-lake" aria-labelledby="west-lake-card-title west-lake-card-action">
               <div class="landscape-image">
                 <img src="/src/assets/west-lake-preview.jpg" width="1024" height="540" alt="西湖三维模型：湖东的开阔水面与湖西连绵的林木山脊" />
@@ -70,6 +71,7 @@
                 <span id="west-lake-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
               </div>
               </a>
+              <div class="landscape-card-tools"><button class="landscape-sources" type="button" data-source-place="west-lake" data-name="西湖" aria-label="查看西湖数据来源"><span aria-hidden="true">ⓘ</span> 数据来源</button></div>
               <button class="landscape-favorite" type="button" data-place="west-lake" data-name="西湖" aria-label="收藏西湖" aria-pressed="false">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
               </button>
@@ -103,6 +105,15 @@
           </article>
         </section>
       </main>
+
+      <dialog id="home-sources-dialog" aria-labelledby="home-sources-title">
+        <div class="home-sources-header">
+          <h2 id="home-sources-title">数据来源</h2>
+          <form method="dialog"><button class="home-sources-close" aria-label="关闭数据来源">×</button></form>
+        </div>
+        <div id="home-sources-links" class="home-sources-links"></div>
+        <p class="home-sources-copyright">produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.</p>
+      </dialog>
 
       <footer class="home-footer">
         <p><span aria-hidden="true">◇</span> 进入景观后，拖动旋转 · 滚轮缩放 · 切换视角</p>

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { LEIFENG_SITE } from './site-layout.js';
 
 const OCTAGON = 8;
 const FLOOR_COUNT = 5;
@@ -103,68 +104,254 @@ function barBetween(start, end, radius, segments = 6) {
   return geometry;
 }
 
-function moundGeometry(radius, height, x, z) {
-  const rings = 4;
-  const segments = 12;
-  const positions = [];
-  const indices = [];
-  for (let ring = 0; ring <= rings; ring += 1) {
-    const t = ring / rings;
-    const ringRadius = radius * t;
-    const ringY = height * Math.pow(1 - t, 1.65);
-    for (let segment = 0; segment < segments; segment += 1) {
-      const angle = segment / segments * Math.PI * 2;
-      positions.push(x + Math.sin(angle) * ringRadius, ringY, z + Math.cos(angle) * ringRadius);
-    }
+function groundHeight(x, z) {
+  const { width, height, originX, originZ, stepX, stepZ, values } = LEIFENG_SITE.ground;
+  const fx = THREE.MathUtils.clamp((x - originX) / stepX, 0, width - 1);
+  const fz = THREE.MathUtils.clamp((z - originZ) / stepZ, 0, height - 1);
+  const x0 = Math.min(width - 2, Math.floor(fx));
+  const z0 = Math.min(height - 2, Math.floor(fz));
+  const tx = fx - x0, tz = fz - z0;
+  const sample = (ix, iz) => values[iz * width + ix];
+  const a = sample(x0, z0), b = sample(x0 + 1, z0), c = sample(x0, z0 + 1), d = sample(x0 + 1, z0 + 1);
+  if (tx + tz <= 1) return a * (1 - tx - tz) + b * tx + c * tz;
+  return b * (1 - tz) + c * (1 - tx) + d * (tx + tz - 1);
+}
+
+export function getLeifengRawGroundHeight(x, z) {
+  return groundHeight(x, z);
+}
+
+function pointInPolygon(x, z, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, zi] = polygon[i], [xj, zj] = polygon[j];
+    const intersects = ((zi > z) !== (zj > z)) && x < (xj - xi) * (z - zi) / (zj - zi) + xi;
+    if (intersects) inside = !inside;
   }
-  for (let ring = 0; ring < rings; ring += 1) {
-    for (let segment = 0; segment < segments; segment += 1) {
-      const next = (segment + 1) % segments;
-      const a = ring * segments + segment;
-      const b = ring * segments + next;
-      const c = (ring + 1) * segments + segment;
-      const d = (ring + 1) * segments + next;
-      indices.push(a, c, b, b, c, d);
-    }
+  return inside;
+}
+
+const pondFloor = Math.min(...LEIFENG_SITE.pond.map(([x, z]) => groundHeight(x, z))) - 0.25;
+const terrainStep = 2;
+const terrainMinX = Math.min(...LEIFENG_SITE.boundary.map(([x]) => x)) - 2;
+const terrainMinZ = Math.min(...LEIFENG_SITE.boundary.map(([, z]) => z)) - 2;
+
+function polygonDistance(x, z, polygon) {
+  let distance = Infinity;
+  for (let i = 1; i < polygon.length; i++) {
+    distance = Math.min(distance, distanceToSegment(x, z, ...polygon[i - 1], ...polygon[i]));
   }
+  return distance;
+}
+
+export function getLeifengSiteBlend(x, z) {
+  return pointInPolygon(x, z, LEIFENG_SITE.boundary) ? 1
+    : 1 - THREE.MathUtils.smoothstep(polygonDistance(x, z, LEIFENG_SITE.boundary), 0, 10);
+}
+
+function gradedHeight(x, z) {
+  let y = groundHeight(x, z);
+  const pondDistance = polygonDistance(x, z, LEIFENG_SITE.pond);
+  if (pointInPolygon(x, z, LEIFENG_SITE.pond) || pondDistance < 3) y = pondFloor;
+  else if (pondDistance < 7) {
+    y = THREE.MathUtils.lerp(pondFloor, y, THREE.MathUtils.smoothstep(pondDistance, 3, 7));
+  }
+  const radius = Math.hypot(x, z);
+  // Grade only the immediate terrace: cut uphill and fill downhill so a
+  // coarse, exaggerated DEM cannot turn its perimeter into a tall pedestal.
+  if (radius < 15.5) y = -0.12;
+  else if (radius < 30) y = THREE.MathUtils.lerp(-0.12, y,
+    THREE.MathUtils.smoothstep(radius, 15.5, 30));
+  // Short missing approach is an explicitly artistic link to the original
+  // tower stairs. The long uphill segment retains its mapped footprint.
+  const upper = LEIFENG_SITE.paths.find(({ kind }) => kind === 'ascending').points
+    .reduce((a, b) => a[1] < b[1] ? a : b);
+  const rampEnd = upper[1] + 12;
+  if (Math.abs(x) < 5 && z >= 14 && z <= rampEnd) {
+    const t = THREE.MathUtils.clamp((z - 17) / (rampEnd - 17), 0, 1);
+    const height = THREE.MathUtils.lerp(0, groundHeight(upper[0], rampEnd), t);
+    y = THREE.MathUtils.lerp(height, y, THREE.MathUtils.smoothstep(Math.abs(x), 3.5, 5));
+  }
+  return y;
+}
+
+// Queries use the very same triangles as the standalone mesh. This keeps
+// paths and tree roots on the visible surface across DEM creases.
+export function getLeifengGroundHeight(x, z) {
+  const gx = (x - terrainMinX) / terrainStep, gz = (z - terrainMinZ) / terrainStep;
+  const col = Math.floor(gx), row = Math.floor(gz);
+  const px = terrainMinX + col * terrainStep, pz = terrainMinZ + row * terrainStep;
+  const u = gx - col, v = gz - row;
+  const a = gradedHeight(px, pz), b = gradedHeight(px + terrainStep, pz);
+  const c = gradedHeight(px, pz + terrainStep), d = gradedHeight(px + terrainStep, pz + terrainStep);
+  return u + v <= 1 ? a * (1 - u - v) + b * u + c * v
+    : b * (1 - v) + c * (1 - u) + d * (u + v - 1);
+}
+
+function createClosedHillside(material) {
+  const outline = LEIFENG_SITE.boundary;
+  const columns = Math.ceil((Math.max(...outline.map(([x]) => x)) + 2 - terrainMinX) / terrainStep);
+  const rows = Math.ceil((Math.max(...outline.map(([, z]) => z)) + 2 - terrainMinZ) / terrainStep);
+  const positions = [], indices = [], vertices = new Map(), edges = new Map();
+  const vertex = (col, row) => {
+    const key = row * (columns + 1) + col;
+    if (!vertices.has(key)) {
+      const x = terrainMinX + col * terrainStep, z = terrainMinZ + row * terrainStep;
+      vertices.set(key, positions.length / 3);
+      positions.push(x, getLeifengGroundHeight(x, z), z);
+    }
+    return vertices.get(key);
+  };
+  const edge = (a, b) => {
+    const key = Math.min(a, b) + '/' + Math.max(a, b);
+    if (edges.has(key)) edges.delete(key);
+    else edges.set(key, [a, b]);
+  };
+  for (let row = 0; row < rows; row++) for (let col = 0; col < columns; col++) {
+    const x = terrainMinX + (col + 0.5) * terrainStep, z = terrainMinZ + (row + 0.5) * terrainStep;
+    if (!pointInPolygon(x, z, outline) && polygonDistance(x, z, outline) > 3) continue;
+    const a = vertex(col, row), b = vertex(col + 1, row), c = vertex(col, row + 1), d = vertex(col + 1, row + 1);
+    indices.push(a, c, b, b, c, d);
+    [[a, c], [c, d], [d, b], [b, a]].forEach(([a, b]) => edge(a, b));
+  }
+  const topIndices = [...indices], topCount = positions.length / 3;
+  let bottomY = Infinity;
+  for (let i = 1; i < positions.length; i += 3) bottomY = Math.min(bottomY, positions[i] - 6);
+  for (let i = 0; i < topCount; i++) positions.push(positions[i * 3], bottomY, positions[i * 3 + 2]);
+  for (let i = 0; i < topIndices.length; i += 3) {
+    indices.push(topCount + topIndices[i], topCount + topIndices[i + 2], topCount + topIndices[i + 1]);
+  }
+  edges.forEach(([a, b]) => indices.push(a, a + topCount, b, b, a + topCount, b + topCount));
+  const colors = [], green = new THREE.Color('#56664a'), soil = new THREE.Color('#514936');
+  for (let i = 0; i < topCount * 2; i++) colors.push(...(i < topCount ? green : soil).toArray());
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setIndex(indices);
+  const surface = material;
+  surface.color.set('#ffffff'); surface.vertexColors = true;
+  geometry.computeVertexNormals();
+  const mesh = new THREE.Mesh(geometry, surface);
+  mesh.name = 'leifeng-closed-hillside';
+  mesh.userData = { closedSolid: true, bottomY, terrainStep, sourceBoundary: 'OSM park outline with 6m display margin' };
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function createSitePath(material, points, width, name) {
+  const sampled = [];
+  points.forEach((point, index) => {
+    if (!index) sampled.push(point);
+    else {
+      const previous = points[index - 1];
+      const distance = Math.hypot(point[0] - previous[0], point[1] - previous[1]);
+      const steps = Math.max(1, Math.ceil(distance));
+      for (let step = 1; step <= steps; step += 1) {
+        sampled.push([THREE.MathUtils.lerp(previous[0], point[0], step / steps),
+          THREE.MathUtils.lerp(previous[1], point[1], step / steps)]);
+      }
+    }
+  });
+  const vertices = [];
+  const indices = [];
+  sampled.forEach(([x, z], index) => {
+    const before = sampled[Math.max(0, index - 1)];
+    const after = sampled[Math.min(sampled.length - 1, index + 1)];
+    const dx = after[0] - before[0], dz = after[1] - before[1];
+    const length = Math.hypot(dx, dz) || 1;
+    for (const side of [-1, 1]) {
+      const px = x + side * dz / length * width, pz = z - side * dx / length * width;
+      vertices.push(px, getLeifengGroundHeight(px, pz) + 0.28, pz);
+    }
+    if (index) {
+      const a = (index - 1) * 2, b = index * 2;
+      indices.push(a, b, a + 1, a + 1, b, b + 1);
+    }
+  });
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
-  return geometry;
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.name = name;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function createPond(material) {
+  const shape = new THREE.Shape();
+  LEIFENG_SITE.pond.forEach(([x, z], index) => {
+    if (index) shape.lineTo(x, -z);
+    else shape.moveTo(x, -z);
+  });
+  shape.closePath();
+  const geometry = new THREE.ShapeGeometry(shape);
+  geometry.rotateX(-Math.PI / 2);
+  geometry.translate(0, pondFloor + 0.25, 0);
+  const pond = new THREE.Mesh(geometry, material);
+  pond.name = 'release-pond';
+  pond.receiveShadow = true;
+  return pond;
+}
+
+function createSiteDetails(materials) {
+  const group = new THREE.Group();
+  group.name = 'leifeng-site-details';
+  LEIFENG_SITE.paths.forEach(({ id, kind, points }) => {
+    group.add(createSitePath(materials.path, points, kind === 'ascending' ? 1.05 : 0.7, `leifeng-path-${id}`));
+  });
+  const pond = createPond(new THREE.MeshPhysicalMaterial({
+    color: '#477b80', roughness: 0.34, metalness: 0.05, transparent: true, opacity: 0.88,
+  }));
+  group.add(pond);
+  const upper = LEIFENG_SITE.paths.find(({ kind }) => kind === 'ascending').points
+    .reduce((a, b) => a[1] < b[1] ? a : b);
+  const link = createSitePath(materials.path, [upper, [0, 15.58]], 1.05, 'leifeng-entry-link');
+  link.userData.artisticConnection = true;
+  group.add(link);
+  const [entryX, entryZ] = LEIFENG_SITE.entrance;
+  const entry = createSitePath(materials.path,
+    [[entryX, entryZ - 1.5], [entryX, entryZ + 1.5]], 2, 'leifeng-entrance-landing');
+  group.add(entry);
+  return group;
+}
+
+function distanceToSegment(x, z, ax, az, bx, bz) {
+  const dx = bx - ax, dz = bz - az;
+  const t = THREE.MathUtils.clamp(((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz || 1), 0, 1);
+  return Math.hypot(x - (ax + dx * t), z - (az + dz * t));
+}
+
+function createTreePositions() {
+  const positions = [];
+  const minX = Math.min(...LEIFENG_SITE.boundary.map(([x]) => x));
+  const maxX = Math.max(...LEIFENG_SITE.boundary.map(([x]) => x));
+  const minZ = Math.min(...LEIFENG_SITE.boundary.map(([, z]) => z));
+  const maxZ = Math.max(...LEIFENG_SITE.boundary.map(([, z]) => z));
+  for (let z = minZ + 8; z < maxZ; z += 16) {
+    for (let x = minX + 8; x < maxX; x += 16) {
+      const jitterX = Math.sin(x * 0.37 + z * 0.19) * 4;
+      const jitterZ = Math.cos(x * 0.17 - z * 0.31) * 4;
+      const px = x + jitterX, pz = z + jitterZ;
+      if (!pointInPolygon(px, pz, LEIFENG_SITE.boundary) || Math.hypot(px, pz) < 18) continue;
+      const nearPath = LEIFENG_SITE.paths.some(({ points }) => points.slice(1).some((point, index) =>
+        distanceToSegment(px, pz, points[index][0], points[index][1], point[0], point[1]) < 5));
+      const nearPond = pointInPolygon(px, pz, LEIFENG_SITE.pond);
+      if (nearPath || nearPond) continue;
+      const height = 2.4 + (Math.abs(Math.sin(px * 0.11 + pz * 0.08)) * 1.8);
+      positions.push([px, getLeifengGroundHeight(px, pz), pz, height]);
+    }
+  }
+  return positions;
 }
 
 function createLandscape(materials) {
   const group = new THREE.Group();
   group.name = 'leifeng-landscape';
 
-  const ground = new THREE.Mesh(new THREE.CircleGeometry(34, 48), materials.ground);
-  ground.name = 'ground';
-  ground.rotation.x = -Math.PI / 2;
-  ground.receiveShadow = true;
-  group.add(ground);
+  group.add(createClosedHillside(materials.hill));
 
-  const mounds = [
-    moundGeometry(15, 5.2, -23, -8),
-    moundGeometry(12, 3.8, 22, 2),
-    moundGeometry(10, 3.1, -18, 17),
-  ];
-  group.add(mergeMesh('nearby-hills', mounds, materials.hill));
-
-  const path = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.12, 19), materials.path);
-  path.name = 'approach-path';
-  path.position.set(0, 0.06, 23.5);
-  path.receiveShadow = true;
-  group.add(path);
-
-  const treePositions = [
-    [-20, 0.4, -3, 3.4], [-17, 0.5, 7, 3.1], [-13, 0.25, 18, 2.8],
-    [-23, 0.4, 14, 3.7], [-12, 0.25, -16, 3.2], [-20, 0.35, -18, 3.5],
-    [19, 0.3, -5, 3.1], [22, 0.45, 8, 3.7], [16, 0.25, 17, 2.8],
-    [25, 0.25, 18, 3.2], [15, 0.2, -17, 3.4], [24, 0.25, -14, 3.0],
-    [-10, 0.15, 25, 2.5], [11, 0.15, 26, 2.7], [-28, 0.25, 3, 3.2],
-    [28, 0.2, 1, 3.0], [-7, 0.15, -24, 2.8], [8, 0.15, -25, 3.1],
-  ];
+  const treePositions = createTreePositions();
   const trunkGeometry = new THREE.CylinderGeometry(0.13, 0.22, 1, 7);
   trunkGeometry.translate(0, 0.5, 0);
   const crownGeometry = new THREE.IcosahedronGeometry(1, 1);
@@ -176,7 +363,8 @@ function createLandscape(materials) {
   const matrix = new THREE.Matrix4();
   const quaternion = new THREE.Quaternion();
   const crownCounts = [0, 0];
-  treePositions.forEach(([x, y, z, height], index) => {
+  treePositions.forEach(([x, , z, height], index) => {
+    const y = getLeifengGroundHeight(x, z);
     matrix.compose(new THREE.Vector3(x, y, z), quaternion, new THREE.Vector3(height, height, height));
     trunks.setMatrixAt(index, matrix);
     const batch = index % 2;
@@ -211,7 +399,11 @@ function createTower(materials, detailed = true) {
   const treadCount = 12;
   for (let step = 0; step < treadCount; step += 1) {
     const height = (step + 1) / treadCount * 4;
-    stairParts.push(transformed(new THREE.BoxGeometry(5.8, height, 0.56), [0, height / 2, 15.3 - step * 0.56]));
+    const z = 15.3 - step * 0.56;
+    const bottom = Math.min(0, ...[-2.9, 2.9].flatMap((x) => [-0.28, 0.28]
+      .map((dz) => getLeifengGroundHeight(x, z + dz) - 0.15)));
+    stairParts.push(transformed(new THREE.BoxGeometry(5.8, height - bottom, 0.56),
+      [0, (height + bottom) / 2, z]));
   }
   group.add(mergeMesh('entry-steps', stairParts, materials.stoneLight, {
     treadCount, groundY: 0, topY: 4, entranceDirection: '+z',
@@ -399,19 +591,83 @@ function createTowerMaterials() {
   };
 }
 
+function createProtectionBase(materials) {
+  const group = new THREE.Group();
+  group.name = 'leifeng-protection-base';
+  const radius = 14.6, positions = [], indices = [];
+  // A small octagonal retaining wall and platform supports the actual tower
+  // footprint; its lower edge follows the hill instead of forming a huge disk.
+  for (let side = 0; side < 8; side++) for (let sample = 0; sample < 8; sample++) {
+    const angle = (side * 2 - 1) * Math.PI / 8, next = angle + Math.PI / 4;
+    const t = sample / 8;
+    const x = THREE.MathUtils.lerp(Math.sin(angle), Math.sin(next), t) * radius;
+    const z = THREE.MathUtils.lerp(Math.cos(angle), Math.cos(next), t) * radius;
+    positions.push(x, 0.04, z, x, getLeifengGroundHeight(x, z) - 0.2, z);
+  }
+  for (let i = 0; i < 64; i++) {
+    const a = i * 2, b = (i + 1) % 64 * 2;
+    indices.push(a, b, a + 1, b, b + 1, a + 1);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setIndex(indices);
+  group.add(mergeMesh('protection-retaining-wall', [geometry], materials.stone));
+  group.add(mergeMesh('protection-terrace', [
+    transformed(new THREE.CylinderGeometry(radius, radius, 0.16, 8), [0, -0.04, 0], [0, -Math.PI / 8, 0]),
+  ], materials.stoneLight));
+  const rails = [];
+  for (let i = 1; i < 64; i++) {
+    const offset = i * 6;
+    const x = positions[offset], z = positions[offset + 2];
+    if (z > 11 && Math.abs(x) < 4) continue;
+    rails.push(transformed(new THREE.BoxGeometry(0.16, 0.7, 0.16), [x, 0.45, z]));
+    const next = (i + 1) % 64 * 6;
+    if (!(positions[next + 2] > 11 && Math.abs(positions[next]) < 4)) {
+      rails.push(barBetween([x, 0.72, z], [positions[next], 0.72, positions[next + 2]], 0.07, 4));
+    }
+  }
+  group.add(mergeMesh('protection-terrace-railings', rails, materials.stoneLight));
+  return group;
+}
+
+/**
+ * Shared tower precinct used by the overview and the close-range exhibition.
+ * Coordinates use the same local convention as the tower: x east, z south.
+ */
+export function createLeifengCore({ detailed = true } = {}) {
+  const towerMaterials = createTowerMaterials();
+  const group = new THREE.Group();
+  group.name = 'leifeng-site-core';
+  group.userData = {
+    kind: 'artistic-approximation',
+    origin: 'tower-centre',
+    coordinateSystem: 'x-east-z-south',
+    floorCount: FLOOR_COUNT,
+    sides: OCTAGON,
+  };
+  group.add(createProtectionBase(towerMaterials), createTower(towerMaterials, detailed), createSiteDetails({
+    path: material('#a89679'),
+  }));
+  group.updateMatrixWorld(true);
+  const anchors = {
+    tower: [0, 16, 6.2],
+    base: [0, 3.1, 9.7],
+    eaves: [5.8, 23.8, 4.2],
+    lakeView: [8.4, 5.2, -7.4],
+  };
+  return { group, anchors };
+}
+
 /**
  * Creates an original, stylised close-range impression of Leifeng Pagoda.
  * Dimensions are scene units chosen for composition, not a measured restoration.
  */
 export function createLeifengModel() {
   const materials = {
-    ground: material('#6c7454'),
     hill: material('#56664a'),
-    path: material('#a89679'),
     trunk: material('#4a382e'),
     leafDark: material('#294837'),
     leafLight: material('#426448'),
-    ...createTowerMaterials(),
   };
   const group = new THREE.Group();
   group.name = 'leifeng-pagoda-model';
@@ -422,7 +678,8 @@ export function createLeifengModel() {
     entranceDirection: '+z',
     lakeDirection: '-z',
   };
-  group.add(createLandscape(materials), createTower(materials));
+  const core = createLeifengCore();
+  group.add(createLandscape(materials), core.group);
   group.updateMatrixWorld(true);
 
   return {
@@ -434,127 +691,4 @@ export function createLeifengModel() {
       lakeView: [8.4, 5.2, -7.4],
     },
   };
-}
-
-/**
- * Creates the compact five-storey tower used at the Leifeng POI in the West
- * Lake overview. It reuses the close-range tower's five-floor geometry and
- * omits its landscape and fine facade/roof details while retaining the same
- * roof profiles, balconies, arched windows and finial silhouette.
- */
-export function createLeifengOverviewTower(scale = 0.02) {
-  const group = new THREE.Group();
-  group.name = 'leifeng-overview-tower';
-  group.userData = { kind: 'artistic-approximation', floorCount: FLOOR_COUNT, sides: OCTAGON, scale };
-  const tower = createTower(createTowerMaterials(), false);
-  tower.scale.setScalar(scale);
-  group.add(tower);
-  group.updateMatrixWorld(true);
-  return group;
-}
-
-/**
- * Forms the small level base that lets the overview tower meet uneven DEM
- * terrain without replacing the terrain itself. The outer slope is sampled
- * densely so its rim follows the local ground while the tower and stairs stay
- * supported on a compact horizontal platform.
- */
-export function createLeifengOverviewFoundation({ x, z, getHeight }) {
-  const platformRadius = 0.34;
-  const outerRadius = 0.48;
-  const segments = 64;
-  const sampleStep = 0.04;
-  const samples = [getHeight(x, z)];
-  for (let dx = -outerRadius; dx <= outerRadius + 1e-6; dx += sampleStep) {
-    for (let dz = -outerRadius; dz <= outerRadius + 1e-6; dz += sampleStep) {
-      if (Math.hypot(dx, dz) <= outerRadius) samples.push(getHeight(x + dx, z + dz));
-    }
-  }
-  // The existing stair run reaches past the octagonal tower base toward +z.
-  for (let dx = -0.14; dx <= 0.14 + 1e-6; dx += sampleStep) {
-    for (let dz = platformRadius; dz <= outerRadius + 0.10 + 1e-6; dz += sampleStep) samples.push(getHeight(x + dx, z + dz));
-  }
-  const baseY = Math.max(...samples) + 0.004;
-  const material = new THREE.MeshStandardMaterial({ color: '#69775d', roughness: 1 });
-  const stone = new THREE.MeshStandardMaterial({ color: '#827c70', roughness: 0.92 });
-  const pathMaterial = new THREE.MeshStandardMaterial({ color: '#a89679', roughness: 1 });
-  const group = new THREE.Group();
-  group.name = 'leifeng-overview-foundation';
-  group.userData = { baseY, platformRadius, outerRadius, sampleCount: samples.length };
-
-  const ringStep = 0.005;
-  const radii = Array.from({ length: Math.round((outerRadius - platformRadius) / ringStep) + 1 }, (_, index) =>
-    Math.min(outerRadius, platformRadius + index * ringStep));
-  const positions = [], indices = [];
-  function surfaceHeight(px, pz) {
-    const dx = px - x, dz = pz - z;
-    const radius = Math.hypot(dx, dz);
-    if (radius <= platformRadius) return baseY;
-    if (radius >= outerRadius) return getHeight(px, pz) + 0.004;
-    const angle = Math.atan2(dx, dz);
-    const outerHeight = getHeight(x + Math.sin(angle) * outerRadius, z + Math.cos(angle) * outerRadius) + 0.004;
-    const desired = THREE.MathUtils.lerp(baseY, outerHeight, (radius - platformRadius) / (outerRadius - platformRadius));
-    // The final 0.015 world-unit blend removes the safety margin at the rim,
-    // keeping the outer edge on the measured terrain rather than floating.
-    const safety = 0.012 * THREE.MathUtils.clamp((outerRadius - radius) / 0.015, 0, 1);
-    return Math.max(getHeight(px, pz) + 0.004 + safety, desired + safety);
-  }
-  radii.forEach((radius, ring) => {
-    for (let index = 0; index < segments; index += 1) {
-      const angle = index / segments * Math.PI * 2;
-      const px = x + Math.sin(angle) * radius;
-      const pz = z + Math.cos(angle) * radius;
-      positions.push(px, ring === 0 ? baseY : surfaceHeight(px, pz), pz);
-    }
-  });
-  for (let ring = 0; ring < radii.length - 1; ring += 1) {
-    for (let index = 0; index < segments; index += 1) {
-      const next = (index + 1) % segments;
-      const inner = ring * segments + index;
-      const innerNext = ring * segments + next;
-      const outer = (ring + 1) * segments + index;
-      const outerNext = (ring + 1) * segments + next;
-      // sin/cos rings advance counter-clockwise in x/z; this winding points up.
-      indices.push(inner, outer, innerNext, innerNext, outer, outerNext);
-    }
-  }
-  const slopeGeometry = new THREE.BufferGeometry();
-  slopeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  slopeGeometry.setIndex(indices);
-  slopeGeometry.computeVertexNormals();
-  const slope = new THREE.Mesh(slopeGeometry, material);
-  slope.name = 'leifeng-overview-slope';
-  slope.receiveShadow = true;
-
-  const platform = new THREE.Mesh(new THREE.CylinderGeometry(platformRadius, platformRadius, 0.018, segments), stone);
-  platform.name = 'leifeng-overview-platform';
-  platform.position.set(x, baseY - 0.009, z);
-  platform.receiveShadow = true;
-
-  const approachRows = 28, approachColumns = 16;
-  const approach = new THREE.BufferGeometry();
-  const approachPositions = [], approachIndices = [];
-  for (let row = 0; row <= approachRows; row += 1) {
-    const offset = THREE.MathUtils.lerp(0.30, outerRadius + 0.10, row / approachRows);
-    const halfWidth = THREE.MathUtils.lerp(0.13, 0.11, row / approachRows);
-    for (let column = 0; column <= approachColumns; column += 1) {
-      const dx = THREE.MathUtils.lerp(-halfWidth, halfWidth, column / approachColumns);
-      const px = x + dx, pz = z + offset;
-      approachPositions.push(px, surfaceHeight(px, pz) + 0.006, pz);
-    }
-    if (row) {
-      for (let column = 0; column < approachColumns; column += 1) {
-        const previous = (row - 1) * (approachColumns + 1) + column, current = row * (approachColumns + 1) + column;
-        approachIndices.push(previous, current, previous + 1, previous + 1, current, current + 1);
-      }
-    }
-  }
-  approach.setAttribute('position', new THREE.Float32BufferAttribute(approachPositions, 3));
-  approach.setIndex(approachIndices);
-  approach.computeVertexNormals();
-  const path = new THREE.Mesh(approach, pathMaterial);
-  path.name = 'leifeng-overview-approach';
-  path.receiveShadow = true;
-  group.add(slope, platform, path);
-  return { group, baseY };
 }

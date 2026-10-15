@@ -121,6 +121,7 @@ main { position: relative; z-index: 3; pointer-events: none; }
 .place-nav a:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
 .clean-toggle { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid rgba(232, 235, 218, 0.3); color: var(--ivory); background: rgba(18, 39, 43, 0.65); font-size: 10px; letter-spacing: 0.1em; white-space: nowrap; cursor: pointer; pointer-events: auto; }
 .clean-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.clean-toggle[hidden] { display: none; }
 .clean-toggle:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
 .clean-icon { color: var(--gold); font-size: 17px; line-height: 0.6; }
 .immersive-toggle { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid rgba(232, 235, 218, 0.3); color: var(--ivory); background: rgba(18, 39, 43, 0.65); font-size: 10px; letter-spacing: 0.1em; white-space: nowrap; cursor: pointer; pointer-events: auto; transition: color 0.4s ease, border-color 0.4s ease, background 0.4s ease; }
@@ -229,12 +230,6 @@ h1 span { display: inline-block; transform: translateY(25px); }
 #app.is-west-lake .intro { top: clamp(60px, 9vh, 130px); }
 #app.is-west-lake .intro-copy { margin-top: 28px; }
 #app.is-west-lake .intro-caption { margin-top: 20px; }
-.terrain-source { margin-top: 16px; max-width: 340px; color: #a9b7b0; font-size: 10px; letter-spacing: 0.06em; }
-.terrain-source a { color: var(--gold); text-decoration: none; }
-.terrain-source a:hover { color: var(--ivory); }
-.terrain-source a + a { display: block; margin-top: 6px; }
-.terrain-source p { margin: 7px 0 0; max-width: 320px; padding: 8px 10px; border: 1px solid rgba(232, 235, 218, 0.13); color: #b4c1bb; background: rgba(14, 31, 35, 0.78); font-size: 8px; line-height: 1.45; letter-spacing: 0; }
-
 .scene-caption {
   position: absolute;
   top: 35%;
@@ -441,8 +436,6 @@ h1 span { display: inline-block; transform: translateY(25px); }
   #app.is-west-lake .intro-copy { margin-top: 14px; font-size: 12px; }
   #app.is-west-lake .intro-caption { margin-top: 13px; }
   .intro-caption { margin-top: 13px; font-size: 9px; }
-  .terrain-source { margin-top: 10px; max-width: 250px; font-size: 9px; }
-  .terrain-source p { font-size: 8px; }
   .view-nav { left: 9%; right: 9%; bottom: 21px; width: auto; }
   #app.is-west-lake .view-nav { max-height: none; overflow: visible; }
   .view-nav-heading { margin-bottom: 6px; font-size: 8px; }
@@ -520,12 +513,14 @@ h1 span { display: inline-block; transform: translateY(25px); }
 .leifeng-hotspot-overlay { z-index: 2; opacity: 0; }
 #app.is-leaving-scenic .scenic-ui { opacity: 0; transition: opacity 1.1s ease-in-out; }
 .leifeng-scene-hotspot span { opacity: 1; visibility: visible; }
+.jingci-scene-hotspot span { opacity: 1; visibility: visible; }
 .lingyin-scene-hotspot span,
 #app.is-route-view .lingyin-scene-hotspot span { opacity: 0; visibility: hidden; }
 .lingyin-scene-hotspot:hover span, .lingyin-scene-hotspot:focus-visible span, .lingyin-scene-hotspot.is-active span,
 #app.is-route-view .lingyin-scene-hotspot:hover span, #app.is-route-view .lingyin-scene-hotspot:focus-visible span, #app.is-route-view .lingyin-scene-hotspot.is-active span { opacity: 1; visibility: visible; }
 
 @media (max-width: 650px) {
+  .jingci-scene-hotspot:not(.is-active):not(:hover):not(:focus-visible) span { opacity: 0; visibility: hidden; }
   .scenic-header { top: 22px; left: 20px; right: 20px; gap: 8px; }
   .scenic-header h1 { font-size: 21px; }
   .scenic-header span { font-size: 8px; letter-spacing: 0.05em; }
@@ -543,6 +538,31 @@ h1 span { display: inline-block; transform: translateY(25px); }
 }
 
 /* 景点名称保持纯白，仅用单层暗色阴影保证在地形上可读。 */
+
+/* 西湖全景采用三级标记：核心地标保留剪影，普通景点收为点位，
+   苏堤、白堤等线性景观只保留一个轻量名称。 */
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="core"] .landmark-icon,
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"]:is(:hover, :focus-visible, .is-active, .is-open, .is-pinned) .landmark-icon {
+  display: block; opacity: 0.96; stroke: #17353a; stroke-width: 1.1; paint-order: stroke fill;
+  filter: drop-shadow(0 1px 1px rgba(7, 22, 25, 0.72));
+}
+#app.is-west-lake .scenic-hotspot.west-lake-marker:is([data-presentation="dot"], [data-presentation="region"])::before { background: rgba(245, 240, 225, 0.22); }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"]::after {
+  content: ''; position: absolute; width: 6px; height: 6px; border: 1px solid #17353a;
+  border-radius: 50%; background: #f5f0e1; box-shadow: 0 1px 1px rgba(7, 22, 25, 0.45);
+}
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"] .landmark-icon { display: none; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"] span { color: #fff; opacity: 0 !important; visibility: hidden !important; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"]:is(:hover, :focus-visible, .is-active, .is-open, .is-pinned)::after { display: none; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="dot"]:is(:hover, :focus-visible, .is-active, .is-open, .is-pinned) span { color: #fff; opacity: 1 !important; visibility: visible !important; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="region"]::after {
+  content: ''; position: absolute; left: 0; top: 50%; width: 4px; height: 4px; border-radius: 50%;
+  background: #f5f0e1; box-shadow: 0 1px 1px rgba(7, 22, 25, 0.58); transform: translateY(-50%);
+}
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="region"] .landmark-icon { display: none; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="region"] span { position: static; transform: none; display: block; padding: 0 0 0 6px; color: #fff; font-size: 10px; letter-spacing: 0.1em; opacity: 0.9 !important; visibility: visible !important; }
+#app.is-west-lake .scenic-hotspot.west-lake-marker[data-presentation="region"]:is(:hover, :focus-visible, .is-active, .is-open, .is-pinned) span { color: var(--gold); opacity: 1 !important; }
+
 .scenic-hotspot:hover span,
 .scenic-hotspot:focus-visible span,
 .scenic-hotspot.is-active span,

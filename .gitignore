@@ -1,3 +1,6 @@
 node_modules/
 dist/
 .DS_Store
+
+# Research copies: reference the original project page in published docs.
+docs/jingci-references/mu-tect-*.jpg

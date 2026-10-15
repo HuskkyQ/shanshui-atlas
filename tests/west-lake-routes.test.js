@@ -44,15 +44,17 @@ test('route geometry contains real White Causeway and Su Causeway ways', () => {
   assert.ok(!routes.routes.some((route) => route.sourceWayIds.includes('1060403263')), 'ferry relation must not be used');
 });
 
-test('eight attractions have unique OSM elements and stay inside the terrain tile', () => {
-  assert.deepEqual(attractions.map((item) => item.id), stops);
+test('attractions retain unique source points and only mapped route stops require a snap', () => {
+  assert.deepEqual(attractions.map((item) => item.id), [...stops.slice(0, 7), 'jingci-temple', stops[7]]);
   assert.equal(new Set(attractions.map((item) => item.osmElement)).size, attractions.length);
   for (const item of attractions) {
     assert.match(item.osm, /^https:\/\/www\.openstreetmap\.org\/(node|way)\/\d+$/);
     assert.ok(item.longitude >= dem.west && item.longitude <= dem.east);
     assert.ok(item.latitude >= dem.south && item.latitude <= dem.north);
-    assert.deepEqual(routes.poiSnaps[item.id] !== undefined, true);
-    assert.ok(routes.poiSnaps[item.id] <= 130, `${item.id} snap is too far from OSM walking geometry`);
+    if (stops.includes(item.id)) {
+      assert.deepEqual(routes.poiSnaps[item.id] !== undefined, true);
+      assert.ok(routes.poiSnaps[item.id] <= 130, `${item.id} snap is too far from OSM walking geometry`);
+    }
   }
   assert.equal(attractionById.get('leifeng').note.includes('湖岸步道入口'), true);
 });

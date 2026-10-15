@@ -26,6 +26,7 @@ export async function createWestLakeTerrain() {
   }
   const values = new DataView(buffer);
   const waterMask = new Uint8Array(maskBuffer);
+  const displayedCells = new Map();
   const elevation = (x, z) => values.getInt16((z * width + x) * 2, true) / 10;
   // Only the rendered lake bed is lowered; the saved DEM stays unmodified.
   const ground = (x, z) => waterMask[z * width + x] ? lakeElevation - 3 : elevation(x, z);
@@ -36,10 +37,16 @@ export async function createWestLakeTerrain() {
     const [u, v] = gridPoint(x, z);
     const x0 = Math.floor(u), z0 = Math.floor(v);
     const x1 = Math.min(x0 + 1, width - 1), z1 = Math.min(z0 + 1, height - 1);
-    return worldY(THREE.MathUtils.lerp(
-      THREE.MathUtils.lerp(ground(x0, z0), ground(x1, z0), u - x0),
-      THREE.MathUtils.lerp(ground(x0, z1), ground(x1, z1), u - x0), v - z0,
-    ));
+    const cell = displayedCells.get(z0 * width + x0);
+    if (cell) {
+      const u = clamp((x - cell.left) / (cell.right - cell.left) * 8, 0, 8);
+      const v = clamp((z - cell.front) / (cell.back - cell.front) * 8, 0, 8);
+      const col = Math.max(0, Math.min(7, Math.floor(u))), row = Math.max(0, Math.min(7, Math.floor(v)));
+      const a = row * 9 + col;
+      return triangleHeight(cell.heights[a], cell.heights[a + 1], cell.heights[a + 9], cell.heights[a + 10], u - col, v - row);
+    }
+    return triangleHeight(worldY(ground(x0, z0)), worldY(ground(x1, z0)),
+      worldY(ground(x0, z1)), worldY(ground(x1, z1)), u - x0, v - z0);
   }
   const isWater = (x, z) => {
     const [u, v] = gridPoint(x, z);
@@ -136,6 +143,55 @@ export async function createWestLakeTerrain() {
       group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), lineMaterial));
     });
   });
-  return { group, getHeight, toWorld, isWater, waterMaterial, waterHeight: waterY, width: WIDTH, depth: DEPTH,
+  function triangleHeight(a, b, c, d, x, z) {
+    return x + z <= 1 ? a * (1 - x - z) + b * x + c * z
+      : b * (1 - z) + c * (1 - x) + d * (x + z - 1);
+  }
+
+  function adjustGround(adjustment, bounds) {
+    const vertices = geometry.getAttribute('position');
+    const colors = geometry.getAttribute('color');
+    const nextPositions = Array.from(vertices.array), nextColors = Array.from(colors.array), nextIndices = [];
+    for (let row = 0; row < height - 1; row++) for (let col = 0; col < width - 1; col++) {
+      const a = row * width + col, b = a + 1, c = a + width, d = c + 1;
+      const left = vertices.getX(a), right = vertices.getX(b), front = vertices.getZ(a), back = vertices.getZ(c);
+      const previous = displayedCells.get(a);
+      if (right < bounds.minX || left > bounds.maxX || back < bounds.minZ || front > bounds.maxZ) {
+        if (previous) {
+          for (let z = 0; z < 8; z++) for (let x = 0; x < 8; x++) {
+            const p = previous.start + z * 9 + x;
+            nextIndices.push(p, p + 9, p + 1, p + 1, p + 9, p + 10);
+          }
+        } else nextIndices.push(a, c, b, b, c, d);
+        continue;
+      }
+      const start = nextPositions.length / 3;
+      const heights = new Float32Array(81);
+      for (let z = 0; z <= 8; z++) for (let x = 0; x <= 8; x++) {
+        const worldX = THREE.MathUtils.lerp(left, right, x / 8), worldZ = THREE.MathUtils.lerp(front, back, z / 8);
+        const y = previous ? previous.heights[z * 9 + x]
+          : triangleHeight(vertices.getY(a), vertices.getY(b), vertices.getY(c), vertices.getY(d), x / 8, z / 8);
+        const adjusted = adjustment(worldX, worldZ, y);
+        heights[z * 9 + x] = adjusted;
+        nextPositions.push(worldX, adjusted, worldZ);
+        for (let channel = 0; channel < 3; channel++) nextColors.push(triangleHeight(
+          colors.array[a * 3 + channel], colors.array[b * 3 + channel],
+          colors.array[c * 3 + channel], colors.array[d * 3 + channel], x / 8, z / 8));
+      }
+      for (let z = 0; z < 8; z++) for (let x = 0; x < 8; x++) {
+        const p = start + z * 9 + x;
+        nextIndices.push(p, p + 9, p + 1, p + 1, p + 9, p + 10);
+      }
+      displayedCells.set(a, { left, right, front, back, heights, start });
+    }
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(nextPositions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(nextColors, 3));
+    geometry.setIndex(nextIndices);
+    geometry.deleteAttribute('normal');
+    geometry.computeVertexNormals();
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+  }
+  return { group, getHeight, adjustGround, toWorld, isWater, waterMaterial, waterHeight: waterY, width: WIDTH, depth: DEPTH,
     bounds: { minX: -WIDTH / 2, maxX: WIDTH / 2, minZ: -DEPTH / 2, maxZ: DEPTH / 2 } };
 }

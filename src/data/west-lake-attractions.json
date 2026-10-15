@@ -112,6 +112,23 @@
     "official": "https://wgly.hangzhou.gov.cn/art/2022/12/1/art_1229696389_58943150.html"
   },
   {
+    "id": "jingci-temple",
+    "name": "净慈寺",
+    "category": "湖畔名胜",
+    "description": "西湖南岸、南屏山慧日峰下的寺院，背靠山林，与雷峰塔相对。可进入场景探索按复建效果图表达的中轴殿堂、高台大阁、两翼院落与南屏晚钟。",
+    "longitude": 120.1443406,
+    "latitude": 30.2311307,
+    "viewOffset": [
+      0.7,
+      0.65,
+      -0.9
+    ],
+    "osm": "https://www.openstreetmap.org/node/4427428610",
+    "osmElement": "node/4427428610",
+    "note": "坐标为寺院代表点，不是游客入口；整体建筑群按复建效果图艺术化表达，不是现状实测，未编号建筑保留分区名。",
+    "official": "https://eng.hangzhou.gov.cn/art/2021/3/10/art_811216_58875578.html"
+  },
+  {
     "id": "liulang",
     "name": "柳浪闻莺",
     "category": "湖畔名胜",

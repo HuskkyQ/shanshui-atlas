@@ -10,10 +10,21 @@ import { isPOIVisible } from '../src/shared/poi-visibility.js';
 import { westLakePOIGroups, westLakePOIs } from '../src/west-lake/pois.js';
 
 test('core POIs remain visible at every distance', () => {
-  for (const id of ['leifeng', 'lingyin-temple', 'santan']) {
+  for (const id of ['leifeng', 'lingyin-temple', 'santan', 'jingci-temple']) {
     const poi = westLakePOIs.find((item) => item.id === id);
     assert.equal(poi.importance, 3);
     assert.equal(isPOIVisible({ ...poi, distance: 1_000 }), true);
+  }
+});
+
+test('West Lake marks every POI with four core icons, two causeway names, or a dot', () => {
+  assert.deepEqual(westLakePOIs.filter(({ presentation }) => presentation === 'core').map(({ id }) => id).sort(),
+    ['jingci-temple', 'leifeng', 'lingyin-temple', 'santan']);
+  assert.deepEqual(westLakePOIs.filter(({ presentation }) => presentation === 'region').map(({ id }) => id).sort(), ['baidi', 'sudi']);
+  for (const poi of westLakePOIs) {
+    assert.ok(['core', 'region', 'dot'].includes(poi.presentation), `${poi.name} still has a map marker`);
+    assert.equal(isPOIVisible({ ...poi, distance: Infinity }), true, `${poi.name} remains eligible for zoom density filtering`);
+    if (poi.importance < 3 && !['sudi', 'baidi'].includes(poi.id)) assert.equal(poi.presentation, 'dot');
   }
 });
 
@@ -53,7 +64,7 @@ test('unified POIs keep source locations, unique IDs, and core future-scene link
   }
   assert.equal(new Set(westLakePOIs.map(({ id }) => id)).size, westLakePOIs.length);
   assert.deepEqual(
-    Object.fromEntries(['leifeng', 'lingyin-temple', 'santan'].map((id) => [id, westLakePOIs.find((item) => item.id === id).sceneId])),
-    { leifeng: 'leifeng-pagoda', 'lingyin-temple': 'lingyin-temple', santan: 'santanyinyue' },
+    Object.fromEntries(['leifeng', 'lingyin-temple', 'santan', 'jingci-temple'].map((id) => [id, westLakePOIs.find((item) => item.id === id).sceneId])),
+    { leifeng: 'leifeng-pagoda', 'lingyin-temple': 'lingyin-temple', santan: 'santanyinyue', 'jingci-temple': 'jingci-temple' },
   );
 });

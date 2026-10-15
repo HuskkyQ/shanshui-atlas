@@ -31,11 +31,20 @@ function camera() {
 function boxFor(labelObject, cameraObject) {
   const anchor = labelObject.getWorldPosition(new THREE.Vector3()).project(cameraObject);
   const size = labelObject.userData.landmarkHitSize || 29;
+  const text = labelObject.userData.landmarkLabelSize;
+  const textWidth = Number(text?.width) || 0;
+  const textHeight = Number(text?.height) || 0;
   const x = (anchor.x + 1) * WIDTH / 2;
   const y = (1 - anchor.y) * HEIGHT / 2;
   const offsetX = (0.5 - labelObject.center.x) * size;
   const offsetY = (0.5 - labelObject.center.y) * size;
-  return { left: x + offsetX - size / 2, right: x + offsetX + size / 2, top: y + offsetY - size / 2, bottom: y + offsetY + size / 2 };
+  const half = size / 2;
+  return {
+    left: x + offsetX - Math.max(half, textWidth / 2),
+    right: x + offsetX + Math.max(half, textWidth / 2),
+    top: y + offsetY - half - textHeight,
+    bottom: y + offsetY + half,
+  };
 }
 
 function overlaps(a, b) {
@@ -136,4 +145,22 @@ test('dense 34px labels receive stable non-overlapping screen offsets', () => {
   const centers = labels.map((item) => item.center.clone());
   layoutLandmarkLabels(labels, view, WIDTH, HEIGHT);
   labels.forEach((item, index) => assert.deepEqual(item.center, centers[index]));
+});
+
+test('a core landmark name reserves space above its icon without moving either world anchor', () => {
+  const view = camera();
+  const parent = new THREE.Group();
+  const core = label(new THREE.Vector3(0, 0, 0), 'is-attraction', 30);
+  const nearby = label(new THREE.Vector3(0, 30, 0), 'is-attraction', 30);
+  core.userData.landmarkLabelSize = { width: 88, height: 25 };
+  parent.add(core, nearby);
+  parent.updateMatrixWorld(true);
+  const anchorsBefore = [core, nearby].map((item) => item.getWorldPosition(new THREE.Vector3()).clone());
+
+  layoutLandmarkLabels([core, nearby], view, WIDTH, HEIGHT);
+
+  assert.equal(core.element.dataset.offsetX, '0');
+  assert.notEqual(nearby.element.dataset.offsetX, '0');
+  assert.equal(overlaps(boxFor(core, view), boxFor(nearby, view)), false);
+  [core, nearby].forEach((item, index) => assert.deepEqual(item.getWorldPosition(new THREE.Vector3()), anchorsBefore[index]));
 });
