@@ -1,6 +1,38 @@
 node_modules/
 dist/
 .DS_Store
+outputs/
+previews/
+.openai/
+.workbuddy/
+scripts/__pycache__/
+
+HANDOFF.MD
+/代码审查报告-2026-11-02.md
+
+# Internal plans, acceptance logs, and ops notes (keep locally).
+docs/superpowers/
+docs/server-deployment.md
+docs/*acceptance*.md
+docs/code-review-fixes-*.md
+docs/changelog-legacy-*.md
+docs/landscape-candidates-*
+docs/*-feasibility-*.md
+docs/*-photo-audit-*.md
+docs/*-followup-*.md
+
+# Large local reference snapshots (tests/regen use paths on disk; not for remote).
+docs/xingping-references/
+docs/zhouzhuang-references/
+docs/changbai-references/
+
+# Research board / candidate pages (internal).
+docs/jiangnan-water-town-candidates-*.md
+docs/landscape-candidates-research-*.md
+docs/xingping-terrain-and-water-study-*.md
+
+# Design previews (local only; not shipped to production).
+public/design/
 
 # Research copies: reference the original project page in published docs.
 docs/jingci-references/mu-tect-*.jpg
