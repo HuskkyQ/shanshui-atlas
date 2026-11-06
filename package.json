@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 571 --strictPort",
     "test": "node --test",
+    "lint": "eslint . && node scripts/check-js-syntax.mjs",
+    "format:check": "prettier --check eslint.config.js package.json vite.config.js src/places/ src/xingping/scene.js src/xingping/style.css src/shared/scene-shell.js src/shared/scene-viewport.js src/shared/webgl-recovery.js src/west-lake/scenic-history.js src/west-lake/hikes-data.js scripts/check-js-syntax.mjs scripts/README.md docs/changelog.md",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 571 --strictPort"
   },
@@ -14,6 +19,10 @@
     "three": "^0.180.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "prettier": "^3.6.2",
     "vite": "^7.1.0"
   }
 }

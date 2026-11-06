@@ -148,3 +148,67 @@ test('所有模型顶点均为有限数', () => {
   });
   model.dispose();
 });
+
+test('补充建筑保持地图位置，待霜亭基座贴合东岛且不增加热点', () => {
+  const model = createZhuozhengGardenModel();
+  assert.ok(layout.contextBuildings?.length >= 8, 'reviewed central buildings are included');
+  assert.deepEqual(Object.keys(model.anchors).sort(), [...keys].sort());
+  for (const building of layout.contextBuildings) {
+    const object = model.group.getObjectByName(`building-${building.key}`);
+    assert.ok(object, `${building.name} has a mapped context building`);
+    assert.ok(Math.hypot(object.position.x - building.position[0], object.position.z - building.position[2]) < 0.01);
+  }
+  model.group.updateMatrixWorld(true);
+  const pavilion = model.group.getObjectByName('building-daishuang-pavilion');
+  const island = model.group.getObjectByName('island-2');
+  const ray = new THREE.Raycaster(new THREE.Vector3(pavilion.position.x, 20, pavilion.position.z), new THREE.Vector3(0, -1, 0));
+  const hit = ray.intersectObject(island, false)[0];
+  assert.ok(hit, 'Daishuang has island terrain underneath');
+  assert.ok(Math.abs(hit.point.y - pavilion.position.y) < 0.06, 'pavilion foundation rests on the island');
+  model.dispose();
+});
+
+test('连续屋面保留凹轮廓，不能把庭院填成一整块屋顶', () => {
+  const model = createZhuozhengGardenModel();
+  model.group.updateMatrixWorld(true);
+  const area = layout.coveredAreas?.find((a) => a.source.osmId === '508113054');
+  assert.ok(area, 'mapped courtyard roof is included');
+  const roof = model.group.getObjectByName('covered-roof-508113054');
+  assert.ok(roof);
+  const xs = area.outline.map(([x]) => x), zs = area.outline.map(([, z]) => z);
+  const ray = new THREE.Raycaster();
+  let empty = 0, solid = 0;
+  for (let x = Math.min(...xs) + 0.3; x < Math.max(...xs); x += 1.5) {
+    for (let z = Math.min(...zs) + 0.3; z < Math.max(...zs); z += 1.5) {
+      ray.set(new THREE.Vector3(x, 20, z), new THREE.Vector3(0, -1, 0));
+      const hits = ray.intersectObject(roof, false);
+      if (!pointInRing(x, z, area.outline)) {
+        assert.equal(hits.length, 0, `courtyard stays open at ${x},${z}`);
+        empty += 1;
+      } else {
+        assert.ok(hits.length > 0, `mapped roof remains at ${x},${z}`);
+        solid += 1;
+      }
+    }
+  }
+  assert.ok(empty > 20 && solid > 10, 'checks both court voids and narrow roof arms');
+  model.dispose();
+});
+
+test('乔木按地图林团分布，避开水面、建筑、廊屋和庭院铺地', () => {
+  const model = createZhuozhengGardenModel();
+  const trunks = model.group.getObjectByName('garden-tree-trunks');
+  assert.ok(layout.vegetationClusters?.length > 0);
+  assert.ok(trunks.count > 0);
+  const matrix = new THREE.Matrix4(), point = new THREE.Vector3();
+  for (let i = 0; i < trunks.count; i++) {
+    trunks.getMatrixAt(i, matrix); point.setFromMatrixPosition(matrix);
+    const { x, z } = point;
+    assert.ok(layout.vegetationClusters.some((a) => pointInRing(x, z, a.outline)), `tree ${i} is in mapped woodland`);
+    assert.ok(!layout.ponds.some((p) => pointInRing(x, z, p.outline) && !p.holes.some((h) => pointInRing(x, z, h))));
+    for (const area of [...layout.buildings, ...layout.contextBuildings, ...layout.coveredAreas, ...layout.groundAreas]) {
+      if (area.outline.length > 3) assert.ok(!pointInRing(x, z, area.outline), `tree ${i} clears ${area.key}`);
+    }
+  }
+  model.dispose();
+});

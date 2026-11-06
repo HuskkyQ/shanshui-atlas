@@ -1,0 +1,35 @@
+<div id="daci-app">
+  <div id="daci-canvas" class="daci-canvas-wrap" aria-label="可旋转的大慈岩三维场景"></div>
+  <div class="daci-wash" aria-hidden="true"></div>
+  <header class="daci-header">
+    <a class="daci-brand" href="./" aria-label="返回首页"><span class="daci-mark" aria-hidden="true">岩</span><span>山水志</span><small>大慈岩 · 返回首页</small></a>
+    <button id="daci-immersive" class="daci-control" type="button" aria-pressed="false">沉浸式体验</button>
+  </header>
+  <main class="daci-main">
+    <section class="daci-intro" aria-labelledby="daci-title">
+      <p class="daci-eyebrow exhibit-eyebrow"><span class="exhibit-eyebrow-line"></span><span>ZHEJIANG, CHINA</span><span class="exhibit-eyebrow-dot">◆</span><span class="exhibit-coordinates">建德</span></p>
+      <h1 id="daci-title" class="exhibit-title">大慈<span>岩</span></h1>
+      <p class="daci-english exhibit-english">DACIYAN CLIFF TEMPLE</p>
+      <p class="daci-description exhibit-copy">一半嵌入岩腹，<br />一半凌驾崖面。</p>
+      <span class="daci-caption exhibit-caption">大慈岩江南悬空寺 · 单侧峭壁、主殿与天栈云渡示意</span>
+      <p class="daci-gesture">拖动旋转 · 滚轮缩放<br />Shift＋拖动平移</p>
+    </section>
+    <aside class="daci-explorer" aria-label="大慈岩探索">
+      <div class="daci-explorer-head"><span>大慈岩 · 六处探索</span><span><button id="daci-side" type="button">侧览</button><button id="daci-reset" type="button">总览</button></span></div>
+      <nav id="daci-hotspots" class="daci-hotspots" aria-label="选择观察点"></nav>
+      <article id="daci-detail" class="daci-detail" aria-live="polite">
+        <p class="daci-detail-kicker">DACIYAN CLIFF TEMPLE</p>
+        <h2 id="daci-detail-name">大慈岩</h2>
+        <p id="daci-detail-description"></p>
+        <a id="daci-source" target="_blank" rel="noreferrer"></a>
+      </article>
+    </aside>
+  </main>
+  <div id="daci-loading" class="daci-loading" role="status">正在展开崖壁…</div>
+  <div id="daci-error" class="daci-error" hidden>
+    <p>寺院暂时无法打开，请重试。</p>
+    <button id="daci-retry" type="button">重试</button>
+    <a href="./">返回首页</a>
+  </div>
+  <button id="daci-exit-immersive" class="daci-exit-immersive" type="button" hidden>退出沉浸</button>
+</div>

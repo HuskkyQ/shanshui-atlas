@@ -1,3 +1,5 @@
+import { attachWebGLRecovery } from '../shared/webgl-recovery.js';
+import { createCompass } from '../shared/compass.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { enableShiftPan } from '../shared/scene-controls.js';
@@ -10,21 +12,22 @@ import { createJingciOverview } from './jingci-temple/overview.js';
 import { westLakePOIs, westLakePOIGroups } from './pois.js';
 import { selectMapPoints } from './marker-density.js';
 import { isPOIVisible } from '../shared/poi-visibility.js';
-import { getLightingForDate, skyDirection } from '../shared/lighting.js';
+import { getExhibitionLight, getLightingForDate, skyDirection } from '../shared/lighting.js';
 import { createLandmarkIcon, getLandmarkIconKind } from '../shared/landmark-icons.js';
 import { layoutLandmarkLabels } from '../shared/landmark-layout.js';
 import { createLandmarkIconScaler } from '../shared/landmark-scale.js';
+import { SCENE_COLORS, getSceneTheme } from '../shared/scene-palette.js';
 import { captureScenicEntryView } from '../shared/scenic-entry-view.js';
 import builtLandmarkData from '../data/west-lake-built-landmarks.json' with { type: 'json' };
-import terrainMetadata from '../data/west-lake-dem.json';
-import routeData from '../data/west-lake-routes.json';
-import hikeData from '../data/west-lake-hikes.json';
+import terrainMetadata from '../data/west-lake-dem.json' with { type: 'json' };
+import routeData from '../data/west-lake-routes.json' with { type: 'json' };
+import { loadWestLakeHikes } from './hikes-data.js';
 
 const attractions = westLakePOIGroups.attractions;
 const landmarks = westLakePOIs;
 
 const VIEWS = {
-  overview: { position: [31, 29, 38], target: [0, 0.8, 0] },
+  overview: { position: [34, 32, 42], target: [0, 0.55, 0] },
   lake: { position: [20, 13, 13], target: [6.5, 0.5, -4] },
   hills: { position: [16, 20, 25], target: [-5, 1.5, 0] },
   top: { position: [7, 27, -4.5], target: [7, 0.5, -5] },
@@ -186,11 +189,12 @@ function addLandmarks(scene, terrain, builtModels, overviewAnchors) {
 }
 
 export async function createWestLakeScene(container, onMotionChange, onLightingChange) {
+  const hikeData = await loadWestLakeHikes();
   const terrain = await createWestLakeTerrain();
   const scene = new THREE.Scene();
   scene.add(terrain.group);
-  scene.background = new THREE.Color('#344d51');
-  const fog = new THREE.FogExp2('#405c5d', 0.009);
+  scene.background = new THREE.Color(SCENE_COLORS.daySky);
+  const fog = new THREE.FogExp2(SCENE_COLORS.dayFog, 0.009);
   scene.fog = fog;
   const jingciOverview = createJingciOverview(terrain, landmarks.find(({ id }) => id === 'jingci-temple'),
     terrainMetadata.horizontalScale);
@@ -227,6 +231,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
+  const removeRecovery = attachWebGLRecovery(renderer.domElement, { onRestored: () => { renderer.shadowMap.needsUpdate = true; } });
   const labels = new CSS2DRenderer();
   labels.domElement.className = 'trailhead-overlay';
   container.appendChild(labels.domElement);
@@ -243,7 +248,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   const moonlight = new THREE.DirectionalLight('#a9c5e5', 0);
   scene.add(ambient, sunlight, moonlight);
   const colors = Object.fromEntries(Object.entries({
-    nightSky: '#0b1925', daySky: '#344d51', duskSky: '#72554b', nightFog: '#152935', dayFog: '#405c5d',
+    nightSky: SCENE_COLORS.nightSky, daySky: SCENE_COLORS.daySky, duskSky: SCENE_COLORS.duskSky, nightFog: SCENE_COLORS.nightFog, dayFog: SCENE_COLORS.dayFog,
     nightAmbient: '#7899bc', dayAmbient: '#e9e9d9', nightGround: '#142b35', dayGround: '#294b46', lowSun: '#ffc17b', noonSun: '#fff1dc',
   }).map(([key, color]) => [key, new THREE.Color(color)]));
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -255,7 +260,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   controls.minPolarAngle = 0.05;
   controls.maxPolarAngle = Math.PI * 0.49;
   controls.autoRotateSpeed = 0.3;
-  const compass = document.querySelector('#compass-dial');
+  const compass = createCompass(container, { variant: 'landscape' });
   const clock = new THREE.Clock();
   let motion = !reducedMotion, cleanMode = false, immersiveMode = false, activeView = 'overview';
   let tween = null, savedView = null, frameId, paused = false, disposed = false;
@@ -277,10 +282,16 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
   controls.addEventListener('start', cancelTween);
 
   function updateLighting() {
+    const palette = getSceneTheme();
+    colors.daySky.set(palette.daySky);
+    colors.nightSky.set(palette.nightSky);
+    colors.duskSky.set(palette.duskSky);
+    colors.dayFog.set(palette.dayFog);
+    colors.nightFog.set(palette.nightFog);
     renderer.shadowMap.enabled = !cleanMode && !immersiveMode;
     terrain.waterMaterial.uniforms.glintStrength.value = cleanMode || immersiveMode ? 0 : 1;
     if (cleanMode || immersiveMode) {
-      scene.background.set('#65787a');
+      scene.background.set(palette.neutral);
       scene.fog = null;
       ambient.color.set('#ffffff');
       ambient.groundColor.set('#ffffff');
@@ -298,19 +309,21 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
     sunlight.color.copy(colors.noonSun).lerp(colors.lowSun, twilight * 0.8);
     moonlight.position.fromArray(skyDirection(moon)).multiplyScalar(45);
     moonlight.intensity = moonStrength * 1.6;
-    ambient.color.copy(colors.nightAmbient).lerp(colors.dayAmbient, daylight);
-    ambient.groundColor.copy(colors.nightGround).lerp(colors.dayGround, daylight);
-    ambient.intensity = 1.05 + 1.05 * daylight;
+    const exhibitLight = getExhibitionLight(daylight);
+    ambient.color.copy(colors.nightAmbient).lerp(colors.dayAmbient, exhibitLight.ambientMix);
+    ambient.groundColor.copy(colors.nightGround).lerp(colors.dayGround, exhibitLight.ambientMix);
+    ambient.intensity = exhibitLight.ambientIntensity;
     scene.background.copy(colors.nightSky).lerp(colors.daySky, daylight).lerp(colors.duskSky, twilight * 0.35);
     scene.fog = fog;
-    fog.color.copy(colors.nightFog).lerp(colors.dayFog, daylight);
-    terrain.waterMaterial.uniforms.light.value = 0.3 + 0.7 * daylight;
+    fog.color.copy(colors.nightFog).lerp(colors.dayFog, exhibitLight.fogMix);
+    terrain.waterMaterial.uniforms.light.value = exhibitLight.waterLight;
     renderer.toneMappingExposure = 1.55 - 0.15 * daylight;
     onLightingChange({ time, period });
   }
   updateLighting();
   const lightingInterval = window.setInterval(updateLighting, 60_000);
   document.addEventListener('visibilitychange', updateLighting);
+  window.addEventListener('atlas-theme-change', updateLighting);
 
   function resize() {
     const width = container.clientWidth, height = container.clientHeight;
@@ -357,7 +370,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
     landmarkIconScaler();
     forest.update(camera, container.clientHeight, elapsed);
     builtModels.update(camera, container.clientHeight, elapsed);
-    compass.style.transform = `rotate(${Math.atan2(camera.position.x - controls.target.x, camera.position.z - controls.target.z)}rad)`;
+    compass.update(camera);
     if (motion && !cleanMode && !immersiveMode) terrain.waterMaterial.uniforms.time.value = elapsed;
     renderer.render(scene, camera);
     sights.update(camera, container.clientWidth, container.clientHeight, controls.target);
@@ -509,7 +522,9 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       cancelAnimationFrame(frameId);
       window.clearInterval(lightingInterval);
       document.removeEventListener('visibilitychange', updateLighting);
+      window.removeEventListener('atlas-theme-change', updateLighting);
       observer.disconnect();
+      compass.dispose();
       disposeShiftPan();
       controls.removeEventListener('start', cancelTween);
       controls.dispose();
@@ -521,6 +536,7 @@ export async function createWestLakeScene(container, onMotionChange, onLightingC
       });
       geometries.forEach((geometry) => geometry.dispose());
       materials.forEach((material) => material.dispose());
+      removeRecovery();
       renderer.dispose();
       renderer.domElement.remove();
       labels.domElement.remove();

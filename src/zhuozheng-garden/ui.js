@@ -8,7 +8,7 @@ export function createGardenUI({ document: doc, window: win, createScene, conten
   const errorPanel = get('#garden-error');
   const loading = get('#garden-loading');
   const listeners = [];
-  let scene = null, selectedId = null, immersive = false, revision = 0, disposed = false;
+  let scene = null, selectedId = null, immersive = false, aerial = false, revision = 0, disposed = false;
   const listen = (element, event, callback) => {
     element.addEventListener(event, callback);
     listeners.push(() => element.removeEventListener(event, callback));
@@ -29,12 +29,10 @@ export function createGardenUI({ document: doc, window: win, createScene, conten
   });
   nav.replaceChildren(...buttons);
   doc.title = `${content.name} · 山水志`;
-  get('#garden-description').textContent = content.description;
-  get('#garden-model-note').textContent = content.modelNote;
-
   function showDetail(id) {
     const item = content.hotspots.find((entry) => entry.id === id);
     selectedId = item?.id || null;
+    if (selectedId) aerial = false;
     app.classList.toggle('has-detail', Boolean(item));
     get('#garden-detail-name').textContent = item?.name || '中部园 · 池广林茂';
     get('#garden-detail-description').textContent = item?.description || content.description;
@@ -88,6 +86,7 @@ export function createGardenUI({ document: doc, window: win, createScene, conten
       scene.mount();
       scene.setImmersive(immersive);
       if (selectedId) scene.selectHotspot(selectedId, { animate: false });
+      else if (aerial) scene.setAerialView({ animate: false });
       await scene.reveal();
       if (disposed || token !== revision) return false;
       loading.hidden = true;
@@ -103,7 +102,8 @@ export function createGardenUI({ document: doc, window: win, createScene, conten
   }
 
   listen(get('#garden-retry'), 'click', start);
-  listen(get('#garden-reset'), 'click', () => scene?.resetView());
+  listen(get('#garden-reset'), 'click', () => { aerial = false; scene?.resetView(); });
+  listen(get('#garden-aerial'), 'click', () => { aerial = true; scene?.setAerialView(); });
   listen(enterImmersive, 'click', () => setImmersive(true));
   listen(exitImmersive, 'click', () => setImmersive(false));
   listen(doc, 'keydown', (event) => {

@@ -1,0 +1,37 @@
+{
+  "width": 396,
+  "height": 216,
+  "west": 110.45,
+  "east": 110.55972222222223,
+  "north": 24.96,
+  "south": 24.900277777777777,
+  "unit": "decimetres, unsigned 16-bit little-endian",
+  "encoding": "uint16le-decimetres",
+  "minElevation": 112.0,
+  "maxElevation": 625.7,
+  "rawMinElevation": 112.0,
+  "rawMaxElevation": 625.7254028320312,
+  "source": {
+    "dataset": "Copernicus DEM GLO-30",
+    "product": "Copernicus_DSM_COG_10",
+    "resolution": "1 arc-second native samples",
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N24_00_E110_00_DEM/Copernicus_DSM_COG_10_N24_00_E110_00_DEM.tif",
+    "tileSha256": "fc2cd2f77f8f6b2901f5667aaf536ddd255d5295db01cf64b878c8b4ee2020bf",
+    "tileBytes": 48595506,
+    "verticalDatum": "EGM2008",
+    "researchWindow": {
+      "west": 110.45,
+      "east": 110.56,
+      "south": 24.9,
+      "north": 24.96
+    }
+  },
+  "limitations": "DSM surface values include vegetation/buildings and are not bare-ground, riverbed, bathymetry, or measured water level.",
+  "waterElevation": {
+    "value": 116.0,
+    "unit": "m",
+    "datum": "EGM2008",
+    "displayOnly": true,
+    "method": "median of DEM pixels whose centres fall inside mapped display polygons"
+  }
+}

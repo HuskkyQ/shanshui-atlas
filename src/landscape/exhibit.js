@@ -1,12 +1,12 @@
 import './style.css';
-import huangshanLandmarks from '../data/huangshan-landmarks.json';
+import huangshanLandmarks from '../data/huangshan-landmarks.json' with { type: 'json' };
 import { westLakePOIs, westLakePOIGroups } from '../west-lake/pois.js';
 import { getScenicScene } from '../west-lake/scenic-scenes.js';
 import { createSceneSession } from '../west-lake/scene-session.js';
 import { createScenicUI } from '../west-lake/scenic-ui.js';
 import { createPOIPhoto } from '../shared/poi-photo.js';
-import westLakeRoutes from '../data/west-lake-routes.json';
-import westLakeHikes from '../data/west-lake-hikes.json';
+import westLakeRoutes from '../data/west-lake-routes.json' with { type: 'json' };
+import { loadWestLakeHikes } from '../west-lake/hikes-data.js';
 
 const isWestLake = new URLSearchParams(window.location.search).get('place') === 'west-lake';
 const { mountains: westLakeLandmarks, attractions: westLakeAttractions, trailheads: westLakeTrailheads,
@@ -143,6 +143,7 @@ function updateCleanMode(isClean) {
 }
 
 try {
+  const westLakeHikes = isWestLake ? await loadWestLakeHikes() : null;
   const createScene = isWestLake ? (await import('../west-lake/scene.js')).createWestLakeScene
     : (await import('../huangshan/scene.js')).createHuangshanScene;
   const exhibit = await createScene(document.querySelector('#canvas-wrap'), updateMotion, updateLightingStatus);
@@ -153,7 +154,7 @@ try {
   updateCleanMode(exhibit.isCleanMode());
   let immersiveMode = false, pinnedHotspot = null;
   const canvasWrap = document.querySelector('#canvas-wrap');
-  const immersivePanels = [...document.querySelectorAll('.brand, .place-nav, .clean-toggle, .intro, .scene-caption, .trailhead-credit, .view-nav, .site-footer, .compass')];
+  const immersivePanels = [...document.querySelectorAll('.brand, .place-nav, .clean-toggle, .intro, .scene-caption, .trailhead-credit, .view-nav, .site-footer')];
   const hotspots = [...canvasWrap.querySelectorAll('.scenic-hotspot, .trailhead-hotspot')];
 
   function hideImmersiveDetail() {

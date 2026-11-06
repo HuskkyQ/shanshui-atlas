@@ -1,0 +1,53 @@
+:has(> .scene-roam-footer) { --scene-roam-footer-height: 84px; }
+.scene-roam-footer {
+  position: absolute;
+  z-index: 8;
+  right: 6.3%;
+  bottom: 0;
+  left: 6.3%;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  border-top: 1px solid var(--atlas-line, #d1c9b8);
+  color: var(--atlas-muted, #536259);
+  font: 11px 'DM Sans', 'PingFang SC', sans-serif;
+  letter-spacing: .12em;
+  pointer-events: none;
+}
+.scene-roam-hint { display: flex; align-items: center; gap: 13px; white-space: nowrap; }
+.scene-roam-hint b { color: var(--atlas-gold, #79592d); margin: 0 6px; font-weight: 400; }
+.scene-roam-hint-icon { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid var(--atlas-line, #d1c9b8); border-radius: 50%; color: var(--atlas-ink, #233e34); font-size: 17px; font-weight: 300; }
+.scene-roam-hint-text { white-space: nowrap; }
+.scene-auto-roam {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 0;
+  border: 0;
+  color: var(--atlas-muted, #536259);
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+  font: inherit;
+  letter-spacing: .1em;
+}
+.scene-auto-roam:hover { color: var(--atlas-ink, #233e34); }
+.scene-roam-indicator { width: 6px; height: 6px; border-radius: 50%; background: var(--atlas-gold, #79592d); box-shadow: 0 0 12px rgba(121,89,45,.45); }
+.scene-auto-roam[aria-pressed='false'] .scene-roam-indicator { background: #60736f; box-shadow: none; }
+.scene-roam-state { margin-left: 6px; color: var(--atlas-gold, #79592d); font-size: 10px; }
+.scene-auto-roam[aria-pressed='false'] .scene-roam-state { color: #82928d; }
+.scene-auto-roam:focus-visible { outline: 1px solid #d3b17a; outline-offset: 3px; }
+.scene-auto-roam:disabled { cursor: default; opacity: .65; }
+.scene-auto-roam[hidden], .scene-roam-footer[hidden] { display: none; }
+@media (max-width: 650px) {
+  :has(> .scene-roam-footer) { --scene-roam-footer-height: 66px; }
+  .scene-roam-footer { right: 7%; left: 7%; height: 66px; gap: 8px; font-size: 9px; letter-spacing: .04em; }
+  .scene-roam-hint { gap: 7px; }
+  .scene-roam-hint-text { display: none; }
+  .scene-roam-hint-icon { width: 23px; height: 23px; font-size: 13px; }
+  .scene-roam-hint b { margin: 0 2px; }
+  .scene-auto-roam { gap: 5px; font-size: 9px; letter-spacing: 0; }
+  .scene-roam-state { margin-left: 2px; }
+}

@@ -1,3 +1,4 @@
+import { attachWebGLRecovery } from '../../shared/webgl-recovery.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
@@ -11,7 +12,9 @@ import {
   applyScenicEntryView,
   fitScenicEntryView,
 } from '../../shared/scenic-entry-view.js';
+import { createCompass } from '../../shared/compass.js';
 import { santanContent as content } from '../scenic-content.js';
+import { SCENE_COLORS, watchSceneTheme } from '../../shared/scene-palette.js';
 
 const OVERVIEW_VIEWS = {
   desktop: { position: [8, 12, 48], target: [4, 4.3, -3] },
@@ -64,12 +67,15 @@ export function createScene(initialContext = {}) {
   let disposed = false;
   let frameId = 0;
   let renderer = null;
+  let removeRecovery;
   let labelRenderer = null;
   let resizeObserver = null;
   let controls = null;
   let disposeShiftPan = null;
   let scene = null;
+  let stopWatchingTheme;
   let camera = null;
+  let compass = null;
   let container = null;
   let onHotspot = null;
   let tween = null;
@@ -234,6 +240,7 @@ export function createScene(initialContext = {}) {
     controls.update();
     landmarkIconScaler?.();
     layoutLandmarkLabels(landmarkLabels, camera, container.clientWidth, container.clientHeight);
+    compass?.update(camera);
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
   }
@@ -251,8 +258,8 @@ export function createScene(initialContext = {}) {
     scene = new THREE.Scene();
     scene.name = 'santanyinyue-scenic-scene';
     scene.userData.lightingMode = 'fixed-exhibition-lighting';
-    scene.background = new THREE.Color('#6c8587');
-    scene.fog = new THREE.Fog('#6c8587', 68, 150);
+    scene.background = new THREE.Color(SCENE_COLORS.paper);
+    scene.fog = new THREE.Fog(SCENE_COLORS.dayFog, 68, 150);
     camera = new THREE.PerspectiveCamera(40, 1, 0.1, 190);
     const overview = overviewView();
     camera.position.copy(overview.position);
@@ -266,6 +273,9 @@ export function createScene(initialContext = {}) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
+    stopWatchingTheme = watchSceneTheme(scene);
+    removeRecovery = attachWebGLRecovery(renderer.domElement, { onRestored: () => { renderer.shadowMap.needsUpdate = true; } });
+    compass = createCompass(container, { reference: 'model' });
 
     labelRenderer = new CSS2DRenderer();
     labelRenderer.domElement.className = 'trailhead-overlay leifeng-hotspot-overlay santan-hotspot-overlay';
@@ -394,7 +404,11 @@ export function createScene(initialContext = {}) {
     hotspotListeners.clear();
     landmarkLabels.length = 0;
     views.clear();
+    stopWatchingTheme?.();
     disposeSceneResources(scene);
+    compass?.dispose();
+    compass = null;
+    removeRecovery?.();
     renderer?.dispose();
     renderer?.forceContextLoss();
     renderer?.domElement.remove();

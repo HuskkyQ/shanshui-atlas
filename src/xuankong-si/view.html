@@ -1,0 +1,35 @@
+<div id="xuankong-app">
+  <div id="xuankong-canvas" class="xuankong-canvas-wrap" aria-label="可旋转的悬空寺三维场景"></div>
+  <div class="xuankong-wash" aria-hidden="true"></div>
+  <header class="xuankong-header">
+    <a class="xuankong-brand" href="./" aria-label="返回首页"><span class="xuankong-mark" aria-hidden="true">寺</span><span>山水志</span><small>悬空寺 · 返回首页</small></a>
+    <button id="xuankong-immersive" class="xuankong-control" type="button" aria-pressed="false">沉浸式体验</button>
+  </header>
+  <main class="xuankong-main">
+    <section class="xuankong-intro" aria-labelledby="xuankong-title">
+      <p class="xuankong-eyebrow exhibit-eyebrow"><span class="exhibit-eyebrow-line"></span><span>SHANXI, CHINA</span><span class="exhibit-eyebrow-dot">◆</span><span class="exhibit-coordinates">浑源</span></p>
+      <h1 id="xuankong-title" class="exhibit-title">悬空<span>寺</span></h1>
+      <p class="xuankong-english exhibit-english">XUANKONG TEMPLE</p>
+      <p class="xuankong-description exhibit-copy">木构楼阁贴着峭壁，<br />栈道在山岩间上下相连。</p>
+      <span class="xuankong-caption exhibit-caption">悬空寺 · 山西浑源依崖建筑与栈道布局示意</span>
+      <p class="xuankong-gesture">拖动旋转 · 滚轮缩放<br />Shift＋拖动平移</p>
+    </section>
+    <aside class="xuankong-explorer" aria-label="悬空寺探索">
+      <div class="xuankong-explorer-head"><span>悬空寺 · 六处探索</span><span><button id="xuankong-side" type="button">侧览</button><button id="xuankong-reset" type="button">总览</button></span></div>
+      <nav id="xuankong-hotspots" class="xuankong-hotspots" aria-label="选择观察点"></nav>
+      <article id="xuankong-detail" class="xuankong-detail" aria-live="polite">
+        <p class="xuankong-detail-kicker">XUANKONG TEMPLE</p>
+        <h2 id="xuankong-detail-name">悬空寺</h2>
+        <p id="xuankong-detail-description"></p>
+        <a id="xuankong-source" target="_blank" rel="noreferrer"></a>
+      </article>
+    </aside>
+  </main>
+  <div id="xuankong-loading" class="xuankong-loading" role="status">正在展开崖壁…</div>
+  <div id="xuankong-error" class="xuankong-error" hidden>
+    <p>寺院暂时无法打开，请重试。</p>
+    <button id="xuankong-retry" type="button">重试</button>
+    <a href="./">返回首页</a>
+  </div>
+  <button id="xuankong-exit-immersive" class="xuankong-exit-immersive" type="button" hidden>退出沉浸</button>
+</div>

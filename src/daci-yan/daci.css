@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+:root { font-family: 'DM Sans', 'PingFang SC', sans-serif; color: #f5eee1; background: #193b3b; font-synthesis: none; text-rendering: optimizeLegibility; }
+* { box-sizing: border-box; }
+html, body, #daci-app { width: 100%; height: 100%; min-width: 320px; margin: 0; overflow: hidden; }
+button { font: inherit; }
+#daci-app { position: relative; background: radial-gradient(circle at 54% 28%, #6f9186 0, #315d59 44%, #163639 100%); }
+.daci-canvas-wrap, .daci-canvas-wrap canvas, .daci-hotspot-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.daci-canvas-wrap { z-index: 0; }
+.daci-canvas-wrap canvas { display: block; cursor: grab; }
+.daci-canvas-wrap canvas:active { cursor: grabbing; }
+.daci-hotspot-overlay { pointer-events: none; }
+.daci-wash { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(11, 34, 35, .76), rgba(14, 43, 42, .22) 41%, transparent 72%), linear-gradient(0deg, rgba(9, 30, 31, .64), transparent 27%, transparent 76%, rgba(10, 34, 35, .2)); }
+.daci-header, .daci-main { position: relative; z-index: 3; }
+.daci-header { display: flex; align-items: center; justify-content: space-between; height: 92px; margin: 0 6.3%; border-bottom: 1px solid rgba(245, 238, 225, .2); }
+.daci-brand { display: flex; align-items: center; gap: 13px; color: #f5eee1; text-decoration: none; white-space: nowrap; }
+.daci-brand small { margin-left: 9px; color: #bdc4b5; font-size: 10px; letter-spacing: .16em; }
+.daci-mark { display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid rgba(243, 220, 181, .64); font: 500 21px/1 'Noto Serif SC', serif; }
+.daci-control, .daci-explorer-head button, .daci-exit-immersive { padding: 9px 13px; border: 1px solid rgba(245, 238, 225, .33); color: #f5eee1; background: rgba(18, 48, 47, .72); cursor: pointer; white-space: nowrap; }
+.daci-control:hover, .daci-explorer-head button:hover, .daci-exit-immersive:hover { border-color: var(--atlas-gold); color: var(--atlas-gold); }
+.daci-main { display: flex; justify-content: space-between; height: calc(100% - 92px); padding: 7vh 6.3% 5vh; pointer-events: none; }
+.daci-intro { max-width: 360px; }
+.daci-eyebrow, .daci-detail-kicker { color: var(--atlas-gold); font-size: 10px; letter-spacing: .2em; }
+.daci-intro h1 { margin: 20px 0 3px; font: 600 clamp(52px, 7vw, 88px)/1 'Noto Serif SC', serif; letter-spacing: .16em; }
+.daci-intro h1 span { color: var(--atlas-gold); }
+.daci-english { margin: 0; color: #c0c9b7; font-size: 12px; letter-spacing: .26em; }
+.daci-description { max-width: 310px; margin: 28px 0 10px; color: #edf0df; font: 15px/1.9 'Noto Serif SC', serif; }
+.daci-gesture { margin: 24px 0 12px; color: #cbd4c2; font-size: 10px; line-height: 1.9; letter-spacing: .06em; }
+.daci-explorer { align-self: flex-end; width: min(340px, 35vw); padding: 14px; pointer-events: auto; background: rgba(12, 35, 35, .68); }
+.daci-explorer-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--atlas-line); color: var(--atlas-gold); font: 12px 'Noto Serif SC', serif; }
+.daci-explorer-head span:last-child { display: flex; gap: 5px; }
+.daci-explorer-head button { padding: 5px 8px; font-size: 10px; }
+.daci-hotspots { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; margin-top: 4px; }
+.daci-hotspot-item { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 11px 0; border: 0; border-bottom: 1px solid rgba(245, 238, 225, .11); color: #d6ddce; background: transparent; text-align: left; white-space: nowrap; cursor: pointer; }
+.daci-hotspot-item:hover, .daci-hotspot-item[aria-pressed="true"] { color: var(--atlas-gold); }
+.daci-index { color: #94ad9c; font-size: 10px; letter-spacing: .12em; }
+.daci-detail { margin-top: 17px; padding: 15px 17px; border-left: 2px solid var(--atlas-gold); background: rgba(11, 33, 33, .79); box-shadow: 0 12px 28px rgba(0, 0, 0, .16); }
+.daci-detail-kicker { margin: 0 0 7px; font-size: 9px; }
+.daci-detail h2 { margin: 0 0 7px; font: 500 23px/1.2 'Noto Serif SC', serif; }
+.daci-detail p { margin: 0; color: var(--atlas-muted); font: 12px/1.75 'Noto Serif SC', serif; }
+.daci-detail a { display: inline-block; margin-top: 8px; color: var(--atlas-gold); font-size: 10px; text-decoration: none; }
+.daci-hotspot { position: relative; display: grid; width: var(--landmark-hit-size, 31px); height: var(--landmark-hit-size, 31px); padding: 0; border: 0; place-items: center; background: transparent; cursor: pointer; pointer-events: auto; }
+.daci-hotspot::before { position: absolute; z-index: -1; top: 50%; left: 50%; width: var(--label-leader-length, 0px); height: 1px; content: ''; background: rgba(228, 185, 108, .55); transform: rotate(var(--label-leader-angle, 0rad)); transform-origin: left center; pointer-events: none; }
+.daci-hotspot .landmark-icon { width: var(--landmark-icon-size, 29px); height: var(--landmark-icon-size, 29px); filter: drop-shadow(0 2px 2px rgba(8, 24, 24, .86)); transition: width .1s ease, height .1s ease, filter .18s ease; }
+.daci-hotspot:hover .landmark-icon, .daci-hotspot.is-active .landmark-icon { filter: drop-shadow(0 0 3px #f1ce8b); }
+.daci-hotspot:focus-visible { outline: 1px solid var(--atlas-gold); outline-offset: 3px; }
+.daci-hotspot > span { position: absolute; bottom: 100%; left: 50%; width: max-content; max-width: 228px; padding: 4px 6px; color: #fff; background: transparent; font: 500 11px/1.3 'Noto Serif SC', serif; text-align: center; text-shadow: 0 1px 3px rgba(0, 0, 0, .86); white-space: nowrap; opacity: 0; visibility: hidden; transform: translateX(-50%); transition: opacity .16s ease; }
+.daci-hotspot:hover > span, .daci-hotspot:focus-visible > span, .daci-hotspot.is-active > span { opacity: 1; visibility: visible; }
+.daci-hotspot > span strong { display: block; font-weight: 500; }
+.daci-error { position: absolute; z-index: 5; top: 35%; left: 50%; padding: 24px; color: #f5eee1; background: rgba(11, 33, 33, .94); text-align: center; transform: translateX(-50%); }
+.daci-error button, .daci-error a { display: inline-block; margin: 8px; padding: 8px 12px; border: 1px solid var(--atlas-gold); color: var(--atlas-gold); background: transparent; text-decoration: none; cursor: pointer; }
+.daci-loading { position: absolute; z-index: 5; top: 48%; left: 50%; padding: 12px 20px; color: #f5eee1; background: #193b3be6; font: 13px 'Noto Serif SC', serif; transform: translate(-50%, -50%); }
+.daci-exit-immersive { position: fixed; z-index: 6; top: 24px; right: 6.3%; }
+#daci-app.is-immersive .daci-wash { opacity: 0; }
+#daci-app.is-immersive .daci-header { justify-content: flex-end; border-color: transparent; pointer-events: none; }
+#daci-app.is-immersive .daci-brand, #daci-app.is-immersive .daci-intro { opacity: 0; pointer-events: none; transform: translateX(-30px); }
+#daci-app.is-immersive .daci-explorer { padding: 0; background: transparent; pointer-events: none; opacity: 0; transform: translateX(40px); }
+#daci-app.is-immersive.has-detail .daci-explorer { opacity: 1; transform: none; }
+#daci-app.is-immersive .daci-explorer-head, #daci-app.is-immersive .daci-hotspots { display: none; }
+#daci-app.is-immersive .daci-detail { display: none; pointer-events: auto; }
+#daci-app.is-immersive.has-detail .daci-detail { display: block; }
+
+#daci-app { background: var(--atlas-scene-paper); color: var(--atlas-ink, #233e34); }
+.daci-control, .daci-explorer-head button, .daci-exit-immersive { border-color: var(--atlas-line, #d1c9b8); color: var(--atlas-ink, #233e34); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+.daci-explorer { background: var(--atlas-panel, rgba(250,247,238,.94)); border: 1px solid var(--atlas-line, #d1c9b8); }
+.daci-hotspot-item { border-bottom-color: var(--atlas-line, #d1c9b8); color: var(--atlas-muted, #536259); }
+.daci-detail { background: var(--atlas-panel, rgba(250,247,238,.94)); color: var(--atlas-ink, #233e34); border-left-color: var(--atlas-gold, #79592d); }
+.daci-error, .daci-loading { color: var(--atlas-ink, #233e34); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+.daci-brand, .daci-intro, .daci-explorer, .daci-wash { transition: opacity .45s ease, transform .45s ease; }
+@media (max-width: 650px) {
+  .daci-header { height: 68px; margin: 0 5%; }
+  .daci-brand small { display: none; }
+  .daci-control { padding: 7px 9px; font-size: 10px; }
+  .daci-main { display: block; height: calc(100% - 68px); padding: 4vh 5% 3vh; }
+  .daci-intro { max-width: 245px; }
+  .daci-intro h1 { margin-top: 12px; font-size: 44px; }
+  .daci-english { font-size: 10px; }
+  .daci-description, .daci-gesture { display: none; }
+  .daci-explorer { position: absolute; right: 5%; bottom: 3vh; left: 5%; width: auto; }
+  .daci-explorer-head { font-size: 11px; }
+  .daci-hotspots { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; scrollbar-color: #94ad9c transparent; }
+  .daci-hotspot-item { flex: 0 0 auto; gap: 5px; padding: 8px 5px; border-bottom: 0; font-size: 11px; }
+  .daci-detail { margin-top: 7px; padding: 10px 12px; }
+  .daci-detail h2 { font-size: 18px; }
+  .daci-detail p { font-size: 10px; line-height: 1.6; }
+  .daci-detail a { margin-top: 6px; font-size: 9px; }
+  .daci-exit-immersive { top: 16px; right: 5%; }
+  #daci-app.is-immersive .daci-explorer { right: 5%; bottom: 3vh; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

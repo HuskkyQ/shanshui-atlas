@@ -1,0 +1,28 @@
+.scene-compass {
+  position: absolute;
+  top: max(104px, calc(env(safe-area-inset-top) + 88px));
+  right: max(24px, env(safe-area-inset-right));
+  z-index: 4;
+  width: 78px;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .16));
+}
+.scene-compass svg { display: block; width: 100%; height: auto; overflow: visible; transform-origin: center; }
+.scene-compass-face { fill: var(--atlas-panel, rgba(250,247,238,.94)); stroke: var(--atlas-line, #d1c9b8); stroke-width: 1; }
+.scene-compass-ring { fill: none; stroke: var(--atlas-gold, #79592d); stroke-width: 1; stroke-dasharray: 1 4; }
+.scene-compass-ticks { fill: none; stroke: var(--atlas-ink, #233e34); stroke-width: 1.25; }
+.scene-compass-north { fill: var(--atlas-gold, #79592d); }
+.scene-compass-south { fill: var(--atlas-muted, #536259); }
+.scene-compass-pivot { fill: var(--atlas-ink, #233e34); }
+.scene-compass text { fill: var(--atlas-ink, #233e34); font: 700 9px 'PingFang SC', sans-serif; text-anchor: middle; }
+.scene-compass .scene-compass-n { fill: var(--atlas-gold, #79592d); }
+.scene-compass-reference { display: block; padding-top: 4px; color: var(--atlas-ink, #233e34); font: 10px/1.2 'PingFang SC', sans-serif; text-align: center; text-shadow: 0 1px 3px rgba(250,247,238,.9); }
+.scene-compass--landscape { top: auto; bottom: 108px; right: 2.7%; }
+#app.is-scenic .scene-compass--landscape { visibility: hidden; }
+#app.is-scenic .scene-compass--default { top: max(84px, calc(env(safe-area-inset-top) + 72px)); }
+@media (max-width: 700px) {
+  .scene-compass { width: 62px; top: max(88px, calc(env(safe-area-inset-top) + 76px)); right: max(16px, env(safe-area-inset-right)); }
+  .scene-compass--landscape { top: auto; bottom: 205px; }
+  .scene-compass-reference { font-size: 9px; }
+}

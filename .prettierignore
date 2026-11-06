@@ -1,0 +1,8 @@
+dist/
+outputs/
+previews/
+node_modules/
+src/data/
+src/assets/
+README.md
+index.html

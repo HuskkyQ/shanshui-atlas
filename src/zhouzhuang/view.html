@@ -1,0 +1,38 @@
+<div id="zhou-app">
+  <div id="zhou-canvas" class="zhou-canvas-wrap"></div>
+  <div class="zhou-vignette" aria-hidden="true"></div>
+  <header class="zhou-header">
+    <a class="zhou-brand" href="./" aria-label="返回山水志首页"><span class="zhou-mark" aria-hidden="true">水</span><span>山水志<small>周庄 · 返回首页</small></span></a>
+    <div class="zhou-actions">
+      <button id="zhou-overview" type="button">总览</button>
+      <button id="zhou-top" type="button">北向俯看</button>
+      <button id="zhou-enter" class="zhou-primary" type="button" hidden>进入街区行走 <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
+  <main class="zhou-main">
+    <section class="zhou-intro" aria-labelledby="zhou-title">
+      <p class="exhibit-eyebrow"><span class="exhibit-eyebrow-line"></span><span>KUNSHAN, CHINA</span><span class="exhibit-eyebrow-dot">◆</span><span class="exhibit-coordinates">31°07′N · 120°51′E</span></p>
+      <h1 id="zhou-title" class="exhibit-title">周<span>庄</span></h1>
+      <p class="zhou-english exhibit-english">ZHOUZHUANG<br />WATER TOWN</p>
+      <p class="zhou-poem exhibit-copy">桥连两岸，水入人家。<br />沿着石街，走近水乡。</p>
+      <span class="zhou-caption exhibit-caption">周庄双桥与两岸街巷 · 公开地图布局示意</span>
+      <nav class="zhou-places" aria-label="选择周庄观察点">
+        <button type="button" data-bridge="287819684"><span>01</span>世德桥<small>石拱相映</small></button>
+        <button type="button" data-bridge="608391000"><span>02</span>永安桥<small>一横一竖</small></button>
+        <button type="button" data-bridge="608673062"><span>03</span>邻桥水巷<small>沿岸而行</small></button>
+        <button type="button" data-bridge="608390993"><span>04</span>富安桥<small>桥楼相望</small></button>
+      </nav>
+    </section>
+    <p id="zhou-observe-hint" class="zhou-observe-hint">拖动旋转 · 滚轮缩放 · Shift＋拖动平移</p>
+    <p class="zhou-mobile-hint">拖动观察 · 双指缩放<br />电脑可进入街区行走</p>
+  </main>
+  <div id="zhou-loading" class="zhou-loading" role="status">正在展开水乡街巷…</div>
+  <div id="zhou-error" class="zhou-error" hidden><p>街区暂时无法打开，请重试。</p><button id="zhou-retry" type="button">重新打开</button><a href="./">返回首页</a></div>
+  <p id="zhou-status" class="zhou-status" role="status" aria-live="polite"></p>
+  <div class="zhou-walk-hud" hidden>
+    <span class="zhou-crosshair" aria-hidden="true"></span>
+    <div class="zhou-walk-label"><span class="zhou-walk-dot" aria-hidden="true"></span>漫步周庄 <span>河街 · 石巷</span></div>
+    <p class="zhou-walk-help"><kbd>W A S D</kbd> / 方向键 移动<span id="zhou-look-hint">鼠标 环视</span><span><kbd>R</kbd> 回到起点</span><span><kbd>Esc</kbd> 返回总览</span></p>
+    <button id="zhou-exit" type="button">退出行走</button>
+  </div>
+</div>

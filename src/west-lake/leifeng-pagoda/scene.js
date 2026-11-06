@@ -1,3 +1,4 @@
+import { attachWebGLRecovery } from '../../shared/webgl-recovery.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
@@ -7,8 +8,10 @@ import { enableShiftPan } from '../../shared/scene-controls.js';
 import { createLandmarkIconScaler } from '../../shared/landmark-scale.js';
 import { layoutLandmarkLabels } from '../../shared/landmark-layout.js';
 import { applyScenicEntryProjection, applyScenicEntryView, fitScenicEntryView } from '../../shared/scenic-entry-view.js';
+import { createCompass } from '../../shared/compass.js';
 import { LEIFENG_SITE } from './site-layout.js';
 import { leifengContent as content } from '../scenic-content.js';
+import { SCENE_COLORS, watchSceneTheme } from '../../shared/scene-palette.js';
 
 const INITIAL_VIEW = {
   position: [48, 34, 52],
@@ -83,12 +86,15 @@ export function createScene(initialContext = {}) {
   let disposed = false;
   let frameId = 0;
   let renderer = null;
+  let removeRecovery;
   let labelRenderer = null;
   let resizeObserver = null;
   let controls = null;
   let disposeShiftPan = null;
   let scene = null;
+  let stopWatchingTheme;
   let camera = null;
+  let compass = null;
   let container = null;
   let onHotspot = null;
   let tween = null;
@@ -235,6 +241,7 @@ export function createScene(initialContext = {}) {
     controls.update();
     landmarkIconScaler?.();
     layoutLandmarkLabels(landmarkLabels, camera, container.clientWidth, container.clientHeight);
+    compass?.update(camera);
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
   }
@@ -254,8 +261,8 @@ export function createScene(initialContext = {}) {
     scene = new THREE.Scene();
     scene.name = 'leifeng-pagoda-scenic-scene';
     scene.userData.lightingMode = 'fixed-exhibition-lighting';
-    scene.background = new THREE.Color('#456064');
-    scene.fog = new THREE.Fog('#456064', 900, 1800);
+    scene.background = new THREE.Color(SCENE_COLORS.paper);
+    scene.fog = new THREE.Fog(SCENE_COLORS.dayFog, 900, 1800);
     camera = new THREE.PerspectiveCamera(39, 1, 0.1, 2400);
     const initialView = container.clientWidth < 650 ? MOBILE_INITIAL_VIEW : INITIAL_VIEW;
     camera.position.set(...initialView.position);
@@ -269,6 +276,9 @@ export function createScene(initialContext = {}) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
+    stopWatchingTheme = watchSceneTheme(scene);
+    removeRecovery = attachWebGLRecovery(renderer.domElement, { onRestored: () => { renderer.shadowMap.needsUpdate = true; } });
+    compass = createCompass(container, { reference: 'model' });
 
     labelRenderer = new CSS2DRenderer();
     labelRenderer.domElement.className = 'trailhead-overlay leifeng-hotspot-overlay';
@@ -385,7 +395,11 @@ export function createScene(initialContext = {}) {
     hotspotListeners.clear();
     landmarkLabels.length = 0;
     views.clear();
+    stopWatchingTheme?.();
     disposeSceneResources(scene);
+    compass?.dispose();
+    compass = null;
+    removeRecovery?.();
     renderer?.dispose();
     renderer?.forceContextLoss();
     renderer?.domElement.remove();

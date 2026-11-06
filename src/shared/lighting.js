@@ -26,3 +26,13 @@ export function skyDirection({ altitude, azimuth }) {
   const bearing = azimuth * Math.PI / 180;
   return [Math.sin(bearing) * Math.cos(elevation), Math.sin(elevation), -Math.cos(bearing) * Math.cos(elevation)];
 }
+
+export function getExhibitionLight(daylight) {
+  // Keep the model readable in low light while preserving the daytime setup.
+  return {
+    ambientMix: 0.86 + 0.14 * daylight,
+    ambientIntensity: 3.6 - 1.5 * daylight,
+    fogMix: 0.6 + 0.4 * daylight,
+    waterLight: 0.85 + 0.15 * daylight,
+  };
+}

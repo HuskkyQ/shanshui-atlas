@@ -1,21 +1,6 @@
     <div id="app">
       <div class="canvas-wrap" id="canvas-wrap" aria-label="可旋转的黄山主题三维场景；悬停或轻点牌坊查看登山点名称，点击金色标记探索山上名胜"></div>
       <div class="grain" aria-hidden="true"></div>
-      <div class="compass" role="img" aria-label="指南针：N 指向地理北方，随模型视角旋转">
-        <svg id="compass-dial" viewBox="0 0 100 100" aria-hidden="true">
-          <circle class="compass-outer" cx="50" cy="50" r="43" />
-          <circle class="compass-inner" cx="50" cy="50" r="30" />
-          <path class="compass-ticks" d="M50 19v7 M81 50h-7 M50 81v-7 M19 50h7" />
-          <path class="compass-north" d="M50 29 43 55 50 49Z" />
-          <path class="compass-south" d="M50 71 57 45 50 51Z" />
-          <circle class="compass-center" cx="50" cy="50" r="3" />
-          <text class="compass-letter compass-letter-n" x="50" y="15">N</text>
-          <text class="compass-letter" x="89" y="53">E</text>
-          <text class="compass-letter" x="50" y="92">S</text>
-          <text class="compass-letter" x="11" y="53">W</text>
-        </svg>
-      </div>
-
       <header class="site-header">
         <a class="brand" href="./" aria-label="返回首页" title="返回首页">
           <span class="brand-mark" aria-hidden="true">山</span>
@@ -28,7 +13,7 @@
             <a href="?place=huangshan" data-place="huangshan">黄山</a>
             <a href="?place=west-lake" data-place="west-lake">西湖</a>
           </nav>
-          <button id="clean-toggle" class="clean-toggle" hidden aria-pressed="false" title="关闭日夜光照、投影与云雾，保留模型原色"><span class="clean-icon" aria-hidden="true">◇</span><span class="clean-label">去除光影</span></button>
+          <button id="clean-toggle" class="clean-toggle" aria-pressed="false" title="关闭日夜光照、投影与云雾，保留模型原色"><span class="clean-icon" aria-hidden="true">◇</span><span class="clean-label">去除光影</span></button>
           <button id="immersive-toggle" class="immersive-toggle" aria-pressed="false"><span class="immersive-label">沉浸式体验</span></button>
         </div>
       </header>
@@ -98,7 +83,7 @@
         <header class="scenic-header">
           <button id="scenic-back" class="scenic-back">← 返回西湖</button>
           <div><span>西湖 · 景点近游</span><h1 id="scenic-title">景点近游</h1></div>
-          <button id="scenic-reset" class="scenic-reset">全景</button>
+          <span class="scenic-header-actions"><button id="scenic-reset" class="scenic-reset">全景</button></span>
         </header>
         <div id="scenic-loading" class="scenic-loading" role="status" hidden>
           <p id="scenic-status">正在准备景点…</p>

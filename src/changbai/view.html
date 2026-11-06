@@ -1,0 +1,43 @@
+<div id="changbai-app">
+  <div id="changbai-canvas" class="changbai-canvas-wrap" aria-label="可旋转的长白山天池三维场景"></div>
+  <div class="changbai-wash" aria-hidden="true"></div>
+  <header class="changbai-header">
+    <a class="changbai-brand" href="./" aria-label="返回山水志首页">
+      <span class="changbai-mark" aria-hidden="true">池</span>
+      <span>山水志<small>长白山 · 返回首页</small></span>
+    </a>
+  </header>
+  <main class="changbai-main">
+    <section class="changbai-intro" aria-labelledby="changbai-title">
+      <p class="changbai-eyebrow exhibit-eyebrow"><span class="exhibit-eyebrow-line"></span><span>JILIN, CHINA</span><span class="exhibit-eyebrow-dot">◆</span><span class="exhibit-coordinates">42°N · 128°E</span></p>
+      <h1 id="changbai-title" class="exhibit-title"><span class="exhibit-title-lead">长白山<span class="changbai-dot">·</span></span><br class="exhibit-title-break" /><span class="changbai-lake-title">天池</span></h1>
+      <p class="changbai-english exhibit-english">CHANGBAI MOUNTAIN<br />TIANCHI CALDERA LAKE</p>
+      <p class="changbai-copy exhibit-copy">群峰环抱一池蓝，<br />在火山口与湖岸之间游望。</p>
+      <span class="changbai-caption exhibit-caption">长白山天池 · 火山口高程地形与湖面示意</span>
+      <p class="changbai-gesture">拖动旋转 · 滚轮缩放 · 右键拖动平移</p>
+    </section>
+    <aside id="changbai-view-nav" class="changbai-view-nav" aria-label="长白山景点与观察视角">
+      <button id="changbai-sights-toggle" class="changbai-sights-toggle" type="button" aria-expanded="false" aria-controls="changbai-view-panel">
+        <span>景点位置</span><i aria-hidden="true">＋</i>
+      </button>
+      <div id="changbai-view-panel" class="changbai-view-panel">
+        <span class="changbai-view-heading">观察视角 <i></i> VIEW</span>
+        <div class="changbai-view-main">
+          <button id="changbai-overview" class="changbai-view-button is-active" type="button" aria-pressed="true"><span class="changbai-view-no">01</span><span>天池总览</span><span class="changbai-view-arrow">↗</span></button>
+          <button id="changbai-north" class="changbai-view-button" type="button" aria-pressed="false"><span class="changbai-view-no">02</span><span>北向俯看</span><span class="changbai-view-arrow">↗</span></button>
+          <button id="changbai-east" class="changbai-view-button" type="button" aria-pressed="false"><span class="changbai-view-no">03</span><span>东侧湖岸</span><span class="changbai-view-arrow">↗</span></button>
+          <button id="changbai-west" class="changbai-view-button" type="button" aria-pressed="false"><span class="changbai-view-no">04</span><span>西侧湖岸</span><span class="changbai-view-arrow">↗</span></button>
+        </div>
+        <span class="changbai-view-heading changbai-sights-heading">景点位置 <i></i> SIGHTS</span>
+        <div id="changbai-poi-list" class="changbai-poi-list"></div>
+        <p id="changbai-poi-description" class="changbai-poi-description">选择景点，查看其在当前地形中的位置。</p>
+      </div>
+    </aside>
+  </main>
+  <div id="changbai-loading" class="changbai-loading" role="status">正在展开天池山谷…</div>
+  <div id="changbai-error" class="changbai-error" hidden>
+    <p>天池场景暂时无法打开，请重试。</p>
+    <button id="changbai-retry" type="button">重新打开</button>
+    <a href="./">返回首页</a>
+  </div>
+</div>

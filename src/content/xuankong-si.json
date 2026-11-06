@@ -1,0 +1,46 @@
+{
+  "id": "xuankong-si",
+  "name": "悬空寺",
+  "englishName": "XUANKONG TEMPLE",
+  "region": "山西 · 浑源",
+  "description": "沿内凹崖壁，循窄桥与木廊，在层层飞檐之间看一座依岩而建的寺院。",
+  "modelNote": "先建立单侧内凹崖体，再依据同一岩面定位建筑。左侧亭楼与长殿、桥旁附阁、红墙石台按实景外观补充；布局和体量参考景区、地方政府资料及实拍。未取得完整测绘，崖壁、标高、构件尺寸与隐藏连接均为艺术化近似；不能从照片确认的附属建筑不指定殿名，不用于结构工程或导航。",
+  "source": {
+    "name": "恒山景区 · 悬空寺建筑布局",
+    "url": "https://www.byhs.net.cn/culture_detial/77.html"
+  },
+  "hotspots": [
+    {
+      "id": "cliff",
+      "name": "内凹崖壁",
+      "description": "先塑造一侧有岩脚、层理与凹龛的崖体，再让寺院落位于崖面。上方岩层形成挑檐，下面保留建筑外挑和立柱的空间；岩面轮廓及高差为实景比例下的近似。",
+      "source": { "name": "Commons · 寺体与崖壁实景", "url": "https://commons.wikimedia.org/wiki/File:Hangingtemple20190929.jpg" }
+    },
+    {
+      "id": "courtyard",
+      "name": "入口院落",
+      "description": "红墙与石砌高台托起左侧院落，两端亭楼之间由贴崖长殿和木廊相连。侧入口接入左下的崖边步道，再沿阶梯进入南楼。附属建筑按实景外形补充，殿名及隐藏空间未据照片推定。"
+    },
+    {
+      "id": "south-tower",
+      "name": "南楼三层",
+      "description": "南楼以三层木构和重叠挑檐向崖外展开，回廊、栏杆与木窗交代人的尺度。公开资料记载其上下分别为纯阳宫、三官殿和雷音殿，模型着重表现可见外部结构。"
+    },
+    {
+      "id": "bridge",
+      "name": "长线栈桥",
+      "description": "南北楼之间保留窄桥，并补上两处错层的桥旁附阁及带檐的上行楼梯。木廊围绕附阁转折，交代楼阁间的前后层次；隐蔽连接和标高为近似。"
+    },
+    {
+      "id": "north-tower",
+      "name": "北楼三教",
+      "description": "北楼三层贴崖而立，从五佛殿、三圣殿至上部三教殿，楼阁与露出的细长支柱形成鲜明对比。屋面、窗门和栏杆以实景外观简化表达。"
+    },
+    {
+      "id": "structure",
+      "name": "梁柱入岩",
+      "description": "看楼板下方的外挑横梁、斜撑与立柱：横梁向后伸入岩体，立柱向下寻找岩面落脚。这里表达依崖建造的可见关系，不代表文保修缮施工图或真实受力计算。",
+      "source": { "name": "Commons · 楼底与岩壁接口", "url": "https://commons.wikimedia.org/wiki/File:Hunyuan_Xuankong_Si_2013.08.30_09-21-04.jpg" }
+    }
+  ]
+}

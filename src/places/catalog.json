@@ -1,0 +1,175 @@
+[
+  {
+    "id": "collection-title",
+    "title": "选择一处山水，开始游望",
+    "english": "LANDSCAPES",
+    "cards": [
+      {
+        "place": "huangshan",
+        "id": "huangshan-card",
+        "name": "黄山",
+        "english": "MOUNT HUANGSHAN",
+        "location": "安徽 · 黄山",
+        "region": "ANHUI, CHINA",
+        "image": "/src/assets/huangshan-preview.jpg",
+        "width": 1024,
+        "height": 540,
+        "alt": "黄山三维模型：起伏的陡峭群峰与点缀山脊的松树",
+        "description": "奇峰、松石与云海，沿着山脊探索群峰。",
+        "action": "进入建模",
+        "coordinates": "30°N · 118°E",
+        "symbol": "山",
+        "sourceName": "黄山"
+      },
+      {
+        "place": "west-lake",
+        "id": "west-lake-card",
+        "name": "西湖",
+        "english": "WEST LAKE",
+        "location": "浙江 · 杭州",
+        "region": "HANGZHOU, CHINA",
+        "image": "/src/assets/west-lake-preview.jpg",
+        "width": 1024,
+        "height": 540,
+        "alt": "西湖三维模型：湖东的开阔水面与湖西连绵的林木山脊",
+        "description": "三面云山一面城，在湖岸与群山之间漫游。",
+        "action": "进入建模",
+        "coordinates": "30°N · 120°E",
+        "symbol": "水",
+        "sourceName": "西湖"
+      },
+      {
+        "place": "changbai",
+        "id": "changbai-card",
+        "name": "长白山",
+        "english": "CHANGBAI MOUNTAIN",
+        "location": "吉林 · 长白山",
+        "region": "JILIN, CHINA",
+        "image": "/src/assets/changbai-preview.jpg",
+        "width": 1200,
+        "height": 600,
+        "alt": "长白山天池模型：完整火山口群峰环抱蓝色湖面，外围山坡自然展开",
+        "description": "群峰环抱一池蓝，在火山口与湖岸之间游望。",
+        "action": "进入天池",
+        "coordinates": "42°N · 128°E",
+        "symbol": "池",
+        "sourceName": "长白山 · 天池"
+      },
+      {
+        "place": "xingping",
+        "id": "xingping-card",
+        "name": "漓江 · 兴坪",
+        "english": "LI RIVER · XINGPING",
+        "location": "广西 · 阳朔",
+        "region": "GUANGXI, CHINA",
+        "image": "/src/assets/xingping-preview.png",
+        "width": 1674,
+        "height": 873,
+        "alt": "漓江兴坪三维模型：弯曲河谷、两岸连绵峰群与临江山壁",
+        "description": "河湾绕过峰林，在两岸青山之间游望。",
+        "action": "进入山水",
+        "coordinates": "24.93°N · 110.51°E",
+        "symbol": "江",
+        "sourceName": "漓江 · 兴坪"
+      }
+    ]
+  },
+  {
+    "id": "garden-collection-title",
+    "title": "一方园林，自成山水",
+    "english": "GARDENS",
+    "cards": [
+      {
+        "place": "zhuozheng-garden",
+        "id": "garden-card",
+        "name": "拙政园",
+        "english": "ZHUOZHENG GARDEN",
+        "location": "江苏 · 苏州",
+        "region": "SUZHOU, CHINA",
+        "image": "/src/assets/zhuozheng-preview.png",
+        "width": 800,
+        "height": 400,
+        "alt": "拙政园中部园三维模型：中央池水、两座山岛与临水亭堂",
+        "description": "池广林茂，亭廊相望。走近中部园的七处建筑。",
+        "action": "进入园林",
+        "coordinates": "31°N · 120°E",
+        "symbol": "园",
+        "sourceName": "拙政园"
+      }
+    ]
+  },
+  {
+    "id": "tulou-collection-title",
+    "title": "围楼之间，烟火人间",
+    "english": "EARTHEN DWELLINGS",
+    "cards": [
+      {
+        "place": "chengqi-lou",
+        "id": "chengqi-card",
+        "name": "承启楼",
+        "english": "CHENGQI LOU",
+        "location": "福建 · 永定",
+        "region": "YONGDING, CHINA",
+        "image": "/src/assets/chengqi-preview.png",
+        "width": 1000,
+        "height": 500,
+        "alt": "承启楼与高北楼群三维模型：承启楼、侨福楼和两座方形土楼",
+        "description": "环环相套，院中有院。在木廊与屋檐之间，读懂一座土楼。",
+        "action": "进入土楼",
+        "coordinates": "FUJIAN · YONGDING",
+        "symbol": "楼",
+        "sourceName": "承启楼"
+      }
+    ]
+  },
+  {
+    "id": "water-town-collection-title",
+    "title": "桥连两岸，水入人家",
+    "english": "WATER TOWNS",
+    "cards": [
+      {
+        "place": "zhouzhuang",
+        "id": "zhouzhuang-card",
+        "name": "周庄",
+        "english": "ZHOUZHUANG",
+        "location": "江苏 · 昆山",
+        "region": "KUNSHAN, CHINA",
+        "image": "/src/assets/zhouzhuang-preview.jpg",
+        "width": 1000,
+        "height": 500,
+        "alt": "周庄双桥河街模型：世德拱桥、永安梁桥、邻桥与两岸白墙黛瓦街屋",
+        "description": "沿双桥与两岸石街，走近白墙黛瓦。电脑支持第一人称行走。",
+        "action": "进入水乡",
+        "coordinates": "JIANGSU · KUNSHAN",
+        "symbol": "镇",
+        "sourceName": "周庄"
+      }
+    ]
+  },
+  {
+    "id": "temple-collection-title",
+    "title": "依崖而建，凌空而立",
+    "english": "CLIFF TEMPLES",
+    "cards": [
+      {
+        "place": "daci-yan",
+        "id": "daci-card",
+        "name": "大慈岩",
+        "english": "JIANGNAN HANGING TEMPLE",
+        "location": "浙江 · 建德",
+        "region": "JIANDE, CHINA",
+        "image": "/src/assets/daci-preview.webp",
+        "width": 1000,
+        "height": 500,
+        "alt": "大慈岩三维模型：嵌入山崖的红色殿廊、覆顶梯廊与山林",
+        "description": "半入岩腹，半悬崖外。循红廊与覆顶石阶，走近江南悬空寺。",
+        "action": "进入大慈岩",
+        "coordinates": "ZHEJIANG · JIANDE",
+        "symbol": "寺",
+        "sourceName": "大慈岩",
+        "srcset": "/src/assets/daci-preview-500.webp 500w, /src/assets/daci-preview.webp 1000w",
+        "sizes": "(max-width: 650px) 86vw, 1100px"
+      }
+    ]
+  }
+]

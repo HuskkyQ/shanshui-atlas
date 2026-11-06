@@ -19,18 +19,25 @@ function segmentDistance(x, z, a, b) {
   return Math.hypot(x - a[0] - t * dx, z - a[1] - t * dz);
 }
 const snow = layout.buildings.find((b) => b.key === 'xuexiang-pavilion');
+const islandPavilions = [
+  { building: snow, island: 'west-island', height: snow.position[1] },
+  { building: layout.contextBuildings.find((b) => b.key === 'daishuang-pavilion'), island: 'east-island', height: 3.1 },
+];
 function groundHeight(x, z) {
   const island = layout.islands.find((i) => pointInRing(x, z, i.outline));
   if (!island) return 0.32;
   const edge = Math.min(...island.outline.slice(1).map((b, i) => segmentDistance(x, z, island.outline[i], b)));
-  const base = 0.32 + island.height * Math.min(1, edge / 4);
-  if (island.key !== 'west-island') return base;
-  const dx = x - snow.position[0], dz = z - snow.position[2];
-  const c = Math.cos(snow.rotation), s = Math.sin(snow.rotation);
-  const q = Math.max(Math.abs(c * dx - s * dz) - snow.width / 2 - 1,
-    Math.abs(s * dx + c * dz) - snow.depth / 2 - 1, 0);
-  const influence = Math.max(0, 1 - q / 7);
-  return Math.max(base, base + (snow.position[1] - base) * influence * influence);
+  const taper = Math.min(1, edge / 4.5);
+  // Display relief: low shores, uneven wooded ridges, and level pavilion sites.
+  const ridge = 1.9 + 0.65 * Math.sin(x * 0.23) * Math.cos(z * 0.28) + island.height * 0.65;
+  const base = 0.32 + ridge * taper;
+  const { building, height } = islandPavilions.find((p) => p.island === island.key);
+  const dx = x - building.position[0], dz = z - building.position[2];
+  const c = Math.cos(building.rotation), s = Math.sin(building.rotation);
+  const q = Math.max(Math.abs(c * dx - s * dz) - building.width / 2 - 0.8,
+    Math.abs(s * dx + c * dz) - building.depth / 2 - 0.8, 0);
+  const influence = Math.max(0, 1 - q / 4);
+  return THREE.MathUtils.lerp(base, height, influence * influence);
 }
 function shape(points, holes = []) {
   const make = (ring, path) => {
@@ -153,7 +160,7 @@ function buildingRoot(building) {
   const group = new THREE.Group();
   group.name = `building-${building.key}`;
   group.position.set(...building.position);
-  if (building.key !== 'xuexiang-pavilion') group.position.y = 0.32;
+  group.position.y = groundHeight(building.position[0], building.position[2]);
   group.rotation.y = building.rotation;
   group.userData = { buildingKey: building.key, source: building.source, dimensionsAccuracy: 'artistic-approximation' };
   return group;
@@ -281,35 +288,121 @@ function mergeParts(group) {
     geometries.forEach((geometry) => geometry.dispose());
   });
 }
-function islandMesh(island, material, index) {
-  const source = new THREE.ShapeGeometry(shape(island.outline));
+function terrainSurface(outline, heightAt, material, name, spacing = 1.2) {
+  const source = new THREE.ShapeGeometry(shape(outline));
   const nonIndexed = source.toNonIndexed();
   const points = nonIndexed.attributes.position;
   const output = [];
+  const heights = new Map();
+  const sampleHeight = (p) => {
+    const key = `${p.x},${p.y}`;
+    if (!heights.has(key)) heights.set(key, heightAt(p.x, -p.y));
+    return heights.get(key);
+  };
   const add = (a, b, c, depth = 0) => {
-    if (depth < 7 && Math.max(a.distanceTo(b), b.distanceTo(c), c.distanceTo(a)) > 1.5) {
-      const ab = a.clone().add(b).multiplyScalar(0.5), bc = b.clone().add(c).multiplyScalar(0.5), ca = c.clone().add(a).multiplyScalar(0.5);
-      add(a, ab, ca, depth + 1); add(ab, b, bc, depth + 1); add(ca, bc, c, depth + 1); add(ab, bc, ca, depth + 1);
-    } else [a, b, c].forEach((p) => output.push(p.x, groundHeight(p.x, -p.y), -p.y));
+    const ab = a.distanceToSquared(b), bc = b.distanceToSquared(c), ca = c.distanceToSquared(a);
+    if (depth < 18 && Math.max(ab, bc, ca) > spacing * spacing) {
+      // Split only the longest edge; narrow corridor triangles should not become square grids.
+      if (ab >= bc && ab >= ca) {
+        const mid = a.clone().add(b).multiplyScalar(0.5);
+        add(a, mid, c, depth + 1); add(mid, b, c, depth + 1);
+      } else if (bc >= ca) {
+        const mid = b.clone().add(c).multiplyScalar(0.5);
+        add(a, b, mid, depth + 1); add(a, mid, c, depth + 1);
+      } else {
+        const mid = c.clone().add(a).multiplyScalar(0.5);
+        add(a, b, mid, depth + 1); add(mid, b, c, depth + 1);
+      }
+    } else [a, b, c].forEach((p) => output.push(p.x, sampleHeight(p), -p.y));
   };
   for (let i = 0; i < points.count; i += 3) add(new THREE.Vector3().fromBufferAttribute(points, i), new THREE.Vector3().fromBufferAttribute(points, i + 1), new THREE.Vector3().fromBufferAttribute(points, i + 2));
   source.dispose(); nonIndexed.dispose();
   const geometry = new THREE.BufferGeometry(); geometry.setAttribute('position', new THREE.Float32BufferAttribute(output, 3)); geometry.computeVertexNormals();
-  return mesh(geometry, material, `island-${index + 1}`);
+  return mesh(geometry, material, name);
 }
+
+function edgeDistance(x, z, outline) {
+  return Math.min(...outline.slice(1).map((b, i) => segmentDistance(x, z, outline[i], b)));
+}
+
+function makeContextBuilding(b, m) {
+  const group = buildingRoot(b), c = Math.cos(b.rotation), s = Math.sin(b.rotation);
+  const outline = b.outline.map(([x, z]) => {
+    const dx = x - b.position[0], dz = z - b.position[2];
+    return [c * dx - s * dz, s * dx + c * dz];
+  });
+  const pavilion = b.type === 'pavilion';
+  const height = pavilion ? 2.55 : 2.85;
+  const plinth = mesh(new THREE.ExtrudeGeometry(shape(outline), { depth: 0.36, bevelEnabled: false }), m.stone);
+  plinth.rotation.x = -Math.PI / 2;
+  group.add(plinth);
+  outline.slice(1).forEach((end, i) => {
+    const start = outline[i], dx = end[0] - start[0], dz = end[1] - start[1], length = Math.hypot(dx, dz);
+    if (length < 0.25) return;
+    const edge = new THREE.Group();
+    edge.position.set((start[0] + end[0]) / 2, 0.36, (start[1] + end[1]) / 2);
+    edge.rotation.y = Math.atan2(-dz, dx);
+    const bays = Math.max(1, Math.ceil(length / 3));
+    for (let j = 0; j <= bays; j++) box(edge, m.wood, 0.14, height, 0.14, length * (j / bays - 0.5), height / 2, 0);
+    box(edge, m.wood, length, 0.16, 0.17, 0, height, 0);
+    if (!pavilion && length > 1.2) {
+      box(edge, m.wall, length - 0.16, 0.7, 0.14, 0, 0.35, 0);
+      lattice(edge, m, length - 0.3, height - 0.95, 0.78, 0);
+    }
+    group.add(edge);
+  });
+  const roof = terrainSurface(outline, (x, z) => height + 0.52 + Math.min(1.5, edgeDistance(x, z, outline)) * 0.75,
+    m.roof, `${b.key}-roof`, 0.6);
+  roof.userData.keepMesh = true;
+  group.add(roof);
+  return group;
+}
+
+function addCoveredAreas(environment, m) {
+  for (const area of layout.coveredAreas) {
+    const group = new THREE.Group(); group.name = `covered-area-${area.source.osmId}`;
+    group.userData.source = area.source;
+    const roof = terrainSurface(area.outline, (x, z) => 3.05 + Math.min(1.4, edgeDistance(x, z, area.outline)) * 0.75,
+      m.roof, `covered-roof-${area.source.osmId}`, 0.65);
+    roof.userData.keepMesh = true;
+    group.add(roof, terrainSurface(area.outline, (x, z) => groundHeight(x, z) + 0.07, m.path, 'covered-walkway'));
+    let nextPost = 0;
+    area.outline.slice(1).forEach((end, i) => {
+      const start = area.outline[i], dx = end[0] - start[0], dz = end[1] - start[1], length = Math.hypot(dx, dz);
+      if (length < 0.01) return;
+      bar(group, m.wood, [start[0], 3, start[1]], [end[0], 3, end[1]], 0.075);
+      for (; nextPost < length; nextPost += 3.1) {
+        const x = start[0] + dx * nextPost / length, z = start[1] + dz * nextPost / length;
+        const y = groundHeight(x, z) + 0.08;
+        box(group, m.wood, 0.15, 3 - y, 0.15, x, (y + 3) / 2, z);
+      }
+      nextPost -= length;
+    });
+    mergeParts(group); environment.add(group);
+  }
+}
+
 function scatterPlants(environment, materials) {
   let seed = 7421;
   const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
-  const nearBuilding = (x, z, padding) => layout.buildings.some((b) => {
+  const buildings = [...layout.buildings, ...layout.contextBuildings];
+  const nearBuilding = (x, z, padding) => buildings.some((b) => {
     const dx = x - b.position[0], dz = z - b.position[2], c = Math.cos(b.rotation), s = Math.sin(b.rotation);
     return Math.abs(c * dx - s * dz) < b.width / 2 + padding && Math.abs(s * dx + c * dz) < b.depth / 2 + padding;
   });
   const nearPath = (x, z) => layout.paths.some((p) => p.points.slice(1).some((b, i) => segmentDistance(x, z, p.points[i], b) < 1.7));
+  const inWoodland = (x, z) => layout.vegetationClusters.some((area) => pointInRing(x, z, area.outline));
+  const nearCourtyard = (x, z) => [...layout.coveredAreas, ...layout.groundAreas]
+    .some((area) => pointInRing(x, z, area.outline) || edgeDistance(x, z, area.outline) < 1.7);
   const trees = [];
-  for (let attempt = 0; attempt < 5000 && trees.length < 60; attempt++) {
-    const x = 12 + random() * 132, z = -75 + random() * 110;
-    if (inWater(x, z) || nearBuilding(x, z, 4.5) || nearPath(x, z) || trees.some((t) => Math.hypot(x - t.x, z - t.z) < 5.8)) continue;
-    trees.push({ x, z, h: 3.8 + random() * 3.2, y: groundHeight(x, z), type: trees.length % 3 });
+  const bounds = layout.metadata.bounds;
+  // Sample the union once, so overlapping source woodland polygons do not double density.
+  for (let attempt = 0; attempt < 16000 && trees.length < 165; attempt++) {
+    const x = bounds.minX + 3 + random() * (bounds.maxX - bounds.minX - 6);
+    const z = bounds.minZ + 3 + random() * (bounds.maxZ - bounds.minZ - 6);
+    if (!inWoodland(x, z) || inWater(x, z) || nearBuilding(x, z, 2.8) || nearCourtyard(x, z)
+      || nearPath(x, z) || trees.some((t) => Math.hypot(x - t.x, z - t.z) < 2.9)) continue;
+    trees.push({ x, z, h: 5.2 + random() * 3.4, y: groundHeight(x, z), type: trees.length % 3 });
   }
   const matrix = new THREE.Matrix4(), rotation = new THREE.Quaternion();
   const trunkGeometry = new THREE.CylinderGeometry(0.11, 0.25, 1, 7); trunkGeometry.translate(0, 0.5, 0);
@@ -318,9 +411,10 @@ function scatterPlants(environment, materials) {
   trees.forEach((tree, i) => {
     matrix.compose(new THREE.Vector3(tree.x, tree.y, tree.z), rotation, new THREE.Vector3(1, tree.h * 0.75, 1)); trunks.setMatrixAt(i, matrix);
     for (let j = 0; j < 3; j++) {
-      const angle = j * 2.1 + i, scale = tree.type === 0 ? [1.5, 2, 1.5] : tree.type === 1 ? [2, 1.15, 1.7] : [1.4, 1.4, 1.4];
-      matrix.compose(new THREE.Vector3(tree.x + Math.cos(angle) * 0.8, tree.y + tree.h * (0.65 + j * 0.10), tree.z + Math.sin(angle) * 0.8), rotation, new THREE.Vector3(...scale));
+      const angle = j * 2.1 + i, scale = tree.type === 0 ? [2.3, 2.5, 2.1] : tree.type === 1 ? [3.0, 1.65, 2.5] : [2.2, 2.0, 2.3];
+      matrix.compose(new THREE.Vector3(tree.x + Math.cos(angle) * 0.9, tree.y + tree.h * (0.64 + j * 0.09), tree.z + Math.sin(angle) * 0.9), rotation, new THREE.Vector3(...scale));
       crown.setMatrixAt(i * 3 + j, matrix);
+      crown.setColorAt(i * 3 + j, new THREE.Color(['#a7b598', '#bbc6a5', '#d1c6a1', '#a9b4a0', '#c4c9a4'][i % 5]));
     }
   });
   trunks.name = 'garden-tree-trunks'; crown.name = 'garden-varied-tree-crowns';
@@ -328,7 +422,7 @@ function scatterPlants(environment, materials) {
   const shoots = [];
   for (const tree of trees.filter((_, i) => i % 4 === 0)) for (let j = 0; j < 7; j++) {
     const x = tree.x + 1 + Math.sin(j * 2.3) * 0.7, z = tree.z + Math.cos(j * 2.3) * 0.7;
-    if (!inWater(x, z) && !nearBuilding(x, z, 2) && !nearPath(x, z)) shoots.push({ x, z, h: 2.1 + random() });
+    if (inWoodland(x, z) && !inWater(x, z) && !nearBuilding(x, z, 2) && !nearCourtyard(x, z) && !nearPath(x, z)) shoots.push({ x, z, h: 2.1 + random() });
   }
   const bamboo = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.045, 0.065, 1, 5), materials.bamboo, shoots.length);
   const leaves = new THREE.InstancedMesh(new THREE.ConeGeometry(0.4, 1.2, 5), materials.leafLight, shoots.length * 2);
@@ -341,6 +435,22 @@ function scatterPlants(environment, materials) {
     }
   });
   bamboo.name = 'garden-bamboo'; environment.add(bamboo, leaves);
+  const rocks = [];
+  for (let attempt = 0; attempt < 1800 && rocks.length < 95; attempt++) {
+    const island = layout.islands[attempt % 2];
+    const xs = island.outline.map(([x]) => x), zs = island.outline.map(([, z]) => z);
+    const x = Math.min(...xs) + random() * (Math.max(...xs) - Math.min(...xs));
+    const z = Math.min(...zs) + random() * (Math.max(...zs) - Math.min(...zs));
+    if (!pointInRing(x, z, island.outline) || nearBuilding(x, z, 1.2) || nearPath(x, z)) continue;
+    rocks.push({ x, z, h: 0.45 + random() * 1.1 });
+  }
+  const rockery = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1, 0), materials.stone, rocks.length);
+  rocks.forEach((p, i) => {
+    matrix.compose(new THREE.Vector3(p.x, groundHeight(p.x, p.z) + p.h * 0.35, p.z),
+      new THREE.Quaternion().setFromEuler(new THREE.Euler(0.1, i * 1.7, 0.2)), new THREE.Vector3(0.6 + p.h * 0.3, p.h, 0.65));
+    rockery.setMatrixAt(i, matrix);
+  });
+  rockery.name = 'garden-island-rockery'; rockery.castShadow = true; environment.add(rockery);
   const pads = [];
   for (let i = 0; i < 1500 && pads.length < 210; i++) {
     const x = 45 + random() * 85, z = -50 + random() * 55;
@@ -373,7 +483,7 @@ export function createZhuozhengGardenModel() {
   const ground = flat(rectangle, layout.ponds.map((p) => p.outline), m.soil, 0.32, 'central-garden-land-base');
   ground.userData.groundWithWaterHoles = true; environment.add(ground);
   box(environment, m.stone, b.maxX - b.minX, 1.2, b.maxZ - b.minZ, (b.minX + b.maxX) / 2, -0.65, (b.minZ + b.maxZ) / 2, 'garden-exhibit-base');
-  layout.islands.forEach((island, i) => environment.add(islandMesh(island, m.soil, i)));
+  layout.islands.forEach((island, i) => environment.add(terrainSurface(island.outline, groundHeight, m.soil, `island-${i + 1}`)));
   layout.ponds.forEach((pond, i) => {
     const water = flat(pond.outline, pond.holes, m.water, 0.12, `pond-${i + 1}-surface`);
     water.userData = { waterSurface: true, holeCount: pond.holes.length }; environment.add(water);
@@ -391,6 +501,11 @@ export function createZhuozhengGardenModel() {
     matrix.compose(new THREE.Vector3(x, 0.27, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(i * 0.1, i * 1.7, 0)), new THREE.Vector3(1.2, 0.8, 1)); shore.setMatrixAt(i, matrix);
   });
   shore.name = 'pond-natural-stone-shore-instances'; shore.castShadow = true; environment.add(shore);
+  layout.groundAreas.forEach((area) => {
+    const paving = terrainSurface(area.outline, (x, z) => groundHeight(x, z) + 0.055, m.path, `courtyard-${area.source.osmId}`);
+    paving.userData.source = area.source; paving.castShadow = false; environment.add(paving);
+  });
+  addCoveredAreas(environment, m);
   const paths = new THREE.Group(); paths.name = 'garden-walkways';
   layout.paths.forEach((path) => {
     if (path.key === 'osm-way-485084818') return;
@@ -427,6 +542,9 @@ export function createZhuozhengGardenModel() {
     xiangzhou: makeBoat, xiaofeihong: makeBridge, 'wuzhu-pavilion': makeMoon, 'jianshan-lou': (data, materials) => makeHall(data, materials, true) };
   layout.buildings.forEach((building) => {
     const object = builders[building.key](building, m); mergeParts(object); group.add(object);
+  });
+  layout.contextBuildings.forEach((building) => {
+    const object = makeContextBuilding(building, m); mergeParts(object); group.add(object);
   });
   group.updateMatrixWorld(true);
   const anchors = {};

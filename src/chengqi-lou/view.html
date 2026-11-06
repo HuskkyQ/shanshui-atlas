@@ -1,0 +1,35 @@
+<div id="chengqi-app">
+  <div id="chengqi-canvas" class="chengqi-canvas-wrap" aria-label="可旋转的承启楼三维场景"></div>
+  <div class="chengqi-wash" aria-hidden="true"></div>
+  <header class="chengqi-header">
+    <a class="chengqi-brand" href="./" aria-label="返回首页"><span class="chengqi-mark" aria-hidden="true">楼</span><span>山水志</span><small>承启楼 · 返回首页</small></a>
+    <button id="chengqi-immersive" class="chengqi-control" type="button" aria-pressed="false">沉浸式体验</button>
+  </header>
+  <main class="chengqi-main">
+    <section class="chengqi-intro" aria-labelledby="chengqi-title">
+      <p class="chengqi-eyebrow exhibit-eyebrow"><span class="exhibit-eyebrow-line"></span><span>FUJIAN, CHINA</span><span class="exhibit-eyebrow-dot">◆</span><span class="exhibit-coordinates">永定</span></p>
+      <h1 id="chengqi-title" class="exhibit-title">承启<span>楼</span></h1>
+      <p class="chengqi-english exhibit-english">CHENGQI LOU</p>
+      <p class="chengqi-description exhibit-copy">四层环楼围合天井，<br />土楼群落依山而居。</p>
+      <span class="chengqi-caption exhibit-caption">承启楼与邻里土楼 · 航拍布局和公开地图关系示意</span>
+      <p class="chengqi-gesture">拖动旋转 · 滚轮缩放<br />Shift＋拖动平移</p>
+    </section>
+    <aside class="chengqi-explorer" aria-label="承启楼探索">
+      <div class="chengqi-explorer-head"><span>承启楼 · 五处探索</span><span><button id="chengqi-overhead" type="button">俯瞰</button><button id="chengqi-reset" type="button">总览</button></span></div>
+      <nav id="chengqi-hotspots" class="chengqi-hotspots" aria-label="选择观察点"></nav>
+      <article id="chengqi-detail" class="chengqi-detail" aria-live="polite">
+        <p class="chengqi-detail-kicker">CHENGQI LOU</p>
+        <h2 id="chengqi-detail-name">承启楼</h2>
+        <p id="chengqi-detail-description"></p>
+        <a id="chengqi-source" target="_blank" rel="noreferrer"></a>
+      </article>
+    </aside>
+  </main>
+  <div id="chengqi-loading" class="chengqi-loading" role="status">正在展开土楼…</div>
+  <div id="chengqi-error" class="chengqi-error" hidden>
+    <p>土楼暂时无法打开，请重试。</p>
+    <button id="chengqi-retry" type="button">重试</button>
+    <a href="./">返回首页</a>
+  </div>
+  <button id="chengqi-exit-immersive" class="chengqi-exit-immersive" type="button" hidden>退出沉浸</button>
+</div>

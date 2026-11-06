@@ -134,17 +134,22 @@ for (const [name, modifiers] of [
   });
 }
 
-test('right mouse and two-touch dolly-pan do not enable panning', () => {
-  {
-    const { camera, controls, element, cleanup } = makeControls();
-    const before = snapshot(camera, controls);
-    drag(element, pointer('mouse', 2, 100, 100), pointer('mouse', 2, 180, 140));
-    controls.update();
-    assertVectorClose(controls.target, before.target, 'right mouse leaves target fixed');
-    cleanup();
-    controls.dispose();
-  }
+test('right mouse drag pans camera and target together', () => {
+  const { camera, controls, element, cleanup } = makeControls();
+  const before = snapshot(camera, controls);
+  element.dispatch('pointerdown', pointer('mouse', 2, 100, 100));
+  assert.equal(controls.enablePan, true);
+  element.dispatch('pointermove', pointer('mouse', 2, 180, 140));
+  element.dispatch('pointerup', pointer('mouse', 2, 180, 140));
+  controls.update();
+  const after = snapshot(camera, controls);
+  assert.notDeepEqual(after.target.toArray(), before.target.toArray());
+  assertVectorClose(after.relative, before.relative, 'right drag preserves orientation and distance');
+  cleanup();
+  controls.dispose();
+});
 
+test('two-touch dolly-pan does not enable panning', () => {
   const { camera, controls, element, cleanup } = makeControls();
   const before = snapshot(camera, controls);
   element.dispatch('pointerdown', { ...pointer('touch', 0, 100, 100), pointerId: 1 });

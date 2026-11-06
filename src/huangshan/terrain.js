@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import terrainUrl from '../data/huangshan-dem.bin?url';
-import metadata from '../data/huangshan-dem.json';
+import metadata from '../data/huangshan-dem.json' with { type: 'json' };
 
 // Preserve the original scene coordinates while extending the DEM westward.
 const ORIGIN_LON = 118.16291666666666;

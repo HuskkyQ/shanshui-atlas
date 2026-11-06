@@ -1,0 +1,45 @@
+{
+  "width": 576,
+  "height": 540,
+  "west": 127.9901388888889,
+  "east": 128.1498611111111,
+  "north": 42.08986111111111,
+  "south": 41.94013888888889,
+  "unit": "decimetres, unsigned 16-bit little-endian",
+  "minElevation": 1490.1,
+  "maxElevation": 2737.8,
+  "source": {
+    "dataset": "Copernicus DEM GLO-30",
+    "product": "Copernicus_DSM_COG_10",
+    "registryUrl": "https://registry.opendata.aws/copernicus-dem/",
+    "resolution": "1 arc-second native samples",
+    "tiles": [
+      {
+        "id": "N41_00_E127_00",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N41_00_E127_00_DEM/Copernicus_DSM_COG_10_N41_00_E127_00_DEM.tif",
+        "sha256": "5e18cd8e42cd2556cc8bd585b285a8a28f003886a8b57305e7a27aa7c7dcd8b8",
+        "bytes": 42450659
+      },
+      {
+        "id": "N41_00_E128_00",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N41_00_E128_00_DEM/Copernicus_DSM_COG_10_N41_00_E128_00_DEM.tif",
+        "sha256": "ab5cc06f90f23e8d5de51c52e70775fbdb2a5fd2ba3fc721ba5078239b8f1bba",
+        "bytes": 40831414
+      },
+      {
+        "id": "N42_00_E127_00",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_E127_00_DEM/Copernicus_DSM_COG_10_N42_00_E127_00_DEM.tif",
+        "sha256": "7c306aa37161dc918cea957b1f783bfb0e995d6fda3d64781e08b64303c41503",
+        "bytes": 42778018
+      },
+      {
+        "id": "N42_00_E128_00",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_E128_00_DEM/Copernicus_DSM_COG_10_N42_00_E128_00_DEM.tif",
+        "sha256": "8ad5c10f2d11cc24a843c5d4512d19e0bd87922b94eeb3955117aadb8a3d25c7",
+        "bytes": 41965271
+      }
+    ]
+  },
+  "limitations": "The lake surface contains DEM elevation samples and does not represent water depth or bathymetry.",
+  "lakeElevation": 2188.5
+}

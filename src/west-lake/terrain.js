@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import terrainUrl from '../data/west-lake-dem.bin?url';
 import waterUrl from '../data/west-lake-water.bin?url';
-import metadata from '../data/west-lake-dem.json';
-import shoreline from '../data/west-lake-shore.json';
+import metadata from '../data/west-lake-dem.json' with { type: 'json' };
+import shoreline from '../data/west-lake-shore.json' with { type: 'json' };
 
 const ORIGIN_LON = (metadata.west + metadata.east) / 2;
 const ORIGIN_LAT = (metadata.north + metadata.south) / 2;

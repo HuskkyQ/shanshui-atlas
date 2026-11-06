@@ -1,13 +1,16 @@
+import { attachWebGLRecovery } from '../../shared/webgl-recovery.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { enableShiftPan } from '../../shared/scene-controls.js';
+import { createCompass } from '../../shared/compass.js';
 import { createHouseModel } from './model.js';
+import { SCENE_COLORS, watchSceneTheme } from '../../shared/scene-palette.js';
 
 function createPreview() {
   const container = document.querySelector('#house-canvas');
   const buttons = [...document.querySelectorAll('[data-house-view]')];
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#f0efe8');
+  scene.background = new THREE.Color(SCENE_COLORS.paper);
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 150);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -16,6 +19,8 @@ function createPreview() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
   container.append(renderer.domElement);
+  const removeRecovery = attachWebGLRecovery(renderer.domElement, { onRestored: () => { renderer.shadowMap.needsUpdate = true; } });
+  const compass = createCompass(container, { reference: 'model' });
 
   const house = createHouseModel();
   scene.add(house.group);
@@ -95,9 +100,11 @@ function createPreview() {
   resize();
   function render() {
     controls.update();
+    compass.update(camera);
     renderer.render(scene, camera);
     frameId = requestAnimationFrame(render);
   }
+  const stopWatchingTheme = watchSceneTheme(scene);
   render();
   document.querySelector('#house-loading').hidden = true;
 
@@ -105,6 +112,7 @@ function createPreview() {
   return () => {
     if (disposed) return;
     disposed = true;
+    stopWatchingTheme();
     cancelAnimationFrame(frameId);
     observer.disconnect();
     buttons.forEach((button) => button.removeEventListener('click', onView));
@@ -115,7 +123,9 @@ function createPreview() {
     ground.geometry.dispose();
     ground.material.dispose();
     sunlight.shadow.dispose();
+    removeRecovery();
     renderer.dispose();
+    compass.dispose();
     renderer.domElement.remove();
   };
 }

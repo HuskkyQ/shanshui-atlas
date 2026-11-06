@@ -8,6 +8,7 @@ previews/
 scripts/__pycache__/
 
 HANDOFF.MD
+/design-qa.md
 /代码审查报告-2026-11-02.md
 
 # Internal plans, acceptance logs, and ops notes (keep locally).
@@ -36,3 +37,4 @@ public/design/
 
 # Research copies: reference the original project page in published docs.
 docs/jingci-references/mu-tect-*.jpg
+src/assets/daci-reference-*.png

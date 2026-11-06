@@ -1,0 +1,84 @@
+:root { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #f3f0df; background: #294347; font-synthesis: none; text-rendering: optimizeLegibility; }
+* { box-sizing: border-box; }
+html, body, #changbai-app { width: 100%; height: 100%; min-width: 320px; margin: 0; overflow: hidden; }
+button { font: inherit; }
+#changbai-app { position: relative; background: radial-gradient(circle at 61% 35%, #8ea9a1 0, #54716e 45%, #263f43 100%); }
+.changbai-canvas-wrap, .changbai-canvas-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.changbai-canvas-wrap { z-index: 0; }
+.changbai-canvas-wrap canvas { display: block; cursor: grab; }
+.changbai-canvas-wrap canvas:active { cursor: grabbing; }
+.changbai-wash { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(270deg, rgba(17, 39, 42, .52), transparent 32%), linear-gradient(90deg, rgba(22, 45, 47, .7), rgba(25, 54, 55, .18) 43%, transparent 72%), linear-gradient(0deg, rgba(19, 40, 43, .42), transparent 30%, transparent 76%, rgba(17, 39, 42, .2)); }
+.changbai-header, .changbai-main { position: relative; z-index: 3; }
+.changbai-header { display: flex; align-items: center; justify-content: space-between; height: 88px; margin: 0 5.4%; border-bottom: 1px solid rgba(242, 239, 220, .22); }
+.changbai-brand { display: flex; align-items: center; gap: 13px; color: inherit; text-decoration: none; white-space: nowrap; }
+.changbai-brand > span:last-child { display: flex; align-items: baseline; gap: 10px; }
+.changbai-brand small { color: #ced5c9; font-size: 10px; font-weight: 400; letter-spacing: .14em; }
+.changbai-mark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(225, 207, 155, .72); color: #eee0ae; font: 22px/1 'Songti SC', 'STSong', serif; }
+.changbai-error button, .changbai-error a { border: 1px solid rgba(242, 239, 220, .34); color: #f3f0df; background: rgba(31, 61, 62, .6); cursor: pointer; }
+.changbai-main { height: calc(100% - 88px); pointer-events: none; }
+.changbai-intro { position: absolute; top: 11vh; left: 5.4%; width: 340px; }
+.changbai-eyebrow { margin: 0 0 19px; color: #ead792; font-size: 10px; letter-spacing: .22em; }
+.changbai-intro h1 { margin: 0; font: 600 clamp(48px, 6.4vw, 84px)/1.08 'Songti SC', 'STSong', serif; letter-spacing: .05em; }
+.changbai-intro h1 .changbai-dot { color: var(--atlas-gold); font-size: .62em; }
+.changbai-lake-title { display: inline-block; white-space: nowrap; }
+.changbai-english { margin: 12px 0 27px; color: #ccd8ce; font-size: 10px; line-height: 1.7; letter-spacing: .24em; }
+.changbai-gesture { color: #d3ddd2; font-size: 10px; letter-spacing: .06em; }
+.changbai-view-nav { position: absolute; right: 5.4%; bottom: 38px; width: 230px; max-height: calc(100vh - 150px); overflow-y: auto; pointer-events: auto; text-shadow: 0 1px 3px rgba(10, 27, 29, .65); scrollbar-width: thin; scrollbar-color: rgba(229, 206, 140, .45) transparent; }
+.changbai-view-nav::-webkit-scrollbar { width: 3px; }
+.changbai-view-nav::-webkit-scrollbar-thumb { background: rgba(229, 206, 140, .45); }
+.changbai-view-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; color: var(--atlas-gold); font-size: 9px; letter-spacing: .16em; }
+.changbai-view-heading i { flex: 1; border-top: 1px solid rgba(229, 206, 140, .38); }
+.changbai-sights-heading { margin-top: 15px; }
+.changbai-view-button { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 39px; padding: 0 2px; border: 0; border-top: 1px solid rgba(242, 239, 220, .24); color: rgba(243, 240, 223, .65); background: transparent; text-align: left; cursor: pointer; transition: color .2s ease, padding .2s ease; }
+.changbai-view-button:last-child { border-bottom: 1px solid rgba(242, 239, 220, .24); }
+.changbai-view-button:hover, .changbai-view-button:focus-visible, .changbai-view-button.is-active { padding-left: 8px; color: #f3f0df; }
+.changbai-view-button:focus-visible, .changbai-sights-toggle:focus-visible { outline: 1px solid var(--atlas-gold); outline-offset: 2px; }
+.changbai-view-no { color: var(--atlas-gold); font-size: 9px; letter-spacing: .12em; }
+.changbai-view-button > span:nth-child(2) { font: 13px/1 'Songti SC', 'STSong', serif; letter-spacing: .08em; }
+.changbai-view-arrow { margin-left: auto; color: var(--atlas-gold); opacity: 0; transition: opacity .2s ease; }
+.changbai-view-button:hover .changbai-view-arrow, .changbai-view-button:focus-visible .changbai-view-arrow, .changbai-view-button.is-active .changbai-view-arrow { opacity: 1; }
+.changbai-poi-description { min-height: 31px; margin: 10px 1px 0; color: rgba(220, 229, 218, .72); font-size: 9px; line-height: 1.65; }
+.changbai-sights-toggle { display: none; }
+.changbai-poi-marker { position: absolute; z-index: 2; transform: translate(-50%, -100%); padding: 4px 7px 4px 14px; border: 1px solid rgba(242, 239, 220, .45); color: #fff; background: rgba(22, 45, 47, .82); box-shadow: 0 3px 10px rgba(11, 26, 27, .3); font: 10px/1.2 'Songti SC', 'STSong', serif; letter-spacing: .08em; white-space: nowrap; pointer-events: none; }
+.changbai-poi-marker::before { content: ''; position: absolute; left: 6px; top: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--atlas-gold); transform: translateY(-50%); }
+.changbai-loading, .changbai-error { position: absolute; z-index: 7; inset: 0; display: flex; align-items: center; justify-content: center; color: #f3f0df; background: #294347; font: 14px 'Songti SC', 'STSong', serif; letter-spacing: .12em; }
+.changbai-error { flex-direction: column; gap: 14px; background: rgba(31, 56, 58, .96); }
+.changbai-error button, .changbai-error a { padding: 9px 14px; text-decoration: none; font-size: 12px; }
+.changbai-error[hidden], .changbai-loading[hidden] { display: none; }
+@media (max-width: 700px) {
+  .changbai-header { height: 72px; margin-inline: 20px; align-items: center; }
+  .changbai-brand { gap: 9px; }
+  .changbai-brand small { display: none; }
+  .changbai-mark { width: 31px; height: 34px; font-size: 19px; }
+  .changbai-main { height: calc(100% - 72px); }
+  .changbai-intro { top: 6vh; left: 22px; width: 250px; }
+  .changbai-intro h1 { font-size: 47px; }
+  .changbai-english { margin-top: 8px; font-size: 8px; }
+  .changbai-gesture { display: none; }
+  .changbai-view-nav { position: fixed; z-index: 5; right: 16px; bottom: 16px; width: min(358px, calc(100vw - 32px)); max-height: none; overflow: visible; }
+  .changbai-sights-toggle { display: flex; align-items: center; justify-content: space-between; width: 132px; min-height: 38px; margin-left: auto; padding: 0 12px; border: 1px solid rgba(229, 206, 140, .58); color: #f3f0df; background: rgba(26, 51, 52, .86); font-size: 10px; letter-spacing: .12em; cursor: pointer; }
+  .changbai-sights-toggle i { color: var(--atlas-gold); font-size: 14px; font-style: normal; transition: transform .2s ease; }
+  .changbai-view-nav.is-open .changbai-sights-toggle i { transform: rotate(45deg); }
+  .changbai-view-panel { display: none; max-height: min(56vh, 390px); margin-top: 7px; padding: 12px; overflow-y: auto; border: 1px solid rgba(229, 206, 140, .45); background: rgba(26, 51, 52, .93); box-shadow: 0 12px 30px rgba(11, 26, 27, .3); }
+  .changbai-view-nav.is-open .changbai-view-panel { display: block; }
+  .changbai-view-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+  .changbai-view-main .changbai-view-button, .changbai-poi-list .changbai-view-button { min-height: 34px; padding-inline: 8px; border: 1px solid rgba(242, 239, 220, .24); background: var(--atlas-card); }
+  .changbai-view-main .changbai-view-button:hover, .changbai-view-main .changbai-view-button:focus-visible, .changbai-view-main .changbai-view-button.is-active, .changbai-poi-list .changbai-view-button:hover, .changbai-poi-list .changbai-view-button:focus-visible, .changbai-poi-list .changbai-view-button.is-active { padding-left: 8px; border-color: var(--atlas-gold); }
+  .changbai-poi-list { display: flex; gap: 5px; overflow-x: auto; scrollbar-width: none; }
+  .changbai-poi-list::-webkit-scrollbar { display: none; }
+  .changbai-poi-list .changbai-view-button { flex: none; width: auto; }
+  .changbai-view-button .changbai-view-no, .changbai-view-button .changbai-view-arrow { display: none; }
+  .changbai-view-button > span:nth-child(2) { font-size: 10px; white-space: nowrap; }
+  .changbai-view-heading { font-size: 8px; }
+  .changbai-sights-heading { margin-top: 11px; }
+  .changbai-poi-description { margin-bottom: 1px; }
+}
+
+:root { color: var(--atlas-ink, #233e34); background: var(--atlas-paper, #f3efe2); }
+#changbai-app { background: var(--atlas-scene-paper); color: var(--atlas-ink, #233e34); }
+.changbai-sights-toggle { border-color: var(--atlas-line, #d1c9b8); color: var(--atlas-ink, #233e34); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+.changbai-view-panel { border-color: var(--atlas-line, #d1c9b8); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+.changbai-view-button { border-top-color: var(--atlas-line, #d1c9b8); color: var(--atlas-muted, #536259); }
+.changbai-poi-marker { border-color: var(--atlas-line, #d1c9b8); color: var(--atlas-ink, #233e34); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+.changbai-loading, .changbai-error { color: var(--atlas-ink, #233e34); background: var(--atlas-panel, rgba(250,247,238,.94)); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

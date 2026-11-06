@@ -3,11 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#182b31" />
-    <meta name="description" content="山水志：中国山水与园林的三维漫游。进入黄山、西湖与拙政园的三维微缩景观，在群峰、湖岸与园林之间自由游望。" />
+    <meta name="theme-color" content="#e4ede8" />
+    <style>
+      html { --startup-paper: #e4ede8; --startup-ink: #183930; background: var(--startup-paper); }
+      html[data-atlas-theme="inkstone"] { --startup-paper: #28292c; --startup-ink: #f3eee6; }
+      body { margin: 0; }
+      #scene-startup, html[data-scene-startup] .homepage { display: none; }
+      html[data-scene-startup] #scene-startup {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 12px;
+        min-height: 100svh;
+        color: var(--startup-ink);
+        font: 13px/1.6 'PingFang SC', system-ui, sans-serif;
+        letter-spacing: 0.12em;
+      }
+      #scene-startup p { margin: 0; }
+      #scene-startup a { color: var(--startup-ink); }
+    </style>
+    <script>
+      {
+        let theme = 'celadon';
+        try {
+          if (localStorage.getItem('atlas-theme') === 'inkstone') theme = 'inkstone';
+        } catch {
+          // The theme remains usable for the current page when storage is unavailable.
+        }
+        document.documentElement.dataset.atlasTheme = theme;
+        if (theme === 'inkstone') document.querySelector('meta[name="theme-color"]').content = '#28292c';
+        const query = new URLSearchParams(location.search);
+        if (query.get('place') || query.get('model') === 'house') {
+          document.documentElement.setAttribute('data-scene-startup', '');
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="/src/home.css" />
+    <meta name="description" content="山水志：中国山水与园林的三维漫游。进入黄山、西湖、长白山、漓江兴坪、拙政园、承启楼、大慈岩与周庄的三维景观，在群峰、湖岸、园林、土楼与水乡之间自由游望。" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="山水志 · 中国山水与园林的三维漫游" />
+    <meta property="og:description" content="进入真实资料约束下的中国山水与园林三维景观。" />
+    <meta property="og:image" content="/src/assets/huangshan-preview.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="山水志 · 中国山水与园林的三维漫游" />
+    <meta name="twitter:description" content="进入真实资料约束下的中国山水与园林三维景观。" />
+    <meta name="twitter:image" content="/src/assets/huangshan-preview.jpg" />
     <title>山水志 · 中国山水与园林的三维漫游</title>
   </head>
   <body>
+    <div id="scene-startup">
+      <p role="status">正在展开景观…</p>
+      <a href="./">返回首页</a>
+    </div>
     <div class="homepage">
       <header class="home-header">
         <a class="home-brand" href="./" aria-label="山水志首页">
@@ -15,7 +63,9 @@
           <span class="home-brand-name">山水志</span>
           <span class="home-brand-subtitle">中国山水与园林</span>
         </a>
-        <span class="home-header-note">山水有形，游望无界 <span aria-hidden="true">◆</span></span>
+        <div class="home-header-actions">
+          <span class="home-header-note">山水有形，游望无界 <span aria-hidden="true">◆</span></span>
+        </div>
       </header>
 
       <main class="home-main">
@@ -24,86 +74,11 @@
             <p class="home-eyebrow"><span aria-hidden="true"></span> A DIGITAL LANDSCAPE COLLECTION</p>
             <h1 id="home-title">把山水，<em>放在眼前。</em></h1>
           </div>
-          <p class="home-intro-copy">从黄山、西湖，到咫尺之间的江南园林。<br />走进三维山水，换一个角度看风景。</p>
+          <p class="home-intro-copy">从黄山、西湖，到园林、土楼与江南水乡。<br />走进三维山水，换一个角度看风景。</p>
         </section>
 
-        <section id="landscapes" class="home-collection" aria-labelledby="collection-title">
-          <div class="home-collection-heading">
-            <h2 id="collection-title">选择一处山水，开始游望</h2>
-            <span>02 <span aria-hidden="true">/</span> LANDSCAPES</span>
-          </div>
-          <div class="home-grid">
-            <article class="landscape-card has-sources">
-              <a class="landscape-card-link" href="?place=huangshan" aria-labelledby="huangshan-card-title huangshan-card-action">
-              <div class="landscape-image">
-                <img src="/src/assets/huangshan-preview.jpg" width="1024" height="540" alt="黄山三维模型：起伏的陡峭群峰与点缀山脊的松树" fetchpriority="high" />
-                <span class="landscape-index" aria-hidden="true">01 <span>山</span></span>
-                <span class="landscape-coordinates" aria-hidden="true">30°N · 118°E</span>
-              </div>
-              <div class="landscape-info">
-                <div>
-                  <p class="landscape-location">安徽 · 黄山 <span>ANHUI, CHINA</span></p>
-                  <h3 id="huangshan-card-title">黄山 <span>MOUNT HUANGSHAN</span></h3>
-                  <p class="landscape-description">奇峰、松石与云海，沿着山脊探索群峰。</p>
-                </div>
-                <span id="huangshan-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
-              </div>
-              </a>
-              <div class="landscape-card-tools"><button class="landscape-sources" type="button" data-source-place="huangshan" data-name="黄山" aria-label="查看黄山数据来源"><span aria-hidden="true">ⓘ</span> 数据来源</button></div>
-              <button class="landscape-favorite" type="button" data-place="huangshan" data-name="黄山" aria-label="收藏黄山" aria-pressed="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
-              </button>
-            </article>
+        <!-- scenic-collections -->
 
-            <article class="landscape-card has-sources">
-              <a class="landscape-card-link" href="?place=west-lake" aria-labelledby="west-lake-card-title west-lake-card-action">
-              <div class="landscape-image">
-                <img src="/src/assets/west-lake-preview.jpg" width="1024" height="540" alt="西湖三维模型：湖东的开阔水面与湖西连绵的林木山脊" />
-                <span class="landscape-index" aria-hidden="true">02 <span>水</span></span>
-                <span class="landscape-coordinates" aria-hidden="true">30°N · 120°E</span>
-              </div>
-              <div class="landscape-info">
-                <div>
-                  <p class="landscape-location">浙江 · 杭州 <span>HANGZHOU, CHINA</span></p>
-                  <h3 id="west-lake-card-title">西湖 <span>WEST LAKE</span></h3>
-                  <p class="landscape-description">三面云山一面城，在湖岸与群山之间漫游。</p>
-                </div>
-                <span id="west-lake-card-action" class="landscape-action">进入建模 <span aria-hidden="true">↗</span></span>
-              </div>
-              </a>
-              <div class="landscape-card-tools"><button class="landscape-sources" type="button" data-source-place="west-lake" data-name="西湖" aria-label="查看西湖数据来源"><span aria-hidden="true">ⓘ</span> 数据来源</button></div>
-              <button class="landscape-favorite" type="button" data-place="west-lake" data-name="西湖" aria-label="收藏西湖" aria-pressed="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
-              </button>
-            </article>
-          </div>
-        </section>
-        <section class="home-collection home-garden-collection" aria-labelledby="garden-collection-title">
-          <div class="home-collection-heading">
-            <h2 id="garden-collection-title">一方园林，自成山水</h2>
-            <span>01 <span aria-hidden="true">/</span> GARDENS</span>
-          </div>
-          <article class="landscape-card garden-card">
-            <a class="landscape-card-link" href="?place=zhuozheng-garden" aria-labelledby="garden-card-title garden-card-action">
-              <div class="landscape-image">
-                <img src="/src/assets/zhuozheng-preview.png" width="800" height="400" alt="拙政园中部园三维模型：中央池水、两座山岛与临水亭堂" loading="lazy" />
-                <span class="landscape-index" aria-hidden="true">03 <span>园</span></span>
-                <span class="landscape-coordinates" aria-hidden="true">31°N · 120°E</span>
-              </div>
-              <div class="landscape-info">
-                <div>
-                  <p class="landscape-location">江苏 · 苏州 <span>SUZHOU, CHINA</span></p>
-                  <h3 id="garden-card-title">拙政园 <span>ZHUOZHENG GARDEN</span></h3>
-                  <p class="landscape-description">池广林茂，亭廊相望。走近中部园的七处建筑。</p>
-                </div>
-                <span id="garden-card-action" class="landscape-action">进入园林 <span aria-hidden="true">↗</span></span>
-              </div>
-            </a>
-            <button class="landscape-favorite" type="button" data-place="zhuozheng-garden" data-name="拙政园" aria-label="收藏拙政园" aria-pressed="false">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" /></svg>
-            </button>
-          </article>
-        </section>
       </main>
 
       <dialog id="home-sources-dialog" aria-labelledby="home-sources-title">
@@ -111,8 +86,9 @@
           <h2 id="home-sources-title">数据来源</h2>
           <form method="dialog"><button class="home-sources-close" aria-label="关闭数据来源">×</button></form>
         </div>
+        <p id="home-sources-note" class="home-sources-note"></p>
         <div id="home-sources-links" class="home-sources-links"></div>
-        <p class="home-sources-copyright">produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.</p>
+        <p id="home-sources-copyright" class="home-sources-copyright">produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.</p>
       </dialog>
 
       <footer class="home-footer">

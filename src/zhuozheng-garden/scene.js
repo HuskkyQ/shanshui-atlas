@@ -9,20 +9,25 @@ import { createZhuozhengGardenModel } from "./model.js";
 import { enableShiftPan } from "../shared/scene-controls.js";
 import { createLandmarkIconScaler } from "../shared/landmark-scale.js";
 import { layoutLandmarkLabels } from "../shared/landmark-layout.js";
+import { createCompass } from "../shared/compass.js";
+import { createAutoRoam } from "../shared/auto-roam.js";
+import { createExhibitControls } from "../shared/exhibit-controls.js";
 import content from "../content/zhuozheng-garden.json" with { type: "json" };
+import { SCENE_COLORS } from "../shared/scene-palette.js";
 
 export function createScene(initialContext = {}) {
   let mounted = false,
     disposed = false,
     frameId = 0;
-  let renderer, labels, controls, camera, scene, container, model, keyLight;
+  let renderer, labels, controls, camera, scene, container, model, keyLight, compass, roam, exhibitUI;
   let resizeObserver,
     removeShiftPan,
     onHotspot,
     tween = null;
   let selectedId = null,
     viewIsControlled = true,
-    immersive = false;
+    immersive = false,
+    aerial = false;
   let animations = [];
   let reducedMotion = false;
   const bounds = new THREE.Box3();
@@ -41,11 +46,9 @@ export function createScene(initialContext = {}) {
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const mobile = container.clientWidth < 650;
-    const direction = new THREE.Vector3(
-      close ? 0.75 : 0.5,
-      close ? 0.64 : 0.85,
-      1,
-    ).normalize();
+    const direction = aerial && !close
+      ? new THREE.Vector3(0, 1, -0.035).normalize()
+      : new THREE.Vector3(close ? 0.75 : 0.5, close ? 0.64 : 1.25, 1).normalize();
     const right = new THREE.Vector3()
       .crossVectors(new THREE.Vector3(0, 1, 0), direction)
       .normalize();
@@ -90,6 +93,7 @@ export function createScene(initialContext = {}) {
       camera.position.copy(view.position);
       controls.target.copy(view.target);
       tween = null;
+      controls.autoRotate = false;
       controls.update();
       return;
     }
@@ -132,6 +136,7 @@ export function createScene(initialContext = {}) {
   function selectHotspot(id, { animate = true } = {}) {
     if (!mounted || !buildingBounds.has(id)) return false;
     selectedId = id;
+    aerial = false;
     viewIsControlled = true;
     setActive(id);
     moveTo(currentView(), animate);
@@ -142,6 +147,7 @@ export function createScene(initialContext = {}) {
   function resetView() {
     if (!mounted) return false;
     selectedId = null;
+    aerial = false;
     viewIsControlled = true;
     setActive(null);
     moveTo(currentView());
@@ -149,8 +155,20 @@ export function createScene(initialContext = {}) {
     return true;
   }
 
+  function setAerialView({ animate = true } = {}) {
+    if (!mounted) return false;
+    selectedId = null;
+    aerial = true;
+    viewIsControlled = true;
+    setActive(null);
+    moveTo(currentView(), animate);
+    onHotspot?.(null);
+    return true;
+  }
+
   function setImmersive(value) {
     immersive = value;
+    exhibitUI?.setImmersive(value);
     resize();
   }
 
@@ -169,9 +187,11 @@ export function createScene(initialContext = {}) {
       controls.target.copy(tween.fromTarget).lerp(tween.toTarget, eased);
       if (progress === 1) tween = null;
     }
-    controls.update();
+    exhibitUI?.update();
+    controls.update(roam?.update(time));
     landmarkIconScaler?.();
     layoutLandmarkLabels(landmarkLabels, camera, container.clientWidth, container.clientHeight);
+    compass?.update(camera);
     renderer.render(scene, camera);
     labels.render(scene, camera);
   }
@@ -188,7 +208,7 @@ export function createScene(initialContext = {}) {
     ).matches;
     try {
       scene = new THREE.Scene();
-      scene.background = new THREE.Color("#526f69");
+      scene.background = new THREE.Color(SCENE_COLORS.paper);
       camera = new THREE.PerspectiveCamera(40, 1, 0.1, 2000);
       renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -206,6 +226,7 @@ export function createScene(initialContext = {}) {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       container.appendChild(renderer.domElement);
+      compass = createCompass(container, { reference: "geographic" });
       labels = new CSS2DRenderer();
       labels.domElement.className = "garden-hotspot-overlay";
       container.appendChild(labels.domElement);
@@ -215,7 +236,7 @@ export function createScene(initialContext = {}) {
       const center = bounds.getCenter(new THREE.Vector3());
       const size = bounds.getSize(new THREE.Vector3());
       const extent = Math.max(size.x, size.z);
-      scene.fog = new THREE.Fog("#526f69", extent * 4.5, extent * 8);
+      scene.fog = new THREE.Fog(SCENE_COLORS.dayFog, extent * 4.5, extent * 8);
       camera.far = extent * 12;
       content.hotspots.forEach((item) => {
         const building = model.group.getObjectByName(`building-${item.id}`);
@@ -263,10 +284,12 @@ export function createScene(initialContext = {}) {
       controls.dampingFactor = 0.065;
       controls.minDistance = 5;
       controls.maxDistance = extent * 5;
-      controls.minPolarAngle = 0.12;
+      controls.minPolarAngle = 0.025;
       controls.maxPolarAngle = Math.PI * 0.485;
       controls.addEventListener("start", cancelTween);
       removeShiftPan = enableShiftPan(controls);
+      exhibitUI = createExhibitControls({ container, scene, renderer, controls });
+      roam = createAutoRoam({ controls, container, canRoam: () => !tween && !selectedId && !aerial && !immersive });
       mounted = true;
       resize();
       landmarkIconScaler = createLandmarkIconScaler(landmarkLabels, camera, controls.target);
@@ -313,6 +336,9 @@ export function createScene(initialContext = {}) {
     resizeObserver?.disconnect();
     removeShiftPan?.();
     controls?.removeEventListener("start", cancelTween);
+    roam?.dispose();
+    exhibitUI?.dispose();
+    exhibitUI = null;
     controls?.dispose();
     listeners.forEach((remove) => remove());
     markers.forEach(({ marker }) => marker.removeFromParent());
@@ -323,6 +349,8 @@ export function createScene(initialContext = {}) {
     keyLight?.shadow.dispose();
     renderer?.dispose();
     renderer?.forceContextLoss();
+    compass?.dispose();
+    compass = null;
     renderer?.domElement.remove();
     labels?.domElement.remove();
     scene?.clear();
@@ -331,5 +359,5 @@ export function createScene(initialContext = {}) {
     tween = null;
   }
 
-  return { mount, selectHotspot, resetView, setImmersive, reveal, dispose };
+  return { mount, selectHotspot, resetView, setAerialView, setImmersive, reveal, dispose };
 }

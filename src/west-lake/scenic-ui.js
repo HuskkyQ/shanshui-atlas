@@ -1,8 +1,9 @@
 import { getScenicScene } from './scenic-scenes.js';
 import { createPOIPhoto } from '../shared/poi-photo.js';
 import scenicPhotos from '../content/scenic-photos.json' with { type: 'json' };
+import { createScenicHistory } from './scenic-history.js';
 
-export function createScenicUI({ session, container, entryButton }) {
+export function createScenicUI({ session, container, entryButton, window = globalThis.window }) {
   const app = document.querySelector('#app');
   const panel = document.querySelector('#scenic-ui');
   const back = document.querySelector('#scenic-back');
@@ -14,7 +15,7 @@ export function createScenicUI({ session, container, entryButton }) {
   const navigation = document.querySelector('#scenic-hotspots');
   const source = document.querySelector('#scenic-source');
   const showPhoto = createPOIPhoto(document.querySelector('#scenic-photo'), scenicPhotos);
-  const worldPanels = [...document.querySelectorAll('.site-header, main, .site-footer, .compass')];
+  const worldPanels = [...document.querySelectorAll('.site-header, main, .site-footer')];
   let savedInert = [], revision = 0, isOpen = false, sceneId = null, returning = false;
   let content = null, hotspotButtons = [];
 
@@ -48,10 +49,11 @@ export function createScenicUI({ session, container, entryButton }) {
     hotspotButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.scenicHotspot === id)));
   }
 
-  async function enter(id) {
+  async function enter(id, { fromHistory = false } = {}) {
     if (!id || session.state.status === 'loading' || returning) return;
     const definition = getScenicScene(id);
     if (!definition?.enabled || !definition.content) return;
+    if (!fromHistory) scenicHistory.enter(id);
     const token = ++revision;
     sceneId = id;
     setContent(definition);
@@ -102,9 +104,11 @@ export function createScenicUI({ session, container, entryButton }) {
     reset.disabled = false;
     worldPanels.forEach((element, index) => { element.inert = savedInert[index]; });
     entryButton.focus();
+    scenicHistory.clear();
   }
 
-  function exit() {
+  function exit({ fromHistory = false } = {}) {
+    if (!fromHistory && scenicHistory.shouldGoBack()) { scenicHistory.back(); return; }
     if (returning) return;
     revision += 1;
     if (session.state.status !== 'scenic') {
@@ -129,7 +133,7 @@ export function createScenicUI({ session, container, entryButton }) {
   }
 
   const onEntry = () => enter(entryButton.dataset.sceneId);
-  const onRetry = () => enter(sceneId);
+  const onRetry = () => enter(sceneId, { fromHistory: true });
   const onReset = () => session.activeScene?.resetView();
   const onKey = (event) => {
     if (isOpen && event.key === 'Escape') { event.preventDefault(); exit(); }
@@ -139,6 +143,8 @@ export function createScenicUI({ session, container, entryButton }) {
   retry.addEventListener('click', onRetry);
   reset.addEventListener('click', onReset);
   document.addEventListener('keydown', onKey);
+  const scenicHistory = createScenicHistory({ window, onEnter: (id, options) => enter(id, options), onExit: (options) => exit(options) });
+  scenicHistory.syncInitial();
 
   return {
     get isOpen() { return isOpen; },
@@ -152,6 +158,7 @@ export function createScenicUI({ session, container, entryButton }) {
       retry.removeEventListener('click', onRetry);
       reset.removeEventListener('click', onReset);
       document.removeEventListener('keydown', onKey);
+      scenicHistory.dispose();
     },
   };
 }

@@ -44,6 +44,7 @@ function setup(t, { failOnce = false } = {}) {
       setImmersive(value) { this.immersive = value; },
       selectHotspot(id) { this.selection = id; context.onHotspot(id); },
       resetView() { this.selection = null; context.onHotspot(null); },
+      setAerialView() { this.aerial = true; this.selection = null; context.onHotspot(null); },
       dispose() { this.disposeCalls += 1; if (alive) { live -= 1; alive = false; } },
     };
     scenes.push(scene);
@@ -112,4 +113,24 @@ test('a failed mount releases its renderer before retrying and disposal removes 
   for (const element of [doc, win, ...elements.values(), ...get('#garden-hotspots').children]) {
     assert.ok([...element.listeners.values()].every((listeners) => listeners.size === 0));
   }
+});
+
+test('俯视清除近景选择，缓存恢复保留俯视，总览和景点可继续使用', async (t) => {
+  const { ui, get, scenes, win } = setup(t);
+  await ui.start();
+  scenes[0].selectHotspot('yuanxiang-hall');
+  await get('#garden-aerial').emit('click');
+  assert.equal(scenes[0].aerial, true);
+  assert.equal(scenes[0].selection, null);
+  assert.equal(get('#garden-hotspots').children[0].getAttribute('aria-pressed'), 'false');
+  await win.emit('pagehide', { persisted: true });
+  await win.emit('pageshow', { persisted: true });
+  assert.equal(scenes[1].aerial, true);
+  await get('#garden-reset').emit('click');
+  await win.emit('pagehide', { persisted: true });
+  await win.emit('pageshow', { persisted: true });
+  assert.notEqual(scenes[2].aerial, true, 'reset restores the regular overview on remount');
+  await get('#garden-hotspots').children[4].emit('click');
+  assert.equal(scenes[2].selection, 'xiaofeihong');
+  assert.equal(get('#garden-detail-name').textContent, '小飞虹');
 });

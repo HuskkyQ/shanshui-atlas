@@ -1,3 +1,5 @@
+import { attachWebGLRecovery } from '../shared/webgl-recovery.js';
+import { createCompass } from '../shared/compass.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { enableShiftPan } from '../shared/scene-controls.js';
@@ -5,12 +7,13 @@ import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { createTerrain } from './terrain.js';
 import { createForest } from '../shared/forest.js';
-import { getLightingForDate, skyDirection } from '../shared/lighting.js';
+import { getExhibitionLight, getLightingForDate, skyDirection } from '../shared/lighting.js';
 import { createLandmarkIcon, getLandmarkIconKind } from '../shared/landmark-icons.js';
 import { layoutLandmarkLabels } from '../shared/landmark-layout.js';
 import { createLandmarkIconScaler } from '../shared/landmark-scale.js';
-import routeData from '../data/huangshan-routes.json';
-import landmarks from '../data/huangshan-landmarks.json';
+import routeData from '../data/huangshan-routes.json' with { type: 'json' };
+import landmarks from '../data/huangshan-landmarks.json' with { type: 'json' };
+import { SCENE_COLORS, getSceneTheme } from '../shared/scene-palette.js';
 
 const VIEWS = {
   overview: { position: [23, 17, 25], target: [-1.5, 4.1, 0] },
@@ -332,8 +335,8 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     }];
   }));
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#182b31');
-  scene.fog = new THREE.FogExp2('#20353a', 0.014);
+  scene.background = new THREE.Color(SCENE_COLORS.daySky);
+  scene.fog = new THREE.FogExp2(SCENE_COLORS.dayFog, 0.014);
   const atmosphereFog = scene.fog;
 
   const camera = new THREE.PerspectiveCamera(39, 1, 0.1, 150);
@@ -347,6 +350,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
+  const removeRecovery = attachWebGLRecovery(renderer.domElement, { onRestored: () => { renderer.shadowMap.needsUpdate = true; } });
   const labelRenderer = new CSS2DRenderer();
   labelRenderer.domElement.className = 'trailhead-overlay';
   container.appendChild(labelRenderer.domElement);
@@ -366,6 +370,8 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   moonLight.shadow.camera.left = moonLight.shadow.camera.bottom = -27;
   moonLight.shadow.camera.right = moonLight.shadow.camera.top = 27;
   moonLight.shadow.normalBias = 0.03;
+  // Keep the terrain legible at dusk while retaining the live sun/moon
+  // direction and shadow behavior for the normal viewing mode.
   scene.add(moonLight);
 
   scene.add(terrain.group);
@@ -391,8 +397,8 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   scene.add(forest.group);
   const { clouds, sun } = addAtmosphere(scene, terrain);
   const colors = {
-    nightSky: new THREE.Color('#0b1925'), daySky: new THREE.Color('#344d51'), duskSky: new THREE.Color('#72554b'),
-    nightFog: new THREE.Color('#152935'), dayFog: new THREE.Color('#405c5d'),
+    nightSky: new THREE.Color(SCENE_COLORS.nightSky), daySky: new THREE.Color(SCENE_COLORS.daySky), duskSky: new THREE.Color(SCENE_COLORS.duskSky),
+    nightFog: new THREE.Color(SCENE_COLORS.nightFog), dayFog: new THREE.Color(SCENE_COLORS.dayFog),
     nightAmbient: new THREE.Color('#7899bc'), dayAmbient: new THREE.Color('#e9e9d9'),
     nightGround: new THREE.Color('#142b35'), dayGround: new THREE.Color('#294b46'),
     noonSun: new THREE.Color('#fff1dc'), lowSun: new THREE.Color('#ffc17b'),
@@ -403,9 +409,15 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   let savedView = null;
 
   function updateLighting() {
+    const palette = getSceneTheme();
+    colors.daySky.set(palette.daySky);
+    colors.nightSky.set(palette.nightSky);
+    colors.duskSky.set(palette.duskSky);
+    colors.dayFog.set(palette.dayFog);
+    colors.nightFog.set(palette.nightFog);
     if (cleanMode || immersiveMode) {
       renderer.shadowMap.enabled = false;
-      scene.background.set('#65787a');
+      scene.background.set(palette.neutral);
       scene.fog = null;
       ambient.color.set('#ffffff');
       ambient.groundColor.set('#ffffff');
@@ -434,14 +446,15 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     moonLight.color.set('#a9c5e5');
     moonLight.intensity = 1.6 * moonlight;
     moonLight.castShadow = true;
+    const exhibitLight = getExhibitionLight(daylight);
     sunlight.visible = true;
     moonLight.visible = true;
-    ambient.color.copy(colors.nightAmbient).lerp(colors.dayAmbient, daylight);
-    ambient.groundColor.copy(colors.nightGround).lerp(colors.dayGround, daylight);
-    ambient.intensity = 1.05 + 1.05 * daylight;
+    ambient.color.copy(colors.nightAmbient).lerp(colors.dayAmbient, exhibitLight.ambientMix);
+    ambient.groundColor.copy(colors.nightGround).lerp(colors.dayGround, exhibitLight.ambientMix);
+    ambient.intensity = exhibitLight.ambientIntensity;
     scene.background.copy(colors.nightSky).lerp(colors.daySky, daylight).lerp(colors.duskSky, twilight * 0.35);
     scene.fog = atmosphereFog;
-    scene.fog.color.copy(colors.nightFog).lerp(colors.dayFog, daylight).lerp(colors.duskSky, twilight * 0.2);
+    scene.fog.color.copy(colors.nightFog).lerp(colors.dayFog, exhibitLight.fogMix).lerp(colors.duskSky, twilight * 0.2);
     renderer.toneMappingExposure = 1.55 - 0.15 * daylight;
     sun.visible = sunPosition.altitude > -1;
     sun.position.set(sunX * 46, 5 + sunY * 46, sunZ * 46);
@@ -485,6 +498,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   updateLighting();
   const lightingInterval = window.setInterval(updateLighting, 60_000);
   document.addEventListener('visibilitychange', updateLighting);
+  window.addEventListener('atlas-theme-change', updateLighting);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(...VIEWS.overview.target);
@@ -498,7 +512,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
   controls.autoRotate = !reducedMotion;
   controls.autoRotateSpeed = 0.35;
   controls.update();
-  const compassDial = document.querySelector('#compass-dial');
+  const compass = createCompass(container, { variant: 'landscape' });
 
   let motion = !reducedMotion;
   let activeView = 'overview';
@@ -535,7 +549,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
     controls.autoRotate = motion && !cleanMode && !immersiveMode && !viewTween && activeView !== 'trailheads';
     controls.update();
     landmarkIconScaler();
-    compassDial.style.transform = `rotate(${Math.atan2(camera.position.x - controls.target.x, camera.position.z - controls.target.z)}rad)`;
+    compass.update(camera);
     forest.update(camera, container.clientHeight, elapsed);
     if (motion && !cleanMode && !immersiveMode) clouds.forEach((cloud) => {
       cloud.position.x = cloud.userData.originX + Math.sin(elapsed * cloud.userData.speed + cloud.userData.phase) * 0.55;
@@ -582,8 +596,10 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
       cancelAnimationFrame(frameId);
       window.clearInterval(lightingInterval);
       document.removeEventListener('visibilitychange', updateLighting);
+      window.removeEventListener('atlas-theme-change', updateLighting);
       renderer.domElement.removeEventListener('pointerdown', clearTrailheadSelection);
       resizeObserver.disconnect();
+      compass.dispose();
       disposeShiftPan();
       controls.dispose();
       scene.traverse((object) => {
@@ -594,6 +610,7 @@ export async function createHuangshanScene(container, onMotionChange, onLighting
           materials.forEach((material) => { material.map?.dispose(); material.dispose(); });
         }
       });
+      removeRecovery();
       renderer.dispose();
       renderer.domElement.remove();
       labelRenderer.domElement.remove();

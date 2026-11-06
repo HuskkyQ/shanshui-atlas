@@ -1,0 +1,43 @@
+{
+  "id": "chengqi-lou",
+  "name": "承启楼",
+  "englishName": "CHENGQI LOU",
+  "region": "福建 · 永定",
+  "description": "从两圆两方的高北楼群，走进承启楼的层层屋檐、环形木廊与中央祖堂。",
+  "modelNote": "参照航拍与公开资料的艺术化模型，展示承启楼、侨福楼、世泽楼和五云楼。主要尺度与楼层参考公开资料，位置参考公开地图；层高、内圈尺寸、建筑细部及道路、竹林、菜畦均为近似，不表示村落现状的完整测绘。",
+  "source": {
+    "name": "永定区人民政府 · 承启楼",
+    "url": "https://www.yongding.gov.cn/yxyd/ydtl/200804/t20080420_1145764.htm"
+  },
+  "hotspots": [
+    {
+      "id": "entrance",
+      "name": "入楼门厅",
+      "description": "南向门厅是进入围楼的一处主要界面；土墙上的东、西门也把这座楼和村落道路连在一起。"
+    },
+    {
+      "id": "outer-ring",
+      "name": "四层围楼",
+      "description": "最外一圈四层围楼形成完整的圆形界面。层层窗洞和灰瓦屋檐围住内院，也给整座楼提供了最鲜明的轮廓。"
+    },
+    {
+      "id": "inner-rings",
+      "name": "环形院落",
+      "description": "由外向内，建筑依次过渡到两层、单层的内圈。露天环道把居住、行走和眺望串在同一个院落里。"
+    },
+    {
+      "id": "ancestral-hall",
+      "name": "中央祖堂",
+      "description": "祖堂位于同心空间的中心，是日常聚集与节庆仪式的核心。站在这里，四周木廊和屋顶的层次最清楚。"
+    },
+    {
+      "id": "neighbors",
+      "name": "楼群布局",
+      "description": "承启楼居中，西北侧是三层圆形侨福楼，东侧依次为方形世泽楼与五云楼。两圆两方由石路相连，木廊、露天院落与周围竹林、田畦共同交代高北楼群的空间关系。",
+      "source": {
+        "name": "UNESCO · 福建土楼申遗资料",
+        "url": "https://whc.unesco.org/uploads/nominations/1113.pdf"
+      }
+    }
+  ]
+}

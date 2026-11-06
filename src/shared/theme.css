@@ -1,0 +1,134 @@
+/* Shared visual themes. The page keeps one structural system while the
+   exhibition atmosphere can move between celadon daylight and inkstone night. */
+:root {
+  --atlas-paper: #e4ede8;
+  --atlas-scene-paper: #bdcec7;
+  --atlas-card: #f4f7f4;
+  --atlas-ink: #183930;
+  --atlas-muted: #415e53;
+  --atlas-gold: #286452;
+  --atlas-line: #9bb0a6;
+  --atlas-panel: rgba(244, 247, 244, 0.94);
+  --atlas-accent-soft: #6c9081;
+  --atlas-exhibit-wash:
+    linear-gradient(90deg, color-mix(in srgb, var(--atlas-paper) 90%, transparent), color-mix(in srgb, var(--atlas-paper) 27%, transparent) 28%, transparent 52%),
+    linear-gradient(0deg, color-mix(in srgb, var(--atlas-paper) 24%, transparent), transparent 23%, transparent 77%, color-mix(in srgb, var(--atlas-paper) 25%, transparent));
+}
+
+html[data-atlas-theme='inkstone'] {
+  --atlas-paper: #28292c;
+  --atlas-scene-paper: #4a484a;
+  --atlas-card: #343438;
+  --atlas-ink: #f3eee6;
+  --atlas-muted: #d1c8bf;
+  --atlas-gold: #e58f7f;
+  --atlas-line: #726d6b;
+  --atlas-panel: rgba(52, 52, 56, 0.96);
+  --atlas-accent-soft: #ba5748;
+}
+
+html,
+body {
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+}
+
+#app,
+[id$='-app'] {
+  background: var(--atlas-scene-paper);
+  color: var(--atlas-ink);
+}
+
+.canvas-wrap,
+[id$='-canvas'],
+[id$='-canvas'] canvas {
+  background: var(--atlas-scene-paper);
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass,
+html[data-atlas-theme='inkstone'] .scene-roam-footer {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass-reference,
+html[data-atlas-theme='inkstone'] .scene-roam-footer {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass-face {
+  fill: var(--atlas-panel);
+  stroke: var(--atlas-line);
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass-ticks,
+html[data-atlas-theme='inkstone'] .scene-compass-pivot {
+  stroke: var(--atlas-ink);
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass-north,
+html[data-atlas-theme='inkstone'] .scene-compass .scene-compass-n {
+  fill: var(--atlas-accent-soft);
+}
+
+html[data-atlas-theme='inkstone'] .scene-compass-ring {
+  stroke: var(--atlas-gold);
+}
+
+html[data-atlas-theme='inkstone'] .webgl-recovery-notice {
+  background: var(--atlas-panel);
+  color: var(--atlas-ink);
+  border-color: var(--atlas-gold);
+}
+
+html[data-atlas-theme='inkstone'] .scene-roam-indicator {
+  background: var(--atlas-accent-soft);
+  box-shadow: 0 0 12px rgba(186, 87, 72, 0.45);
+}
+
+html[data-atlas-theme='inkstone'] .scene-auto-roam[aria-pressed='false'] .scene-roam-indicator {
+  background: #777272;
+}
+
+.atlas-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 7px 10px;
+  border: 1px solid var(--atlas-line);
+  color: var(--atlas-ink);
+  background: var(--atlas-panel);
+  font: 10px/1 'DM Sans', 'PingFang SC', sans-serif;
+  letter-spacing: .08em;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.atlas-theme-toggle:hover { border-color: var(--atlas-gold); color: var(--atlas-gold); }
+.atlas-theme-toggle:focus-visible { outline: 2px solid var(--atlas-gold); outline-offset: 3px; }
+.atlas-theme-swatch { width: 9px; height: 9px; border-radius: 50%; background: var(--atlas-gold); }
+html[data-atlas-theme='inkstone'] .atlas-theme-swatch { background: var(--atlas-accent-soft); }
+.home-header-actions,
+.house-header-actions,
+.scenic-header-actions { display: flex; align-items: center; gap: 12px; }
+.scenic-header-actions { pointer-events: auto; }
+.is-immersive :is(.site-header, .exhibit-header) .atlas-theme-toggle { display: none; }
+@media (max-width: 700px) {
+  .atlas-theme-toggle { min-height: 30px; padding: 7px 8px; font-size: 9px; }
+  :is(.header-controls, .scenic-header-actions, .exhibit-controls) .atlas-theme-name { display: none; }
+  :is(.header-controls, .scenic-header-actions, .exhibit-controls) .atlas-theme-toggle::after { content: '主题'; }
+  .home-header-actions, .house-header-actions, .scenic-header-actions { gap: 6px; }
+}
+
+/* Private scenic sheets use these suffixes for their shared information rows. */
+[id$='-app'] :is([class$='-description'], [class$='-gesture'], [class$='-explorer-head'], [class$='-hotspot-item']) {
+  color: var(--atlas-muted);
+}
+[id$='-app'] :is([class$='-explorer-head'], [class$='-hotspot-item']) { border-color: var(--atlas-line); }
+[id$='-app'] :is([class$='-detail'], [class$='-explorer'], [class$='-view-panel']) {
+  background: var(--atlas-panel);
+  color: var(--atlas-ink);
+  border-color: var(--atlas-line);
+}
+[id$='-app'] :is([class$='-detail'] p, [class$='-description'], [class$='-gesture']) { color: var(--atlas-muted); }
+[id$='-app'] :is([class$='-eyebrow'], [class$='-detail-kicker'], [class$='-view-heading'], [class$='-view-no']) { color: var(--atlas-gold); }
